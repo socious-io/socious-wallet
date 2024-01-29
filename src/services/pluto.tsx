@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SDK from "@atala/prism-wallet-sdk";
 import { Database } from "@pluto-encrypted/database";
-import IndexDB from "@pluto-encrypted/indexdb"; 
+import InMemory from "@pluto-encrypted/inmemory";
 import { 
     getDefaultCollections,
     DIDCollection,
@@ -33,11 +33,12 @@ export function usePluto() {
             {
                 name: `my-db`,
                 encryptionKey: defaultPassword,
-                storage: IndexDB,
+                storage: InMemory,
                 collections: getDefaultCollections()
             }
           ).then((db) => setPluto(db as any))
         }
+        
       }, [pluto])
 
       return { pluto };
