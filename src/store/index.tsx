@@ -6,7 +6,7 @@ import { usePluto } from 'src/services/pluto';
 const initialState: State = {
   did: null,
   credentials: [],
-  didLoading: true
+  didLoading: true,
 };
 
 // Create contexts
@@ -43,26 +43,24 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     // Indicate loading start if necessary
     dispatch({ type: 'LOADING_START' });
 
-    Promise.all([
-      pluto.getAllCredentials(),
-      pluto.getAllPeerDIDs()
-    ]).then(([credentials, dids]) => {
-      dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
-      dispatch({ type: 'SET_DID', payload: dids.length > 0 ? dids[0].did: null });
-      // Indicate loading end if necessary
-      dispatch({ type: 'LOADING_END' });
-    }).catch(error => {
-      console.error("Failed to load data from Pluto", error);
-      // Handle error state if necessary
-      dispatch({ type: 'LOADING_END' });
-    });
+    Promise.all([pluto.getAllCredentials(), pluto.getAllPrismDIDs()])
+      .then(([credentials, dids]) => {
+        console.log(dids, ' DDDDDDDDDDDDDDDDDDDDDDD');
+        dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
+        dispatch({ type: 'SET_DID', payload: dids.length > 0 ? dids[0].did : null });
+        // Indicate loading end if necessary
+        dispatch({ type: 'LOADING_END' });
+      })
+      .catch((error) => {
+        console.error('Failed to load data from Pluto', error);
+        // Handle error state if necessary
+        dispatch({ type: 'LOADING_END' });
+      });
   }, [pluto]);
 
   return (
     <AppStateContext.Provider value={state}>
-      <AppDispatchContext.Provider value={dispatch}>
-        {children}
-      </AppDispatchContext.Provider>
+      <AppDispatchContext.Provider value={dispatch}>{children}</AppDispatchContext.Provider>
     </AppStateContext.Provider>
   );
 };

@@ -2,30 +2,29 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import SDK from '@atala/prism-wallet-sdk';
 import { usePluto } from './pluto';
+import { config } from 'src/config';
+import { useAppDispatch, useAppState } from 'src/store';
 
 const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
 const RequestPresentation = SDK.RequestPresentation;
 
-const defaultMediatorDID =
-  'did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9iZXRhLW1lZGlhdG9yLmF0YWxhcHJpc20uaW8iLCJyIjpbXSwiYSI6WyJkaWRjb21tL3YyIl19';
-
-const issuerAgentBaseURL = 'http://localhost:8000';
-
 export function useAgent() {
   const [agent, setAgent] = useState<SDK.Agent>();
   const [state, setState] = useState<string>('offline');
   const [error, setError] = useState<Error>();
+  const [warn, setWarn] = useState<string>();
   const { pluto } = usePluto();
-  const [newMessage, setNewMessage] = React.useState<any>([]);
+  const [newMessage, setNewMessage] = React.useState<SDK.Domain.Message[]>([]);
   const [messages, setMessages] = React.useState<SDK.Domain.Message[]>([]);
-  const [credentials, setCredentials] = useState<SDK.Domain.Credential[]>([]);
+  const appState = useAppState();
+  const dispatch = useAppDispatch();
 
   const handleMessages = async (newMessages: SDK.Domain.Message[]) => {
+    setNewMessage(newMessages);
     const joinedMessages = [...messages, ...newMessages];
-    console.log('new message : ', newMessages);
     setMessages(joinedMessages);
-    setNewMessage(joinedMessages.map(() => ''));
+    // setNewMessage(joinedMessages);
 
     const credentialOffers = newMessages.filter(
       (message) => message.piuri === 'https://didcomm.org/issue-credential/3.0/offer-credential',
@@ -51,7 +50,7 @@ export function useAgent() {
           );
           await agent.sendMessage(presentation.makeMessage());
         } catch (err) {
-          console.log('continue after err', err);
+          setWarn(`error on request presentation message : ${err.message}`);
         }
       }
     }
@@ -63,33 +62,32 @@ export function useAgent() {
         try {
           await agent.sendMessage(requestCredential.makeMessage());
         } catch (err) {
-          console.log('continue after error', err);
+          setWarn(`error on credential offer  message : ${err.message}`);
         }
       }
     }
     if (issuedCredentials.length) {
       for (const issuedCredential of issuedCredentials) {
         const issueCredential = IssueCredential.fromMessage(issuedCredential);
-        const cred = await agent.processIssuedCredentialMessage(issueCredential);
-        setCredentials([...credentials, cred]);
+        const credential = await agent.processIssuedCredentialMessage(issueCredential);
+        dispatch({ type: 'SET_CREDENTIALS', payload: [...appState.credentials, credential] });
       }
     }
   };
 
   useEffect(() => {
     const handleStart = async () => {
-      const a = SDK.Agent.initialize({ mediatorDID: defaultMediatorDID, pluto });
+      const a = SDK.Agent.initialize({ mediatorDID: config.MEDIATOR_DID, pluto });
       setState(await a.start());
       const mediator = a.currentMediatorDID;
       if (!mediator) {
-        throw new Error('Mediator not available');
+        setError(new Error('Mediator not available'));
       }
       setAgent(a);
     };
 
     if (pluto) {
       handleStart().then(() => console.log('agent started'));
-      pluto.getAllCredentials().then((rows) => setCredentials(rows));
     }
   }, [pluto]);
 
@@ -102,7 +100,7 @@ export function useAgent() {
     };
   });
 
-  return { agent, state, error, credentials };
+  return { agent, state, error, warn, newMessage };
 }
 
 export function useConnection() {
@@ -116,13 +114,15 @@ export function useConnection() {
     const connect = async () => {
       // TODO: should create only on connection per wallet
       // TODO: use configured API KEY
-      const res = await axios.post(`${issuerAgentBaseURL}/prism-agent/connections`, {
+      const res = await axios.post(`${config.ISSUER_AGENT}/prism-agent/connections`, {
         label: 'Socious wallet default',
       });
 
       setConnectionId(res.data.connectionId);
       setInviteURL(res.data.invitation.invitationUrl);
+      console.log(res.data.invitation.invitationUrl, '----@@@');
       const parsed = await agent.parseOOBInvitation(new URL(res.data.invitation.invitationUrl));
+      console.log(parsed, '@@@@@@@@@@@@@@');
       await agent.acceptInvitation(parsed);
       setConnectionStatus('ESTABLISHED');
     };
