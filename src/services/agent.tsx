@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import SDK from '@atala/prism-wallet-sdk';
-import { usePluto } from './pluto';
 import { config } from 'src/config';
 import { useAppDispatch, useAppState } from 'src/store';
 
@@ -9,18 +8,17 @@ const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
 const RequestPresentation = SDK.RequestPresentation;
 
-export function useAgent() {
+export function useAgent(pluto: SDK.Domain.Pluto) {
   const [agent, setAgent] = useState<SDK.Agent>();
   const [state, setState] = useState<string>('offline');
   const [error, setError] = useState<Error>();
   const [warn, setWarn] = useState<string>();
-  const { pluto } = usePluto();
   const [newMessage, setNewMessage] = React.useState<SDK.Domain.Message[]>([]);
   const [messages, setMessages] = React.useState<SDK.Domain.Message[]>([]);
-  const appState = useAppState();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const handleMessages = async (newMessages: SDK.Domain.Message[]) => {
+    console.log(`Got new Message -> ${JSON.stringify(newMessages)}`)
     setNewMessage(newMessages);
     const joinedMessages = [...messages, ...newMessages];
     setMessages(joinedMessages);
@@ -70,7 +68,7 @@ export function useAgent() {
       for (const issuedCredential of issuedCredentials) {
         const issueCredential = IssueCredential.fromMessage(issuedCredential);
         const credential = await agent.processIssuedCredentialMessage(issueCredential);
-        dispatch({ type: 'SET_CREDENTIALS', payload: [...appState.credentials, credential] });
+        // dispatch({ type: 'SET_CREDENTIALS', payload: [credential] });
       }
     }
   };
@@ -78,21 +76,32 @@ export function useAgent() {
   useEffect(() => {
     const handleStart = async () => {
       const a = SDK.Agent.initialize({ mediatorDID: config.MEDIATOR_DID, pluto });
+
       setState(await a.start());
       const mediator = a.currentMediatorDID;
       if (!mediator) {
         setError(new Error('Mediator not available'));
       }
       setAgent(a);
+      return a;
     };
 
     if (pluto) {
-      handleStart().then(() => console.log('agent started'));
+      handleStart().then((a) => {
+        console.log('agent started')
+        // agent.addListener(SDK.ListenerKey.MESSAGE, handleMessages);
+      });
     }
   }, [pluto]);
 
   useEffect(() => {
     if (!agent) return;
+    const e = agent.connectionManager.events as any    
+    
+    if (e.events.has(SDK.ListenerKey.MESSAGE)) return;
+
+    console.log(e.events.has(SDK.ListenerKey.MESSAGE), '----- events ------@@@')
+
     agent.addListener(SDK.ListenerKey.MESSAGE, handleMessages);
 
     return () => {
@@ -100,15 +109,17 @@ export function useAgent() {
     };
   });
 
+
+
   return { agent, state, error, warn, newMessage };
 }
 
 export function useConnection() {
+  const appState = useAppState();
   const [connectionId, setConnectionId] = useState<string>();
   const [inviteURL, setInviteURL] = useState<string>();
   const [connectionStatus, setConnectionStatus] = useState<'NOT_ESTABLISHED' | 'ESTABLISHED'>('NOT_ESTABLISHED');
 
-  const { agent, state } = useAgent();
 
   useEffect(() => {
     const connect = async () => {
@@ -120,14 +131,13 @@ export function useConnection() {
 
       setConnectionId(res.data.connectionId);
       setInviteURL(res.data.invitation.invitationUrl);
-      console.log(res.data.invitation.invitationUrl, '----@@@');
-      const parsed = await agent.parseOOBInvitation(new URL(res.data.invitation.invitationUrl));
-      console.log(parsed, '@@@@@@@@@@@@@@');
-      await agent.acceptInvitation(parsed);
+      const parsed = await appState.agent.parseOOBInvitation(new URL(res.data.invitation.invitationUrl));
+      console.log(parsed, '***********')
+      await appState.agent.acceptInvitation(parsed);
       setConnectionStatus('ESTABLISHED');
     };
-    if (state === 'running') connect().then(() => console.log('connection established'));
-  }, [agent, state]);
+    if (appState.agent) connect().then(() => console.log('connection established'));
+  }, [appState.agent]);
 
   return {
     connectionId,

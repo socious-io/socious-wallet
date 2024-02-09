@@ -1,18 +1,22 @@
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import ConfirmModal from 'src/components/confirm';
-import { useAgent } from 'src/services/agent';
+import { useAppState } from 'src/store';
 
 function Connection() {
+  const appState = useAppState();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const oob = searchParams.get('_oob');
-  const { agent } = useAgent();
 
   if (!oob) return <Navigate to="/" />;
 
   const handleConfirm = async () => {
-    const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
-    await agent.acceptInvitation(parsed);
+    if (!appState.agent) {
+      alert('wait more please');
+      return;
+    }
+    const parsed = await appState.agent.parseOOBInvitation(new URL(window.location.href));
+    await appState.agent.acceptInvitation(parsed);
     navigate('/');
   };
 

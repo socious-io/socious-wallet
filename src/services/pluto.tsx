@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { config } from 'src/config';
 import SDK from '@atala/prism-wallet-sdk';
 import { Database } from '@pluto-encrypted/database';
-import Storage from '@pluto-encrypted/inmemory';
+import Storage from '@pluto-encrypted/indexdb';
 import {
   getDefaultCollections,
   DIDCollection,
