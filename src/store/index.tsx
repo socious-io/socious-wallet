@@ -9,7 +9,10 @@ const initialState: State = {
   credentials: [],
   didLoading: true,
   pluto: null,
-  agent: null
+  agent: null,
+  error: null,
+  warn: null,
+  message: [],
 };
 
 // Create contexts
@@ -20,19 +23,23 @@ const AppDispatchContext = createContext<React.Dispatch<Action> | undefined>(und
 function appReducer(state: State, action: Action): State {
   switch (action.type) {
     case 'SET_CREDENTIALS':
-      return { ...state, credentials: [...state.credentials, ...action.payload] };
+      return { ...state, credentials: [...state.credentials, ...action.payload].reverse() };
     case 'SET_PLUTO':
       return { ...state, pluto: action.payload };
     case 'SET_AGENT':
       return { ...state, agent: action.payload };
     case 'SET_DID':
-      return { ...state, did: action.payload, didLoading: false }; // Assuming you want to store an array or a single value
+      return { ...state, did: action.payload, didLoading: false };
+    case 'SET_ERROR':
+      return { ...state, error: action.payload };
+    case 'SET_WARN':
+      return { ...state, warn: action.payload };
+    case 'SET_NEW_MESSAGE':
+      return { ...state, message: action.payload };
     case 'LOADING_START':
-      // Handle loading state start
-      return state; // Update accordingly
+      return state;
     case 'LOADING_END':
-      // Handle loading state end
-      return state; // Update accordingly
+      return state;
     default:
       return state;
   }
@@ -42,21 +49,19 @@ function appReducer(state: State, action: Action): State {
 type StateProviderProps = { children: ReactNode };
 
 export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
-  const { pluto } = usePluto();
-  const { agent } = useAgent(pluto);
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const { pluto } = usePluto();
+  const { agent } = useAgent(pluto, dispatch);
 
   useEffect(() => {
     if (!pluto || !agent) return;
     // Indicate loading start if necessary
     dispatch({ type: 'LOADING_START' });
 
-    dispatch({type: 'SET_PLUTO', payload: pluto});
-    dispatch({type: 'SET_AGENT', payload: agent});
+    dispatch({ type: 'SET_PLUTO', payload: pluto });
 
     Promise.all([pluto.getAllCredentials(), pluto.getAllPrismDIDs()])
       .then(([credentials, dids]) => {
-        console.log(dids, ' DDDDDDDDDDDDDDDDDDDDDDD');
         dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
         dispatch({ type: 'SET_DID', payload: dids.length > 0 ? dids[0].did : null });
         // Indicate loading end if necessary

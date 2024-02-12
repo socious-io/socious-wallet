@@ -36,8 +36,8 @@ export function usePluto() {
         collections: getDefaultCollections(),
       });
       setPluto(db);
-      const backup = await db.backup();
-      console.log(backup, '%%%%%%% BACKUP');
+      /* const backup = await db.backup();
+      console.log(backup, '%%%%%%% BACKUP'); */
     };
 
     if (!pluto) connect();
