@@ -16,7 +16,7 @@ function Home() {
                   .filter((field) => field !== 'id')
                   .map((field, i) => (
                     <p key={`field${i}`} className="text-lg font-normal text-gray-500 lg:text-xl  dark:text-gray-400">
-                      {field} : <span>{claim[field]}</span>
+                      {field.replaceAll('_', ' ')} : <span>{claim[field]}</span>
                     </p>
                   )),
               )}
