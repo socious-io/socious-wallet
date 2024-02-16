@@ -10,6 +10,7 @@ const RequestPresentation = SDK.RequestPresentation;
 const handleMessages =
   (pluto: SDK.Domain.Pluto, agent: SDK.Agent, dispatch: React.Dispatch<Action>) =>
   async (newMessages: SDK.Domain.Message[]) => {
+    console.log('new message -> ', newMessages)
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
 
     const credentialOffers = newMessages.filter(
