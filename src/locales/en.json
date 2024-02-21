@@ -2,5 +2,8 @@
   "welcome": "Welcome to Socious Wallet",
   "to-get-started": "To get started, create a new wallet or import from a seed phrase",
   "create-new-wallet": "Create a new wallet",
-  "already-have-wallet": "I already have a wallet"
+  "already-have-wallet": "I already have a wallet",
+  "start-recovery-phrase": "Secret Recovery Phrase",
+  "recovery-phrase-caution": "This is the only way you will be able to recover your wallet. Please store it somewhere safe.",
+  "ok-I-saved": "OK, I saved it somewhere"
 }

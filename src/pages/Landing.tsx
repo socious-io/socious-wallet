@@ -10,9 +10,9 @@ const Landing = () => {
       <div className="h-[20.75rem] pt-8 flex flex-col items-center justify-center px-8">
         <SocioLogo />
         <h1 className="font-semibold text-2xl mt-6 dark:text-gray-50">{intl.formatMessage({ id: 'welcome' })}</h1>
-        <p className="text-center mt-2 text-gray-500 dark:text-gray-400">
+        <h2 className="text-center mt-2 text-gray-500 dark:text-gray-400">
           {intl.formatMessage({ id: 'to-get-started' })}
-        </p>
+        </h2>
       </div>
       <div className="px-8 py-6">
         <div>
