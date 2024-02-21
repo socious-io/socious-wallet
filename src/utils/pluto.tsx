@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { config } from '@/config';
-import * as SDK from '@atala/prism-wallet-sdk';
+import SDK from '@atala/prism-wallet-sdk';
 import { Database } from '@pluto-encrypted/database';
 import Storage from '@pluto-encrypted/indexdb';
 import {
