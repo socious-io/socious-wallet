@@ -24,6 +24,7 @@ function Register() {
       accept: ['didcomm/v2'],
       routingKeys: ['did:example:somemediator#somekey'],
     });
+
     createDID([exampleService]).then(({ mnemonics, did, privateKey }) => {
       setMnemonics(mnemonics);
       setDID(did);
@@ -34,13 +35,13 @@ function Register() {
   if (state.did) return <Navigate to="/" />;
 
   const confirm = async () => {
-    await pluto.storePeerDID(did, [pk]);
+    await pluto.storePrismDID(did, 0, pk, '');
     dispatch({ type: 'SET_DID', payload: did });
   };
 
   return (
     <>
-      <MnemonicsDisplay mnemonics={mnemonics} />
+      <MnemonicsDisplay mnemonics={mnemonics} readOnly={true} />
       <Button variant="primary" onClick={confirm} disabled={!did}>
         Confirm
       </Button>

@@ -2,13 +2,13 @@ import { ListGroup } from 'react-bootstrap';
 import { useAppState } from 'src/store';
 
 function Home() {
-  const state = useAppState();
+  const { credentials } = useAppState();
 
   return (
     <>
       <h1>Credentials</h1>
       <ListGroup>
-        {state.credentials.map((c) => (
+        {credentials.map((c) => (
           <ListGroup.Item key={c.id}>
             <ListGroup>
               {c.claims.map((claim, claimIndex) =>

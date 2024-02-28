@@ -3,25 +3,46 @@ import { Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 
 interface MnemonicsDisplayProps {
   mnemonics: string[];
-  setMnemonics?: (mnemonics: string[]) => void;
   len?: number;
+  readOnly?: boolean;
+  setMnemonics?: (mnemonics: string[]) => void;
 }
 
-const MnemonicsDisplay: React.FC<MnemonicsDisplayProps> = ({ mnemonics, setMnemonics, len = 24 }) => {
-  const [localMnemonics, setLocalMnemonics] = useState<string[]>([]);
+const MnemonicsDisplay: React.FC<MnemonicsDisplayProps> = ({ mnemonics, len = 24, readOnly = false, setMnemonics }) => {
+  const [mns, setMns] = useState(Array(len).fill(''));
   const wordsPerRow = 6;
-  const isEmptyMnemonics = mnemonics.length === 0;
 
   useEffect(() => {
-    // Initialize local mnemonics with either the provided mnemonics or empty strings for 24 inputs
-    setLocalMnemonics(isEmptyMnemonics ? Array(len).fill('') : mnemonics);
-  }, [mnemonics, isEmptyMnemonics, len]);
+    if (readOnly) setMns(mnemonics);
+  }, [mnemonics, readOnly]);
 
   const handleMnemonicChange = (index: number, value: string) => {
-    const updatedMnemonics = [...localMnemonics];
+    const updatedMnemonics = [...mns];
     updatedMnemonics[index] = value;
-    setLocalMnemonics(updatedMnemonics);
-    setMnemonics(updatedMnemonics); // Update parent component's mnemonics state
+    setMns(updatedMnemonics);
+    setMnemonics(updatedMnemonics);
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    if (readOnly) return;
+    e.preventDefault(); // Prevent the default paste behavior
+
+    const pastedText = e.clipboardData.getData('text'); // Get the pasted text
+    const words = pastedText.split(/\s+/).slice(0, len); // Split by space and limit to `len`
+
+    if (words.length > 0) {
+      const updatedMnemonics = Array(len).fill(''); // Create a new array filled with empty strings
+      words.forEach((word, index) => {
+        updatedMnemonics[index] = word; // Update the array with the pasted words
+      });
+
+      setMns(updatedMnemonics);
+      setMnemonics(updatedMnemonics);
+    }
+  };
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(mns.join(' '));
   };
 
   const renderInputs = (mnemonicsToRender: string[]) => {
@@ -39,10 +60,12 @@ const MnemonicsDisplay: React.FC<MnemonicsDisplayProps> = ({ mnemonics, setMnemo
               <InputGroup>
                 <InputGroup.Text>{rowIndex * wordsPerRow + colIndex + 1}</InputGroup.Text>
                 <FormControl
-                  disabled={!isEmptyMnemonics}
+                  disabled={readOnly}
                   value={mnemonic}
                   onChange={(e) => handleMnemonicChange(rowIndex * wordsPerRow + colIndex, e.target.value)}
                   maxLength={8}
+                  onPaste={handlePaste}
+                  onCopy={handleCopy}
                 />
               </InputGroup>
             </Col>
@@ -52,7 +75,7 @@ const MnemonicsDisplay: React.FC<MnemonicsDisplayProps> = ({ mnemonics, setMnemo
     });
   };
 
-  return <div>{renderInputs(localMnemonics)}</div>;
+  return <div>{renderInputs(mns)}</div>;
 };
 
 export default MnemonicsDisplay;
