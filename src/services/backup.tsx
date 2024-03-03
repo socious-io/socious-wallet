@@ -44,6 +44,7 @@ export const Backup: React.FC = () => {
       const form = new FormData();
       form.append('file', blob, `${did.methodId}.bin`);
       const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
+
       const res = await axios.post(`${config.BACKUP_AGENT}/sync`, form, { headers });
       return res.data;
     };

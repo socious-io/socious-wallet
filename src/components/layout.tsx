@@ -1,8 +1,8 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { useAppState } from 'src/store';
 import CenteredSpinner from './spinner';
 import { useEffect, useState } from 'react';
-import { Alert, Container, Navbar } from 'react-bootstrap';
+import { Alert, Container, Navbar, Nav } from 'react-bootstrap';
 
 const Layout = () => {
   const { warn, error, didLoading } = useAppState();
@@ -26,6 +26,16 @@ const Layout = () => {
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container>
           <Navbar.Brand href="/">Socious Wallet</Navbar.Brand>
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link as={Link} to="/">
+                Home
+              </Nav.Link>
+              <Nav.Link as={Link} to="/verify">
+                Verify
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
       <Container>

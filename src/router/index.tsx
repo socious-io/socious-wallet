@@ -8,6 +8,7 @@ import Recover from 'src/pages/recover';
 import Intro from 'src/pages/intro';
 import Home from 'src/pages/home';
 import Connection from 'src/pages/connection';
+import Verify from 'src/pages/verify';
 
 export const blueprint: RouteObject[] = [
   {
@@ -18,6 +19,7 @@ export const blueprint: RouteObject[] = [
       { path: '/intro', element: <Intro /> },
       { path: '/recover', element: <Recover /> },
       { path: '/register', element: <Register /> },
+      { path: '/verify', element: <Verify /> },
     ],
   },
 ];

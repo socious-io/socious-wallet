@@ -6,4 +6,5 @@ export const config = {
   ISSUER_AGENT: process.env.REACT_APP_ISSUER_AGENT,
   BACKUP_AGENT: process.env.REACT_APP_BACKUP_AGENT,
   BACKUP_AGENT_API_KEY: process.env.REACT_APP_BACKUP_AGENT_API_KEY,
+  VERIFF_API_KEY: process.env.REACT_APP_VERIFF_API_KEY,
 };

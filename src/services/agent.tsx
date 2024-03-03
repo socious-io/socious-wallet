@@ -26,7 +26,10 @@ const handleMessages =
     if (requestPresentations.length) {
       for (const requestPresentation of requestPresentations) {
         const lastCredentials = await pluto.getAllCredentials();
+        const pr = JSON.parse(requestPresentation.body);
+        console.log(pr, '******');
         const lastCredential = lastCredentials.at(-1);
+        console.log(lastCredential, '****');
         const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
         try {
           if (lastCredential === undefined)
