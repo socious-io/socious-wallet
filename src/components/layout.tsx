@@ -29,10 +29,7 @@ const Layout = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">
-                Home
-              </Nav.Link>
-              <Nav.Link as={Link} to="/verify">
-                Verify
+                Credentials
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>

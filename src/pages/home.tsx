@@ -1,11 +1,25 @@
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Alert, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { useAppState } from 'src/store';
 
 function Home() {
-  const { credentials } = useAppState();
+  const { credentials, verification } = useAppState();
 
   return (
     <>
+      {!verification && (
+        <Alert variant="warning">
+          <Alert.Heading>Verfication needed</Alert.Heading>
+          <p>
+            Your identity verification has either not been submitted or is still pending approval. During this period,
+            your wallet will be unable to accept any verifiable credentials.
+          </p>
+          <hr />
+          <p className="mb-0">
+            please check your verification status <Link to="/verify"> here </Link>
+          </p>
+        </Alert>
+      )}
       <h1>Credentials</h1>
       <ListGroup>
         {credentials.map((c) => (

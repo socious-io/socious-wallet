@@ -13,6 +13,7 @@ const initialState: State = {
   error: null,
   warn: null,
   message: [],
+  verification: undefined,
 };
 
 // Create contexts
@@ -24,6 +25,8 @@ function appReducer(state: State, action: Action): State {
   switch (action.type) {
     case 'SET_CREDENTIALS':
       return { ...state, credentials: [...state.credentials, ...action.payload].reverse() };
+    case 'SET_VERIFICATION':
+      return { ...state, verification: action.payload };
     case 'SET_PLUTO':
       return { ...state, pluto: action.payload };
     case 'SET_AGENT':
@@ -62,8 +65,15 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
 
     Promise.all([pluto.getAllCredentials(), pluto.getAllPrismDIDs()])
       .then(([credentials, dids]) => {
+        dispatch({
+          type: 'SET_VERIFICATION',
+          payload: credentials.filter((c) => c.claims[0]?.type === 'verification')[0] || null,
+        });
         dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
-        dispatch({ type: 'SET_DID', payload: dids.length > 0 ? dids[0].did : null });
+        dispatch({
+          type: 'SET_DID',
+          payload: dids.length > 0 ? dids.filter((d) => d.keyPathIndex === 0)[0].did : null,
+        });
         // Indicate loading end if necessary
         dispatch({ type: 'LOADING_END' });
       })

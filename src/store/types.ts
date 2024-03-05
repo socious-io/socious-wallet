@@ -7,6 +7,7 @@ export interface Err {
 export interface State {
   did?: SDK.Domain.DID;
   credentials: SDK.Domain.Credential[];
+  verification: SDK.Domain.Credential | null | undefined;
   didLoading: boolean;
   pluto: SDK.Domain.Pluto;
   agent: SDK.Agent;
@@ -23,6 +24,7 @@ export type Action =
   | { type: 'SET_ERROR'; payload: Err }
   | { type: 'SET_WARN'; payload: Err }
   | { type: 'SET_NEW_MESSAGE'; payload: SDK.Domain.Message[] }
+  | { type: 'SET_VERIFICATION'; payload: SDK.Domain.Credential }
   | { type: 'LOADING_END' }
   | { type: 'LOADING_START' }
   | { type: 'LOADING_END' };

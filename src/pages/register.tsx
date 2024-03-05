@@ -35,7 +35,7 @@ function Register() {
   if (state.did) return <Navigate to="/" />;
 
   const confirm = async () => {
-    await pluto.storePrismDID(did, 0, pk, '');
+    await pluto.storePrismDID(did, 0, pk, 'master');
     dispatch({ type: 'SET_DID', payload: did });
   };
 

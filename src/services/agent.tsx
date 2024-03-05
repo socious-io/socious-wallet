@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SDK from '@atala/prism-wallet-sdk';
 import { config } from 'src/config';
 import { Action } from 'src/store/types';
+import { decodeJwtPayload } from 'src/utils';
 
 const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
@@ -26,10 +27,7 @@ const handleMessages =
     if (requestPresentations.length) {
       for (const requestPresentation of requestPresentations) {
         const lastCredentials = await pluto.getAllCredentials();
-        const pr = JSON.parse(requestPresentation.body);
-        console.log(pr, '******');
         const lastCredential = lastCredentials.at(-1);
-        console.log(lastCredential, '****');
         const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
         try {
           if (lastCredential === undefined)
@@ -52,7 +50,6 @@ const handleMessages =
       for (const credentialOfferMessage of credentialOffers) {
         const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
         const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
-
         try {
           await agent.sendMessage(requestCredential.makeMessage());
         } catch (err) {
@@ -63,7 +60,20 @@ const handleMessages =
     if (issuedCredentials.length) {
       for (const issuedCredential of issuedCredentials) {
         const issueCredential = IssueCredential.fromMessage(issuedCredential);
+
+        const credentials = await pluto.getAllCredentials();
+        const verfiedVC = credentials.filter((c) => c.claims[0]?.type === 'verification')[0];
+        const decoded = decodeJwtPayload((issueCredential.attachments[0].data as SDK.Domain.AttachmentBase64).base64);
+        if (!verfiedVC) {
+          if (decoded.vc.credentialSubject.type !== 'verification') break;
+        } else {
+          if (decoded.vc.credentialSubject.type === 'verification') break;
+        }
+
         const credential = await agent.processIssuedCredentialMessage(issueCredential);
+        if (!verfiedVC) {
+          dispatch({ type: 'SET_VERIFICATION', payload: credential });
+        }
         dispatch({ type: 'SET_CREDENTIALS', payload: [credential] });
       }
     }
