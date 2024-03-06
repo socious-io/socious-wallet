@@ -1,15 +1,11 @@
-import SDK from '@atala/prism-wallet-sdk';
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { createDID } from 'src/services/dids';
+import SDK from '@atala/prism-wallet-sdk';
+import { useAppContext } from 'src/store';
 import { usePluto } from 'src/services/pluto';
-import { useAppDispatch, useAppState } from 'src/store';
-import MnemonicsDisplay from 'src/components/mnemonics';
-import { Button } from 'react-bootstrap';
+import { createDID } from 'src/services/dids';
 
-function Register() {
-  const state = useAppState();
-  const dispatch = useAppDispatch();
+const useRegister = () => {
+  const { state, dispatch } = useAppContext();
   const { pluto } = usePluto();
   const [mnemonics, setMnemonics] = useState<string[]>([]);
   const [did, setDID] = useState<SDK.Domain.DID>();
@@ -32,21 +28,17 @@ function Register() {
     });
   }, [pluto, state.did, dispatch]);
 
-  if (state.did) return <Navigate to="/" />;
-
-  const confirm = async () => {
+  const onSave = async () => {
     await pluto.storePrismDID(did, 0, pk, 'master');
     dispatch({ type: 'SET_DID', payload: did });
   };
 
-  return (
-    <>
-      <MnemonicsDisplay mnemonics={mnemonics} readOnly={true} />
-      <Button variant="primary" onClick={confirm} disabled={!did}>
-        Confirm
-      </Button>
-    </>
-  );
-}
+  return {
+    state,
+    mnemonics,
+    onSave,
+    did,
+  };
+};
 
-export default Register;
+export default useRegister;
