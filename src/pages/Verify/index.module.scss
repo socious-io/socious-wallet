@@ -1,0 +1,42 @@
+.card {
+    &__container {
+        padding: 0;
+        height: 46rem;
+        width: 27.5rem;
+
+        @include media-breakpoint-down(md) {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    &__header {
+        width: 100%;
+        @include flex(space-between, center);
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid $border-color;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    &__content {
+        width: 100%;
+        flex: 1;
+        padding: 1.5em 1rem;
+        @include flex(flex-start, center, column);
+    }
+
+    &__footer {
+        width: 100%;
+        @include flex(center, center);
+        padding: 1.5rem 1rem;
+        border-top: 1px solid $border-color;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    &__nav {
+        flex: 1;
+        @include flex(center, center, column);
+    }
+}
