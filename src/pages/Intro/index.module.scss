@@ -1,0 +1,7 @@
+//FIXME: bootstrap's predefined text color not work
+.card {
+    &__text {
+        color: $gray;
+        text-align: center;
+    }
+}
