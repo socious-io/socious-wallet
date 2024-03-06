@@ -1,0 +1,8 @@
+.badge {
+    cursor: pointer;
+    flex: calc(25% - 0.5rem);
+
+    @include media-breakpoint-down(sm) {
+        flex: calc(33.3% - 0.5rem);
+    }
+}
