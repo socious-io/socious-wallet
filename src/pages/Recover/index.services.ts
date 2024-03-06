@@ -1,29 +1,29 @@
-import MnemonicsDisplay from 'src/components/mnemonics';
-import SDK from '@atala/prism-wallet-sdk';
-import { Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { recoverDID } from 'src/services/dids';
-import { useAppDispatch } from 'src/store';
-import { connect } from 'src/services/pluto';
-import { config } from 'src/config';
-import { decrypt } from 'src/services/backup';
+import SDK from '@atala/prism-wallet-sdk';
 import axios from 'axios';
+import { useAppContext } from 'src/store';
+import { config } from 'src/config';
+import { connect } from 'src/services/pluto';
+import { recoverDID } from 'src/services/dids';
+import { decrypt } from 'src/services/backup';
 
-function Recover() {
-  const dispatch = useAppDispatch();
+const useRecover = () => {
+  const { dispatch } = useAppContext();
   const [mns, setMns] = useState<string[]>([]);
-
+  const disabledConfirm = mns.length < 24;
   const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
     uri: 'https://example.com/endpoint',
     accept: ['didcomm/v2'],
     routingKeys: ['did:example:somemediator#somekey'],
   });
 
-  const getMnemonics = (mnemonics: string[]) => {
-    setMns(mnemonics);
+  const handleMnemonicValue = (value: string) => {
+    const updatedMnemonics = value.split(' ');
+    setMns(updatedMnemonics);
   };
 
-  const confirm = async () => {
+  const onConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const { did, privateKey } = await recoverDID(mns, [exampleService]);
     const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
     const res = await axios.get(`${config.BACKUP_AGENT}/fetch/${did.methodId}.bin`, { headers });
@@ -34,14 +34,11 @@ function Recover() {
     window.location.assign('/');
   };
 
-  return (
-    <>
-      <MnemonicsDisplay mnemonics={[]} setMnemonics={getMnemonics} />
-      <Button variant="primary" onClick={confirm} disabled={mns.length < 24}>
-        Confirm
-      </Button>
-    </>
-  );
-}
+  return {
+    handleMnemonicValue,
+    onConfirm,
+    disabledConfirm,
+  };
+};
 
-export default Recover;
+export default useRecover;
