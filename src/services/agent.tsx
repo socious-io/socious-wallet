@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import SDK from '@atala/prism-wallet-sdk';
 import { config } from 'src/config';
-import { Action } from 'src/store/types';
-import { decodeJwtPayload } from 'src/utils';
+import { decodeJwtPayload } from 'src/utilities';
+import { ActionType } from 'src/store/types';
 
 const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
 const RequestPresentation = SDK.RequestPresentation;
 
 const handleMessages =
-  (pluto: SDK.Domain.Pluto, agent: SDK.Agent, dispatch: React.Dispatch<Action>) =>
+  (pluto: SDK.Domain.Pluto, agent: SDK.Agent, dispatch: React.Dispatch<ActionType>) =>
   async (newMessages: SDK.Domain.Message[]) => {
     console.log('new message -> ', newMessages);
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
 
     const credentialOffers = newMessages.filter(
-      (message) => message.piuri === 'https://didcomm.org/issue-credential/3.0/offer-credential',
+      message => message.piuri === 'https://didcomm.org/issue-credential/3.0/offer-credential',
     );
     const issuedCredentials = newMessages.filter(
-      (message) => message.piuri === 'https://didcomm.org/issue-credential/3.0/issue-credential',
+      message => message.piuri === 'https://didcomm.org/issue-credential/3.0/issue-credential',
     );
     const requestPresentations = newMessages.filter(
-      (message) => message.piuri === 'https://didcomm.atalaprism.io/present-proof/3.0/request-presentation',
+      message => message.piuri === 'https://didcomm.atalaprism.io/present-proof/3.0/request-presentation',
     );
 
     if (requestPresentations.length) {
@@ -62,7 +62,7 @@ const handleMessages =
         const issueCredential = IssueCredential.fromMessage(issuedCredential);
 
         const credentials = await pluto.getAllCredentials();
-        const verfiedVC = credentials.filter((c) => c.claims[0]?.type === 'verification')[0];
+        const verfiedVC = credentials.filter(c => c.claims[0]?.type === 'verification')[0];
         const decoded = decodeJwtPayload((issueCredential.attachments[0].data as SDK.Domain.AttachmentBase64).base64);
         if (!verfiedVC) {
           if (decoded.vc.credentialSubject.type !== 'verification') break;
@@ -79,7 +79,7 @@ const handleMessages =
     }
   };
 
-export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Action>) {
+export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<ActionType>) {
   const [agent, setAgent] = useState<SDK.Agent>();
   const [state, setState] = useState<string>('offline');
 
@@ -97,7 +97,7 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
     };
 
     if (pluto) {
-      handleStart().then((a) => {
+      handleStart().then(a => {
         console.log('agent started');
         dispatch({ type: 'SET_AGENT', payload: a });
         a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
