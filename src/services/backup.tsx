@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import crypto from 'crypto-browserify';
 import { config } from 'src/config';
 import React, { useEffect } from 'react';
-import { useAppState } from 'src/store';
+import { useAppContext } from 'src/store';
 
 export const encrypt = (raw: Uint8Array, data: any) => {
   const ecdh = crypto.createECDH('secp256k1');
@@ -33,7 +33,8 @@ export const decrypt = (raw: Uint8Array, encryptedDataHex: string) => {
 };
 
 export const Backup: React.FC = () => {
-  const { pluto, did, credentials } = useAppState();
+  const { state } = useAppContext();
+  const { pluto, did, credentials } = state || {};
 
   useEffect(() => {
     const backup = async () => {
@@ -50,8 +51,8 @@ export const Backup: React.FC = () => {
     };
     if (did && pluto) {
       backup()
-        .then((r) => console.log(r))
-        .catch((err) => console.log(err));
+        .then(r => console.log(r))
+        .catch(err => console.log(err));
     }
   }, [credentials, pluto, did]);
 

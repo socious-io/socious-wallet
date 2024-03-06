@@ -1,0 +1,83 @@
+.alert {
+    font-size: 12px;
+
+    @include media-breakpoint-down(md) {
+        margin-bottom: 0 !important;
+    }
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    &--alert {
+        height: auto;
+
+        @include media-breakpoint-down(md) {
+            height: calc(100% - 9.25rem);
+        }
+    }
+
+    .card {
+        &__container {
+            padding: 0;
+            height: 46rem;
+            width: 27.5rem;
+
+            @include media-breakpoint-down(md) {
+                height: 100%;
+            }
+        }
+
+        &__header {
+            width: 100%;
+            @include flex(space-between, center);
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid $border-color;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        &__content {
+            width: 100%;
+            flex: 1;
+            padding: 1.5em 1rem;
+        }
+
+        &__empty {
+            @include flex(center, center, column);
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            border: 1px solid $border-color;
+            box-shadow: 0px 1px 2px 0px $box-shadow;
+            border-radius: $border-lg;
+            text-align: center;
+            font-size: 14px;
+            color: $gray;
+        }
+
+        &__icon {
+            width: 3rem;
+            height: 3rem;
+            @include flex(center, center);
+            border: 1px solid $border-color;
+            border-radius: $border-lg;
+        }
+
+        &__footer {
+            width: 100%;
+            @include flex(center, center);
+            padding: 1.5rem 1rem;
+            border-top: 1px solid $border-color;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        &__nav {
+            flex: 1;
+            @include flex(center, center, column);
+        }
+    }
+}

@@ -1,0 +1,12 @@
+.title {
+    @include flex(center, flex-start, column);
+    gap: 0.25rem;
+    font-size: 18px;
+    font-weight: 600;
+
+    .subtitle {
+        font-size: 14px;
+        font-weight: 500;
+        color: $primary;
+    }
+}

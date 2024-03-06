@@ -39,7 +39,7 @@ export function usePluto() {
 
   useEffect(() => {
     if (!pluto) {
-      connect().then((db) => setPluto(db));
+      connect().then(db => setPluto(db));
     }
   }, [pluto]);
 

@@ -1,14 +1,16 @@
 import routes from 'src/router';
 import { RouterProvider } from 'react-router-dom';
-import { StateProvider } from './store';
+import { AppProvider } from './store';
 import { Backup } from 'src/services/backup';
 
 function App() {
   return (
-    <StateProvider>
-      <Backup />
-      <RouterProvider router={routes} />
-    </StateProvider>
+    <AppProvider>
+      <div className="app__container">
+        <Backup />
+        <RouterProvider router={routes} />
+      </div>
+    </AppProvider>
   );
 }
 
