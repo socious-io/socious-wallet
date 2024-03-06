@@ -4,7 +4,7 @@ export interface Err {
   err: Error;
   section: string;
 }
-export interface State {
+export interface StateType {
   did?: SDK.Domain.DID;
   credentials: SDK.Domain.Credential[];
   verification: SDK.Domain.Credential | null | undefined;
@@ -16,7 +16,7 @@ export interface State {
   warn: Err;
 }
 
-export type Action =
+export type ActionType =
   | { type: 'SET_CREDENTIALS'; payload: SDK.Domain.Credential[] }
   | { type: 'SET_PLUTO'; payload: SDK.Domain.Pluto }
   | { type: 'SET_DID'; payload: SDK.Domain.DID }
@@ -28,3 +28,5 @@ export type Action =
   | { type: 'LOADING_END' }
   | { type: 'LOADING_START' }
   | { type: 'LOADING_END' };
+
+export type AppProviderProps = { children: React.ReactNode };
