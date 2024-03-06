@@ -1,6 +1,6 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import './styles/main.scss';
 import reportWebVitals from './reportWebVitals';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
