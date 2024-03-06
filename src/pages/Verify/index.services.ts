@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useAppState, useAppDispatch } from 'src/store';
+import { useAppContext } from 'src/store';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore this package types has issue so we ignore error
 import { Veriff } from '@veriff/js-sdk';
 import { createVeriffFrame } from '@veriff/incontext-sdk';
@@ -9,16 +10,17 @@ import { useNavigate } from 'react-router-dom';
 
 const FLAG_KEY = 'submitted_kyc';
 
+//FIXME: create api folder for each axios request
 const startKYC = async (did: string, session: string) => {
   const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
   return axios.post(`${config.BACKUP_AGENT}/verify/start`, { session, did }, { headers });
 };
 
-function Verify() {
-  const { did, credentials, verification } = useAppState();
-  const [submitted, setSubmitted] = useState(localStorage.getItem(FLAG_KEY) ? true : false);
-  const dispatch = useAppDispatch();
+const useVerify = () => {
   const navigate = useNavigate();
+  const { state, dispatch } = useAppContext();
+  const { did, credentials, verification } = state || {};
+  const [submitted, setSubmitted] = useState(localStorage.getItem(FLAG_KEY) ? true : false);
 
   const veriff = Veriff({
     apiKey: config.VERIFF_API_KEY,
@@ -60,7 +62,7 @@ function Verify() {
       const checkStatus = () => {
         axios
           .get(`${config.BACKUP_AGENT}/verify/${did.methodId}/status`, { headers })
-          .then((r) => {
+          .then(r => {
             switch (r.data.verification?.status) {
               case 'declined':
               case 'expired':
@@ -68,15 +70,16 @@ function Verify() {
                 localStorage.removeItem(FLAG_KEY);
                 setSubmitted(false);
                 break;
-              case 'approved':
+              case 'approved': {
                 const url = new URL(r.data.connection.url);
                 // need to clear messages before redirect
                 dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
                 navigate(`${url.pathname}${url.search}`);
                 break;
+              }
             }
           })
-          .catch((err) => {
+          .catch(err => {
             const sessionID = localStorage.getItem('session');
             console.log(err);
             if (err?.response?.status === 400 && sessionID) {
@@ -89,13 +92,7 @@ function Verify() {
     }
   }, [did, submitted, navigate, dispatch, verification]);
 
-  return (
-    <>
-      {!submitted && <div id="veriff-root"></div>}
-      {submitted && !verification && <h3>Your verfication request has been submitted</h3>}
-      {verification && <h3>Your identity has been verified</h3>}
-    </>
-  );
-}
+  return { submitted, verification };
+};
 
-export default Verify;
+export default useVerify;
