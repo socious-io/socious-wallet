@@ -16,7 +16,7 @@
         height: auto;
 
         @include media-breakpoint-down(md) {
-            height: calc(100% - 9.25rem);
+            height: calc(100% - 9.3rem);
         }
     }
 
@@ -28,6 +28,7 @@
 
             @include media-breakpoint-down(md) {
                 height: 100%;
+                width: 100%;
             }
         }
 

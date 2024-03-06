@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Alert, ListGroup } from 'react-bootstrap';
 import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
@@ -8,6 +8,7 @@ import styles from './index.module.scss';
 import cn from 'classnames';
 
 function Home() {
+  const navigate = useNavigate();
   const { state } = useAppContext();
   const { credentials, verification } = state || {};
 
@@ -67,7 +68,7 @@ function Home() {
           </div>
           <div className={styles['card__footer']}>
             <div className={styles['card__nav']}>
-              <Icon name="shield-tick" />
+              <Icon name="shield-tick" onClick={() => navigate('/')} />
               Credentials
             </div>
             <div className={styles['card__nav']}>
