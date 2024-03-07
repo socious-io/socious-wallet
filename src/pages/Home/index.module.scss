@@ -45,6 +45,17 @@
             width: 100%;
             flex: 1;
             padding: 1.5em 1rem;
+            height: 100%;
+            overflow-y: auto;
+
+            &::-webkit-scrollbar {
+                width: 0.25rem;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: $primary;
+                border-radius: 0.5rem;
+            }
         }
 
         &__empty {
