@@ -1,11 +1,12 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
+import ConfirmModal from 'src/components/ConfirmModal';
 import Card from 'src/components/Card';
 import useRecover from './index.services';
 import styles from './index.module.scss';
 
 function Recover() {
-  const { handleMnemonicValue, onConfirm, disabledConfirm } = useRecover();
+  const { handleMnemonicValue, onConfirm, disabledConfirm, errorMessage, closeError } = useRecover();
 
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
@@ -29,6 +30,18 @@ function Recover() {
           </Button>
         </Form>
       </Card>
+      <ConfirmModal
+        open={errorMessage !== undefined}
+        header="Opps wrong"
+        onClose={closeError}
+        buttons={[
+          { children: 'Understood', variant: 'secondery', onClick: closeError, className: 'flex-grow-1 border-solid' },
+        ]}
+      >
+        <div className={styles['title']}>
+          <span className={styles['subtitle']}>{errorMessage}</span>
+        </div>
+      </ConfirmModal>
     </div>
   );
 }
