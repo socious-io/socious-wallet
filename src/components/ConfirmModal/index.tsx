@@ -9,7 +9,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ open, onClose, header, chil
         <Modal.Title>{header}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{children}</Modal.Body>
-      {!!buttons.length && (
+      {!!buttons?.length && (
         <Modal.Footer className="w-100" style={{ border: 'none' }}>
           {buttons.map((button, index) => (
             <Button key={index} {...button} />

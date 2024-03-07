@@ -72,7 +72,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
         dispatch({
           type: 'SET_DID',
-          payload: dids.length > 0 ? dids.filter(d => d.keyPathIndex === 0)[0].did : null,
+          payload: dids?.length > 0 ? dids.filter(d => d.keyPathIndex === 0)[0].did : null,
         });
         // Indicate loading end if necessary
         dispatch({ type: 'LOADING_END' });

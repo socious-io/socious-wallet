@@ -24,6 +24,7 @@ const useRecover = () => {
 
   const onConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (disabledConfirm) return;
     const { did, privateKey } = await recoverDID(mns, [exampleService]);
     const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
     const res = await axios.get(`${config.BACKUP_AGENT}/fetch/${did.methodId}.bin`, { headers });

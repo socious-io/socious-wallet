@@ -8,7 +8,7 @@ const Card: React.FC<CardProps> = ({ children, buttons = [], containerClassName 
   return (
     <div className={cn(styles['card'], containerClassName)}>
       <div className={cn(styles['card__content'], contentClassName)}>{children}</div>
-      {!!buttons.length && (
+      {!!buttons?.length && (
         <div className={styles['card__buttons']}>
           {buttons.map((button, index) => (
             <Button key={index} {...button} />
