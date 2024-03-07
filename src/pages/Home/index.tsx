@@ -32,16 +32,16 @@ function Home() {
         </Alert>
       )}
       <div className={cn(styles['home'], !verification && styles['home--alert'])}>
-        <Card containerClassName={styles['card__container']}>
+        <Card containerClassName={styles['card__container']} contentClassName="h-100">
           <div className={styles['card__header']}>
             Credentials
             <Icon name="bell" />
           </div>
           <div className={styles['card__content']}>
             {credentials.length ? (
-              <ListGroup>
+              <ListGroup className="w-100 d-flex gap-3">
                 {credentials.map(credential => (
-                  <ListGroup.Item key={credential.id}>
+                  <ListGroup.Item key={credential.id} className="rounded border">
                     <ListGroup>
                       {credential.claims.map(claim =>
                         Object.keys(claim)
