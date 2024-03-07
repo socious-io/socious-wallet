@@ -51,7 +51,10 @@ function Home() {
                               key={`field${i}`}
                               className="text-lg fw-bold text-gray-500 lg:text-xl dark:text-gray-400"
                             >
-                              {beautifyText(field)}: <span className="fw-normal">{claim[field]}</span>
+                              {beautifyText(field)} :&nbsp;
+                              <span className="fw-normal">
+                                {field === 'type' ? 'Know Your Customer (KYC)' : claim[field]}
+                              </span>
                             </p>
                           )),
                       )}
