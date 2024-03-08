@@ -5,7 +5,7 @@ import { useAppContext } from 'src/store';
 
 const useConnection = () => {
   const { state } = useAppContext();
-  const { agent, message } = state || {};
+  const { agent, message, verification } = state || {};
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const oob = searchParams.get('_oob');
@@ -24,6 +24,14 @@ const useConnection = () => {
       navigate('/');
     }
   }, [message, established, callback, navigate]);
+
+  useEffect(() => {
+    if (verification === null && oob) {
+      localStorage.setItem('oob', oob);
+      localStorage.setItem('callback', callback);
+      navigate('/intro');
+    }
+  }, [verification, oob, callback]);
 
   const handleConfirm = async () => {
     if (!agent) {
@@ -51,6 +59,7 @@ const useConnection = () => {
     openModal,
     handleConfirm,
     handleCancel,
+    verification,
   };
 };
 

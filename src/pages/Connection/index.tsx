@@ -5,9 +5,10 @@ import useConnection from './index.services';
 import styles from './index.module.scss';
 
 function Connection() {
-  const { oob, openModal, handleConfirm, handleCancel } = useConnection();
+  const { oob, openModal, handleConfirm, handleCancel, verification } = useConnection();
 
   if (!oob) return <Navigate to="/" />;
+  if (!verification) return <></>;
   return (
     <>
       <ConfirmModal
