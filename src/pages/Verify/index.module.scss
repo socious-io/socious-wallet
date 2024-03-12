@@ -23,7 +23,7 @@
         width: 100%;
         flex: 1;
         padding: 1.5em 1rem;
-        @include flex(flex-start, center, column);
+        @include flex(flex-end, center, column);
     }
 
     &__footer {
