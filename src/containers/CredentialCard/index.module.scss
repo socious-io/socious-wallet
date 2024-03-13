@@ -1,0 +1,12 @@
+.container {
+    @include flex(center, flex-start, column);
+    gap: 1.5rem;
+    padding: 1rem;
+    border: 1px solid $border-color;
+    box-shadow: 0px 1px 2px 0px $box-shadow;
+    border-radius: $border-lg;
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    cursor: pointer;
+}
