@@ -5,7 +5,7 @@ import Layout from 'src/containers/Layout';
 import Intro from 'src/pages/Intro';
 import Register from 'src/pages/Register';
 import Recover from 'src/pages/Recover';
-import Home from 'src/pages/Home';
+import Credentials from 'src/pages/Credentials';
 import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
@@ -14,7 +14,12 @@ export const blueprint: RouteObject[] = [
   {
     element: <Layout />,
     children: [
-      { path: '/', element: <DefaultRoute /> },
+      { index: true, element: <Navigate to="/credentials" replace /> },
+      {
+        path: '/credentials',
+        element: <DefaultRoute />,
+        children: [{ path: ':id' }],
+      },
       { path: '/intro', element: <Intro /> },
       { path: '/register', element: <Register /> },
       { path: '/verify', element: <Verify /> },
@@ -30,7 +35,7 @@ function DefaultRoute(): JSX.Element {
 
   if (!state.did) return <Navigate to="/intro" />;
 
-  return <Home />;
+  return <Credentials />;
 }
 
 // function Protect<T extends Record<string, never>>(Component: ComponentType<T>): ComponentType<T> {
