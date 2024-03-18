@@ -6,9 +6,9 @@ import useRegister from './index.services';
 import styles from './index.module.scss';
 
 function Register() {
-  const { state, mnemonics, onSave, did } = useRegister();
+  const { did, mnemonics, onSave } = useRegister();
 
-  if (state.did) return <Navigate to="/" />;
+  if (did) return <Navigate to="/" />;
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
       <Card
@@ -17,7 +17,6 @@ function Register() {
           {
             children: 'OK, I saved it somewhere',
             variant: 'primary',
-            disabled: !did,
             className: 'fw-bold w-100 py-2',
             onClick: onSave,
           },
