@@ -23,7 +23,13 @@
         width: 100%;
         flex: 1;
         padding: 1.5em 1rem;
-        @include flex(flex-start, center, column);
+        @include flex(space-between, center, column);
+    }
+
+    &__information {
+        margin-top: 3rem;
+        @include flex(center, center, column);
+        gap: 0.5rem;
     }
 
     &__footer {
