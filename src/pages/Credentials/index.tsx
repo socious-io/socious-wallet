@@ -4,6 +4,7 @@ import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
 import CredentialCard from 'src/containers/CredentialCard';
 // import sampleAvatar from 'src/assets/images/sample-avatar.png';
+import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
 import { useAppContext } from 'src/store';
 import { beautifyText } from 'src/utilities';
@@ -64,8 +65,15 @@ function Credentials() {
             </div>
           ) : (
             <div className={styles['card__empty']}>
-              <Icon name="shield-tick" className={styles['card__icon']} />
-              You will see credentials here once you accept them
+              <img
+                src={credentialsPlaceholder}
+                height={128}
+                width={172}
+                alt="no credentials"
+                className={styles['card__image']}
+              />
+              <h5 className="fw-bold">Connect to an organization to receive your first credential</h5>
+              <span className="text-secondary">Receive, store and share your digital credentials</span>
             </div>
           )}
         </div>
