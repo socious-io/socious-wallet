@@ -1,0 +1,22 @@
+.card {
+    &__container {
+        width: 32.5rem;
+        max-width: unset;
+        height: auto;
+
+        @include media-breakpoint-down(md) {
+            width: 100%;
+        }
+    }
+
+    &__form {
+        width: 100%;
+        @include flex(space-between, center, column);
+        gap: 0.5rem;
+    }
+
+    &__text {
+        color: $gray;
+        text-align: center;
+    }
+}
