@@ -20,7 +20,7 @@ function Intro() {
             children: 'I already have a wallet',
             variant: 'inherit',
             className: 'fw-bold w-100 py-2',
-            onClick: () => navigate('/recover'),
+            onClick: () => navigate('/import'),
           },
         ]}
       >

@@ -34,7 +34,7 @@ const useRecover = () => {
       const db = await connect(JSON.parse(strObj));
       dispatch({ type: 'SET_PLUTO', payload: db });
       // Note: It must be reload and redirect this is why it use window.location instead of react router
-      window.location.assign('/');
+      window.location.assign('/created#restored');
     } catch (err) {
       setErrorMessage(err.message);
     }

@@ -1,14 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import ConfirmModal from 'src/components/ConfirmModal';
 import Card from 'src/components/Card';
-import useRecover from './index.services';
+import useConfirm from './index.services';
 import styles from './index.module.scss';
 
-function Recover() {
+function Confirm() {
   const navigate = useNavigate();
-  const { handleMnemonicValue, onConfirm, disabledConfirm, errorMessage, closeError } = useRecover();
+  const { handleMnemonicValue, onConfirm, disabledConfirm, errorMessage, closeError } = useConfirm();
 
   return (
     <>
@@ -18,7 +18,7 @@ function Recover() {
           contentClassName="h-100 flex-row"
           buttons={[
             {
-              children: 'Import wallet',
+              children: 'Confirm',
               variant: 'primary',
               type: 'submit',
               disabled: disabledConfirm,
@@ -28,17 +28,15 @@ function Recover() {
               children: 'Back',
               variant: 'inherit',
               type: 'button',
-              onClick: () => navigate('/intro'),
+              onClick: () => navigate('/register'),
               className: 'fw-bold w-100 py-2',
             },
           ]}
         >
           <div className={styles['card__form']}>
-            <div className="d-flex flex-column gap-2 align-items-center">
-              <h4 className="fw-bold">Secret Recovery Phrase</h4>
-              <span className={styles['card__text']}>
-                Restore your existing wallet with your 24-word secret recovery phrase
-              </span>
+            <div className="w-100 d-flex flex-column gap-2 align-items-center">
+              <h4 className="fw-bold">Verify Recovery Phrase</h4>
+              <span className={styles['card__text']}>Confirm your Secret Recovery Phrase</span>
               <Form.Group className="my-3 my-md-5 w-100" controlId="recovery">
                 <Form.Control
                   as="textarea"
@@ -55,8 +53,9 @@ function Recover() {
         </Card>
       </Form>
       <ConfirmModal
-        open={errorMessage !== undefined}
-        header="Opps wrong"
+        open={!!errorMessage}
+        header="Opps wrong!"
+        headerClassName="text-danger"
         onClose={closeError}
         buttons={[
           { children: 'Understood', variant: 'secondery', onClick: closeError, className: 'flex-grow-1 border-solid' },
@@ -70,4 +69,4 @@ function Recover() {
   );
 }
 
-export default Recover;
+export default Confirm;

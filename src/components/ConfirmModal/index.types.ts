@@ -6,4 +6,6 @@ export interface ConfirmModalProps {
   header: string | React.ReactNode;
   children: string | React.ReactNode;
   buttons?: ButtonProps[];
+  headerClassName?: string;
+  contentClassName?: string;
 }

@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SDK from '@atala/prism-wallet-sdk';
 import { useAppContext } from 'src/store';
 import { usePluto } from 'src/services/pluto';
 import { createDID } from 'src/services/dids';
 
 const useRegister = () => {
+  const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
+  const { did, mnemonics } = state || {};
   const { pluto } = usePluto();
-  const [mnemonics, setMnemonics] = useState<string[]>([]);
-  const [did, setDID] = useState<SDK.Domain.DID>();
-  const [pk, setPK] = useState<SDK.Domain.PrivateKey>();
 
   useEffect(() => {
     if (!pluto) return;
-    if (state.did) return;
+    if (mnemonics.length) return;
 
     const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
       uri: 'https://example.com/endpoint',
@@ -21,23 +21,19 @@ const useRegister = () => {
       routingKeys: ['did:example:somemediator#somekey'],
     });
 
-    createDID([exampleService]).then(({ mnemonics, did, privateKey }) => {
-      setMnemonics(mnemonics);
-      setDID(did);
-      setPK(privateKey);
+    createDID([exampleService]).then(({ mnemonics }) => {
+      dispatch({ type: 'SET_MNEMONICS', payload: mnemonics });
     });
-  }, [pluto, state.did, dispatch]);
+  }, [pluto, mnemonics.length, dispatch]);
 
   const onSave = async () => {
-    await pluto.storePrismDID(did, 0, pk, 'master');
-    dispatch({ type: 'SET_DID', payload: did });
+    navigate('/confirm');
   };
 
   return {
-    state,
+    did,
     mnemonics,
     onSave,
-    did,
   };
 };
 

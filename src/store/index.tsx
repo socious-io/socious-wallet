@@ -13,6 +13,7 @@ const initialState: StateType = {
   warn: null,
   message: [],
   verification: undefined,
+  mnemonics: [],
 };
 
 const AppContext = createContext<{
@@ -36,6 +37,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return { ...state, agent: action.payload };
     case 'SET_DID':
       return { ...state, did: action.payload, didLoading: false };
+    case 'SET_MNEMONICS':
+      return { ...state, mnemonics: action.payload };
     case 'SET_ERROR':
       return { ...state, error: action.payload };
     case 'SET_WARN':

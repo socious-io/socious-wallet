@@ -4,6 +4,8 @@ import { useAppContext } from 'src/store';
 import Layout from 'src/containers/Layout';
 import Intro from 'src/pages/Intro';
 import Register from 'src/pages/Register';
+import Confirm from 'src/pages/Confirm';
+import Created from 'src/pages/Created';
 import Recover from 'src/pages/Recover';
 import Credentials from 'src/pages/Credentials';
 import Connection from 'src/pages/Connection';
@@ -22,8 +24,10 @@ export const blueprint: RouteObject[] = [
       },
       { path: '/intro', element: <Intro /> },
       { path: '/register', element: <Register /> },
+      { path: '/confirm', element: <Confirm /> },
+      { path: '/created', element: <Created /> },
       { path: '/verify', element: <Verify /> },
-      { path: '/recover', element: <Recover /> },
+      { path: '/import', element: <Recover /> },
       { path: '/connect', element: <Connection /> },
     ],
   },
