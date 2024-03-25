@@ -9,6 +9,7 @@ export interface StateType {
   mnemonics: string[];
   credentials: SDK.Domain.Credential[];
   verification: SDK.Domain.Credential | null | undefined;
+  submitted: boolean;
   didLoading: boolean;
   pluto: SDK.Domain.Pluto;
   agent: SDK.Agent;
@@ -27,6 +28,7 @@ export type ActionType =
   | { type: 'SET_WARN'; payload: Err }
   | { type: 'SET_NEW_MESSAGE'; payload: SDK.Domain.Message[] }
   | { type: 'SET_VERIFICATION'; payload: SDK.Domain.Credential }
+  | { type: 'SET_SUBMIT'; payload: boolean }
   | { type: 'LOADING_END' }
   | { type: 'LOADING_START' }
   | { type: 'LOADING_END' };

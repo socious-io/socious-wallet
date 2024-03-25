@@ -13,6 +13,7 @@ const initialState: StateType = {
   warn: null,
   message: [],
   verification: undefined,
+  submitted: !!localStorage.getItem('submitted_kyc'),
   mnemonics: [],
 };
 
@@ -31,6 +32,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return { ...state, credentials: [...state.credentials, ...action.payload].reverse() };
     case 'SET_VERIFICATION':
       return { ...state, verification: action.payload };
+    case 'SET_SUBMIT':
+      return { ...state, submitted: action.payload };
     case 'SET_PLUTO':
       return { ...state, pluto: action.payload };
     case 'SET_AGENT':
