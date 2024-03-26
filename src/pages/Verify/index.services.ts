@@ -34,6 +34,7 @@ const useVerify = () => {
             localStorage.setItem(FLAG_KEY, `${true}`);
             localStorage.setItem('session', response.verification.id);
             setSubmitted(true);
+            dispatch({ type: 'SET_SUBMIT', payload: true });
             await startKYC(did.methodId, response.verification.id);
           }
         },
@@ -69,6 +70,7 @@ const useVerify = () => {
               case 'abandoned':
                 localStorage.removeItem(FLAG_KEY);
                 setSubmitted(false);
+                dispatch({ type: 'SET_SUBMIT', payload: false });
                 break;
               case 'approved': {
                 const url = new URL(r.data.connection.url);
