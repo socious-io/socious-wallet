@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
 import Icon from 'src/components/Icon';
-import { beautifyText } from 'src/utilities';
+import { beautifyText, formatDate } from 'src/utilities';
 import { CredentialCardProps } from './index.types';
 import styles from './index.module.scss';
 import cn from 'classnames';
@@ -27,7 +27,7 @@ const CredentialCard: React.FC<CredentialCardProps> = ({
 
       <div className="w-100 d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center gap-3 text-secondary font-size-sm">
-          Issued on {date}
+          {date && <>Issued on {formatDate(date)}</>}
           <Badge
             className={cn(
               'd-flex align-items-center gap-1 fw-bold font-size-sm',
