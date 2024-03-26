@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import legacy from '@vitejs/plugin-legacy';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
@@ -8,6 +9,7 @@ export default defineConfig({
       targets: ['defaults', 'not IE 11'],
     }),
     react(),
+    tsconfigPaths(),
   ],
   resolve: {
     alias: {
@@ -19,7 +21,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/styles/global/_global.scss";`,
+        additionalData: `@import "src/styles/global/_global.scss";`,
       },
     },
   },
