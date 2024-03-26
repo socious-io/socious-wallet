@@ -21,3 +21,13 @@ export const arraysEqual = (a: Array<any>, b: Array<any>) => {
   }
   return true;
 };
+
+//Date
+export const formatDate = (date: string | Date, options?: Intl.DateTimeFormatOptions) => {
+  const currentDate = new Date(date);
+  const currentOptions =
+    options && Object?.keys(options)?.length
+      ? options
+      : ({ year: 'numeric', month: 'short', day: '2-digit' } as Intl.DateTimeFormatOptions);
+  return currentDate.toLocaleDateString('en-US', currentOptions);
+};

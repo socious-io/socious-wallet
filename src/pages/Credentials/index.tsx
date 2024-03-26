@@ -7,7 +7,7 @@ import CredentialCard from 'src/containers/CredentialCard';
 import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
 import { useAppContext } from 'src/store';
-import { beautifyText } from 'src/utilities';
+import { beautifyText, formatDate } from 'src/utilities';
 import styles from './index.module.scss';
 import cn from 'classnames';
 
@@ -105,6 +105,16 @@ function Credentials() {
 
   const renderCredentialDetails = () => {
     const filteredCredential = credentials.find(credential => String(credential.id) === id);
+    const formatClaimField = (claim, field: string) => {
+      const fieldFormatters = {
+        type: 'Know Your Customer (KYC)',
+        verified_at: formatDate(claim[field]),
+        start_date: formatDate(claim[field]),
+        end_date: formatDate(claim[field]),
+        date_of_birth: formatDate(claim[field]),
+      };
+      return fieldFormatters[field] || claim[field];
+    };
 
     return (
       <div className={cn(styles['card__content'], 'd-flex flex-column gap-4')}>
@@ -117,18 +127,25 @@ function Credentials() {
         </div>
         {filteredCredential.claims.map((claim, index) => renderPartialDataCard(claim, index))}
         <ListGroup className="font-size-md">
-          {filteredCredential.claims.map(claim =>
-            Object.keys(claim)
-              .filter(field => field !== 'id')
-              .map((field, i) => (
-                <div key={`field${i}`} className="d-flex flex-column py-3 fw-bold border-bottom border-solid">
-                  {beautifyText(field)}
-                  <span className="fw-normal text-secondary">
-                    {field === 'type' ? 'Know Your Customer (KYC)' : claim[field]}
-                  </span>
-                </div>
-              )),
-          )}
+          <>
+            <div className="d-flex flex-column py-3 fw-bold border-bottom border-solid">
+              ID
+              <span className="fw-normal text-secondary">{filteredCredential.id}</span>
+            </div>
+            {filteredCredential.claims.map(claim =>
+              Object.keys(claim)
+                .filter(field => field !== 'id')
+                .map(
+                  (field, i) =>
+                    claim[field] && (
+                      <div key={`field${i}`} className="d-flex flex-column py-3 fw-bold border-bottom border-solid">
+                        {beautifyText(field)}
+                        <span className="fw-normal text-secondary">{formatClaimField(claim, field)}</span>
+                      </div>
+                    ),
+                ),
+            )}
+          </>
         </ListGroup>
       </div>
     );
