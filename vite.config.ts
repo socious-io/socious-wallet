@@ -18,16 +18,18 @@ export default defineConfig({
       path: 'path-browserify',
     },
   },
+  define: {
+    global: 'window',
+    process: {
+      env: {},
+      version: 'v20.10.0',
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {
         additionalData: `@import "src/styles/global/_global.scss";`,
       },
-    },
-  },
-  build: {
-    rollupOptions: {
-      input: './src/index.ts',
     },
   },
 });

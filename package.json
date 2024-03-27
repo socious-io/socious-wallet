@@ -7,6 +7,10 @@
   },
   "dependencies": {
     "@atala/prism-wallet-sdk": "4.0.2",
+    "@capacitor/android": "^5.7.4",
+    "@capacitor/cli": "^5.7.4",
+    "@capacitor/core": "^5.7.4",
+    "@capacitor/ios": "^5.7.4",
     "@pluto-encrypted/database": "^1.15.5",
     "@pluto-encrypted/indexdb": "^1.12.2",
     "@pluto-encrypted/inmemory": "^1.12.2",
@@ -47,9 +51,10 @@
   },
   "scripts": {
     "start": "craco start",
+    "build:android": "vite build --mode production && npx cap sync android && npx cap open android",
+    "build:ios": "vite build --mode production && npx cap sync ios && npx cap open ios",
+    "build": "vite build --mode production",
     "dev": "vite --port 3000",
-    "build": "craco build",
-    "test": "craco test",
     "prettier": "prettier -w ."
   },
   "eslintConfig": {
