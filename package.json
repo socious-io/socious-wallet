@@ -38,6 +38,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
+    "build:android": "npx cap sync android && npx cap open android",
+    "build:ios": "npx cap sync ios && npx cap open ios",
     "prettier": "prettier -w ."
   },
   "eslintConfig": {
@@ -61,6 +63,10 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
+    "@capacitor/android": "^5.7.4",
+    "@capacitor/cli": "^5.7.4",
+    "@capacitor/core": "^5.7.4",
+    "@capacitor/ios": "^5.7.4",
     "@typescript-eslint/parser": "^5.62.0",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
