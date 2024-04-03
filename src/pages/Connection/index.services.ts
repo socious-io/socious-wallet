@@ -10,7 +10,7 @@ const useConnection = () => {
   const [searchParams] = useSearchParams();
   const oob = searchParams.get('_oob');
   const callback = searchParams.get('callback');
-
+  const verifyConnection = callback.includes('verify/claims');
   const [openModal, setOpenModal] = useState(true);
   const [established, setEstablished] = useState(false);
 
@@ -26,7 +26,7 @@ const useConnection = () => {
   }, [message, established, callback, navigate]);
 
   useEffect(() => {
-    if (verification === null && oob) {
+    if (verification === null && oob && !verifyConnection) {
       localStorage.setItem('oob', oob);
       localStorage.setItem('callback', callback);
       navigate('/intro');
@@ -60,6 +60,7 @@ const useConnection = () => {
     handleConfirm,
     handleCancel,
     verification,
+    verifyConnection,
   };
 };
 

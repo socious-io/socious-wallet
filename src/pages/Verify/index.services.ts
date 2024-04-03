@@ -26,7 +26,6 @@ const useVerify = () => {
     apiKey: config.VERIFF_API_KEY,
     parentId: 'veriff-root',
     onSession: function (err, response) {
-      console.log(response);
       createVeriffFrame({
         url: response.verification.url,
         onEvent: async function (msg) {
