@@ -3,10 +3,11 @@ module.exports = {
     configure: webpackConfig => {
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,
-        crypto: require.resolve('crypto-browserify'),
-        stream: require.resolve('stream-browserify'),
-        path: require.resolve('path-browserify'),
+        crypto: false,
+        stream: false,
+        path: false,
         fs: false,
+        vm: false,
       };
       return webpackConfig;
     },
