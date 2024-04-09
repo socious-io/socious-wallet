@@ -4,9 +4,7 @@
   "private": true,
   "dependencies": {
     "@atala/prism-wallet-sdk": "5.0.0",
-    "@pluto-encrypted/database": "^1.15.5",
     "@pluto-encrypted/indexdb": "^1.12.2",
-    "@pluto-encrypted/inmemory": "^1.12.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
