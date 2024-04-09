@@ -85,7 +85,7 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
 
   useEffect(() => {
     const handleStart = async () => {
-      const a = SDK.Agent.initialize({ mediatorDID: config.MEDIATOR_DID, pluto });
+      const a = SDK.Agent.initialize({ mediatorDID: SDK.Domain.DID.fromString(config.MEDIATOR_DID), pluto });
 
       setState(await a.start());
       const mediator = a.currentMediatorDID;

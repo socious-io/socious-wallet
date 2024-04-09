@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from 'src/store';
-import { usePluto } from 'src/services/pluto';
 import { arraysEqual } from 'src/utilities';
 import { recoverDID } from 'src/services/dids';
 import SDK from '@atala/prism-wallet-sdk';
@@ -9,8 +8,7 @@ import SDK from '@atala/prism-wallet-sdk';
 const useConfirm = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
-  const { mnemonics } = state || {};
-  const { pluto } = usePluto();
+  const { mnemonics, pluto } = state || {};
   const [mns, setMns] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const disabledConfirm = mns.length < 24;
@@ -31,13 +29,14 @@ const useConfirm = () => {
     try {
       if (arraysEqual(mns, mnemonics)) {
         const { did: currentDID, privateKey } = await recoverDID(mns, [exampleService]);
-        await pluto.storePrismDID(currentDID, 0, privateKey, 'master');
+        await pluto.storePrismDID(currentDID, privateKey, 'master');
         dispatch({ type: 'SET_DID', payload: currentDID });
         navigate('/created');
       } else {
         setErrorMessage('The Verify Recovery Phrase does not match.');
       }
     } catch (e) {
+      console.log(e, '@@@@###');
       setErrorMessage(e.message);
     }
   };
