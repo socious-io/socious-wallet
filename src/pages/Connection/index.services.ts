@@ -42,6 +42,13 @@ const useConnection = () => {
     const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
     await agent.acceptInvitation(parsed);
     setEstablished(true);
+    if (callback) {
+      axios
+        .get(callback, { params: { accept: true } })
+        .then(r => console.log(`callback successfully with status ${r.status}`))
+        .catch(err => console.log(err));
+    }
+    navigate('/');
   };
 
   const handleCancel = () => {
