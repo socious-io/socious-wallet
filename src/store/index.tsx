@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { StateType, ActionType, AppProviderProps } from './types';
-import { connect } from 'src/services/pluto';
+import { usePluto } from 'src/services/pluto';
 import { useAgent } from 'src/services/agent';
 
 const initialState: StateType = {
@@ -59,7 +59,7 @@ function appReducer(state: StateType, action: ActionType): StateType {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const pluto = connect();
+  const { pluto } = usePluto();
   const { agent } = useAgent(pluto, dispatch);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
         dispatch({
           type: 'SET_DID',
-          payload: dids?.length > 0 ? dids.filter(d => d.keyPathIndex === 0)[0].did : null,
+          payload: dids?.length > 0 ? dids[0].did : null,
         });
         // Indicate loading end if necessary
         dispatch({ type: 'LOADING_END' });

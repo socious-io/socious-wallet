@@ -38,7 +38,7 @@ export const Backup: React.FC = () => {
 
   useEffect(() => {
     const backup = async () => {
-      const b = await (pluto as any).backup();
+      const b = await pluto.backup();
       const pks = await pluto.getDIDPrivateKeysByDID(did);
       const body = encrypt(pks[0].raw, b);
       const blob = new Blob([body]);

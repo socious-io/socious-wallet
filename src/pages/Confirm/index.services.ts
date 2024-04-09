@@ -29,13 +29,14 @@ const useConfirm = () => {
     try {
       if (arraysEqual(mns, mnemonics)) {
         const { did: currentDID, privateKey } = await recoverDID(mns, [exampleService]);
-        await pluto.storePrismDID(currentDID, 0, privateKey, 'master');
+        await pluto.storePrismDID(currentDID, privateKey, 'master');
         dispatch({ type: 'SET_DID', payload: currentDID });
         navigate('/created');
       } else {
         setErrorMessage('The Verify Recovery Phrase does not match.');
       }
     } catch (e) {
+      console.log(e, '@@@@###');
       setErrorMessage(e.message);
     }
   };
