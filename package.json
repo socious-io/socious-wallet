@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@atala/prism-wallet-sdk": "^5.0.0",
+    "@atala/prism-wallet-sdk": "4.0.2",
+    "@pluto-encrypted/database": "^1.15.5",
     "@pluto-encrypted/indexdb": "^1.12.2",
     "@pluto-encrypted/inmemory": "^1.12.2",
     "@testing-library/jest-dom": "^5.16.5",
@@ -61,11 +62,11 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@craco/craco": "^7.1.0",
     "@capacitor/android": "^5.7.4",
     "@capacitor/cli": "^5.7.4",
     "@capacitor/core": "^5.7.4",
     "@capacitor/ios": "^5.7.4",
-    "@craco/craco": "^7.1.0",
     "@typescript-eslint/parser": "^5.62.0",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",

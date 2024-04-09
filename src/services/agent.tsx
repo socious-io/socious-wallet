@@ -85,10 +85,9 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
 
   useEffect(() => {
     const handleStart = async () => {
-      const mediatorDID = SDK.Domain.DID.fromString(config.MEDIATOR_DID);
-      const a = SDK.Agent.initialize({ mediatorDID, pluto });
-      const status = await a.start();
-      setState(status);
+      const a = SDK.Agent.initialize({ mediatorDID: config.MEDIATOR_DID, pluto });
+
+      setState(await a.start());
       const mediator = a.currentMediatorDID;
       if (!mediator) {
         throw new Error('Mediator not available');
@@ -97,12 +96,14 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
       return a;
     };
 
-    handleStart().then(a => {
-      console.log('agent started');
-      dispatch({ type: 'SET_AGENT', payload: a });
-      a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
-    });
-  }, [dispatch]);
+    if (pluto) {
+      handleStart().then(a => {
+        console.log('agent started');
+        dispatch({ type: 'SET_AGENT', payload: a });
+        a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
+      });
+    }
+  }, [pluto, dispatch]);
 
   return { agent, state };
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from 'src/store';
+import { usePluto } from 'src/services/pluto';
 import { arraysEqual } from 'src/utilities';
 import { recoverDID } from 'src/services/dids';
 import SDK from '@atala/prism-wallet-sdk';
@@ -8,7 +9,8 @@ import SDK from '@atala/prism-wallet-sdk';
 const useConfirm = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
-  const { mnemonics, pluto } = state || {};
+  const { mnemonics } = state || {};
+  const { pluto } = usePluto();
   const [mns, setMns] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const disabledConfirm = mns.length < 24;

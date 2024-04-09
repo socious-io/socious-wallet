@@ -1,15 +1,47 @@
+import { useEffect, useState } from 'react';
 import { config } from 'src/config';
 import SDK from '@atala/prism-wallet-sdk';
+import { Database } from '@pluto-encrypted/database';
 import Storage from '@pluto-encrypted/indexdb';
+import {
+  getDefaultCollections,
+  DIDCollection,
+  DIDPairCollection,
+  MediatorCollection,
+  PrivateKeyColletion,
+  CredentialCollection,
+  CredentialRequestMetadataCollection,
+  LinkSecretColletion,
+  MessageColletion,
+} from '@pluto-encrypted/schemas';
 
-export const connect = (importData?: any) => {
-  const apollo = new SDK.Apollo();
-  const store = new SDK.Store({
+export const connect = async (importData?: any) => {
+  return Database.createEncrypted<{
+    dids: DIDCollection;
+    didpairs: DIDPairCollection;
+    mediators: MediatorCollection;
+    privatekeys: PrivateKeyColletion;
+    credentials: CredentialCollection;
+    credentialrequestmetadatas: CredentialRequestMetadataCollection;
+    linksecrets: LinkSecretColletion;
+    messages: MessageColletion;
+  }>({
     name: config.PLUTO_DB_NAME,
-    storage: Storage,
+    encryptionKey: config.PLUTO_PASSWD,
     importData,
-    password: Buffer.from(config.PLUTO_PASSWD).toString('hex'),
+    storage: Storage,
+    collections: getDefaultCollections(),
   });
-
-  return new SDK.Pluto(store, apollo);
 };
+
+export function usePluto() {
+  const [pluto, setPluto] = useState<SDK.Domain.Pluto>();
+
+  useEffect(() => {
+    if (!pluto) {
+      connect().then(db => setPluto(db));
+    }
+  }, [pluto]);
+
+  return { pluto };
+}

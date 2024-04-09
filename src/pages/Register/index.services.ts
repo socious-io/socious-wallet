@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SDK from '@atala/prism-wallet-sdk';
 import { useAppContext } from 'src/store';
+import { usePluto } from 'src/services/pluto';
 import { createDID } from 'src/services/dids';
 
 const useRegister = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
-  const { did, mnemonics, pluto } = state || {};
+  const { did, mnemonics } = state || {};
+  const { pluto } = usePluto();
 
   useEffect(() => {
     if (!pluto) return;
