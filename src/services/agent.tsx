@@ -27,22 +27,25 @@ const handleMessages =
     if (requestPresentations.length) {
       for (const requestPresentation of requestPresentations) {
         const lastCredentials = await pluto.getAllCredentials();
-        const lastCredential = lastCredentials.at(-1);
+        // @FIXME: first credential is KYC we select it auto for not
+        const lastCredential = lastCredentials[0];
         const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
-        try {
-          if (lastCredential === undefined)
-            dispatch({
-              type: 'SET_ERROR',
-              payload: { err: new Error('could not find last credential'), section: 'find credential' },
-            });
-
-          const presentation = await agent.createPresentationForRequestProof(
-            requestPresentationMessage,
-            lastCredential,
-          );
-          await agent.sendMessage(presentation.makeMessage());
-        } catch (err) {
-          dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
+        if (lastCredential === undefined) {
+          dispatch({
+            type: 'SET_ERROR',
+            payload: { err: new Error('could not find last credential'), section: 'find credential' },
+          });
+        } else {
+          try {
+            const presentation = await agent.createPresentationForRequestProof(
+              requestPresentationMessage,
+              lastCredential,
+            );
+            await agent.sendMessage(presentation.makeMessage());
+          } catch (err) {
+            console.log(err);
+            dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
+          }
         }
       }
     }
