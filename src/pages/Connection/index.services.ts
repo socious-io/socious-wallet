@@ -10,7 +10,7 @@ const useConnection = () => {
   const [searchParams] = useSearchParams();
   const oob = searchParams.get('_oob');
   const callback = searchParams.get('callback');
-  const verifyConnection = callback.includes('verify/claims');
+  const verifyConnection = callback?.includes('verify/claims');
   const [openModal, setOpenModal] = useState(true);
   const [established, setEstablished] = useState(false);
 
