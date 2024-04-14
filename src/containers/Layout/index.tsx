@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Alert, Container } from 'react-bootstrap';
+import { Container, Toast, ToastContainer } from 'react-bootstrap';
 import Loading from 'src/components/Loading';
 import { useAppContext } from 'src/store';
 
@@ -25,16 +25,24 @@ const Layout = () => {
   return (
     <Container>
       {error && errorShow && (
-        <Alert variant="danger">
-          <Alert.Heading>{error.section}</Alert.Heading>
-          {error.err.message}
-        </Alert>
+        <ToastContainer position="top-end" style={{ zIndex: 1 }}>
+          <Toast bg="danger">
+            <Toast.Header closeButton={false} className="fw-bold font-size-lg">
+              {error.section}
+            </Toast.Header>
+            <Toast.Body>{error.err.message}</Toast.Body>
+          </Toast>
+        </ToastContainer>
       )}
       {warn && warnShow && (
-        <Alert variant="warning">
-          <Alert.Heading>{warn.section}</Alert.Heading>
-          {warn.err.message}
-        </Alert>
+        <ToastContainer position="top-end" style={{ zIndex: 1 }}>
+          <Toast bg="warning">
+            <Toast.Header closeButton={false} className="fw-bold font-size-lg">
+              {warn.section}
+            </Toast.Header>
+            <Toast.Body>{warn.err.message}</Toast.Body>
+          </Toast>
+        </ToastContainer>
       )}
       <Outlet />
     </Container>
