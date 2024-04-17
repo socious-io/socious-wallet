@@ -1,6 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAppContext } from 'src/store';
+import { Form } from 'react-bootstrap';
 import ConfirmModal from 'src/components/ConfirmModal';
 import Card from 'src/components/Card';
 import useRecover from './index.services';
@@ -9,7 +10,8 @@ import styles from './index.module.scss';
 function Recover() {
   const navigate = useNavigate();
   const { handleMnemonicValue, onConfirm, disabledConfirm, errorMessage, closeError } = useRecover();
-
+  const { state } = useAppContext();
+  if (state.did) return <Navigate to="/" />;
   return (
     <>
       <Form onSubmit={onConfirm} className="h-100 d-flex align-items-center justify-content-center">

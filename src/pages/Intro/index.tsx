@@ -1,10 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAppContext } from 'src/store';
 import logo from 'src/assets/images/logo.svg';
 import styles from './index.module.scss';
 import Card from 'src/components/Card';
 
 function Intro() {
   const navigate = useNavigate();
+  const { state } = useAppContext();
+  if (state.did) return <Navigate to="/" />;
 
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
