@@ -13,7 +13,7 @@ const Loading: React.FC<LoadingProps> = ({
   if (show) {
     return (
       <div className="h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
-        {message && <h5>{message}</h5>}
+        {message && <h5 className="text-center">{message}</h5>}
         <Spinner animation={animation} role={role} variant={variant} {...rest} />
       </div>
     );

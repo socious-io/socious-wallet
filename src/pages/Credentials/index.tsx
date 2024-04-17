@@ -61,23 +61,26 @@ function Credentials() {
   const renderCredentialsList = () => {
     return (
       <>
-        {submitted &&
-          !verification &&
-          renderAlert(
-            'alert-submit',
-            'Verification request submitted',
-            "Your identity is being reviewed. We'll notify you as soon as it's complete.",
-          )}
         {!verification &&
-          renderAlert(
-            'alert',
-            'Verfication Required',
-            'To receive verifiable credentials you need to verify your identity.',
-            {
-              to: '/verify',
-              text: 'Verify now',
-            },
-          )}
+          (submitted
+            ? renderAlert(
+                'alert-submit',
+                'Verification request submitted',
+                "Your identity is being reviewed. We'll notify you as soon as it's complete.",
+                {
+                  to: '/verify',
+                  text: 'Check verification',
+                },
+              )
+            : renderAlert(
+                'alert',
+                'Verfication Required',
+                'To receive verifiable credentials you need to verify your identity.',
+                {
+                  to: '/verify',
+                  text: 'Verify now',
+                },
+              ))}
         <div className={styles['card__content']}>
           {credentials.length ? (
             <div className="w-100 d-flex flex-column gap-3">
