@@ -19,20 +19,22 @@ function Credentials() {
 
   const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean) => {
     const isKyc = claim?.type === 'verification';
+    const subtitle = {
+      ['experience']: 'Work Certificate',
+      ['education']: 'Educational Certificate',
+    };
+    const subtitleKey = claim?.type || ('job_category' in claim ? 'experience' : 'education');
     const props = isKyc
       ? {
-          // title: `${claim['first_name']} ${claim['last_name']}`,
-          // subtitle: claim['country'],
           title: 'Veriff',
           subtitle: 'KYC',
-          date: claim['verified_at'],
+          date: claim['issued_date'] || claim['verified_at'],
           avatar: kycAvatar,
         }
       : {
           title: claim['company_name'],
-          // subtitle: claim['job_category'],
-          subtitle: 'Work Certificate',
-          date: claim['start_date'],
+          subtitle: subtitle[subtitleKey],
+          date: claim['issued_date'] || claim['start_date'],
           // avatar: sampleAvatar,
         };
 
@@ -74,7 +76,7 @@ function Credentials() {
               )
             : renderAlert(
                 'alert',
-                'Verfication Required',
+                'Verification Required',
                 'To receive verifiable credentials you need to verify your identity.',
                 {
                   to: '/verify',
@@ -143,7 +145,7 @@ function Credentials() {
                     claim[field] && (
                       <div key={`field${i}`} className="d-flex flex-column py-3 fw-bold border-bottom border-solid">
                         {beautifyText(field)}
-                        <span className="fw-normal text-secondary">{formatClaimField(claim, field)}</span>
+                        <span className="fw-normal text-secondary text-break">{formatClaimField(claim, field)}</span>
                       </div>
                     ),
                 ),
