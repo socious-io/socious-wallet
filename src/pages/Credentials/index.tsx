@@ -32,7 +32,7 @@ function Credentials() {
           avatar: kycAvatar,
         }
       : {
-          title: claim['company_name'],
+          title: claim['company_name'] || claim['institute_name'],
           subtitle: subtitle[subtitleKey],
           date: claim['issued_date'] || claim['start_date'],
           // avatar: sampleAvatar,
