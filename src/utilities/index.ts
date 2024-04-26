@@ -6,6 +6,7 @@ export function decodeJwtPayload(jwt: string): any {
 
 //Texts
 export const beautifyText = (str: string) => {
+  if (!str) return str;
   return (str.charAt(0).toUpperCase() + str.slice(1)).replaceAll('_', ' ');
 };
 
