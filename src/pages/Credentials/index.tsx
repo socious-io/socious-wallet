@@ -16,15 +16,18 @@ function Credentials() {
   const { state } = useAppContext();
   const { credentials, verification, submitted } = state || {};
   const { id } = useParams();
-
-  const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean) => {
-    const isKyc = claim?.type === 'verification';
+  const isKyc = type => type === 'verification';
+  const generateNonKycTypeText = claim => {
     const subtitle = {
       ['experience']: 'Work Certificate',
       ['education']: 'Educational Certificate',
     };
     const subtitleKey = claim?.type || ('job_category' in claim ? 'experience' : 'education');
-    const props = isKyc
+    return subtitle[subtitleKey];
+  };
+
+  const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean) => {
+    const props = isKyc(claim?.type)
       ? {
           title: 'Veriff',
           subtitle: 'KYC',
@@ -33,7 +36,7 @@ function Credentials() {
         }
       : {
           title: claim['company_name'] || claim['institute_name'],
-          subtitle: subtitle[subtitleKey],
+          subtitle: generateNonKycTypeText(claim),
           date: claim['issued_date'] || claim['start_date'],
           // avatar: sampleAvatar,
         };
@@ -112,7 +115,7 @@ function Credentials() {
     const filteredCredential = credentials.find(credential => String(credential.id) === id);
     const formatClaimField = (claim, field: string) => {
       const fieldFormatters = {
-        type: 'Know Your Customer (KYC)',
+        type: isKyc(claim?.type) ? 'Know Your Customer (KYC)' : generateNonKycTypeText(claim),
         verified_at: formatDate(claim[field]),
         start_date: formatDate(claim[field]),
         end_date: formatDate(claim[field]),
