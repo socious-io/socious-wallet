@@ -1,0 +1,58 @@
+.scanner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    @include flex(center, center);
+    background-color: black;
+
+    .video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .frame {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        height: 300px;
+        transform: translate(-50%, -50%);
+
+        &__corner {
+            width: 100px;
+            height: 100px;
+            border: 5px solid rgba($color-border, 0.6);
+            border-radius: 5px;
+            position: absolute;
+
+            &--top {
+                top: 4px;
+                left: 4px;
+                border-bottom: none;
+                border-right: none;
+            }
+
+            &--right {
+                top: 4px;
+                right: 4px;
+                border-bottom: none;
+                border-left: none;
+            }
+
+            &--bottom {
+                bottom: 4px;
+                left: 4px;
+                border-top: none;
+                border-right: none;
+            }
+
+            &--left {
+                bottom: 4px;
+                right: 4px;
+                border-top: none;
+                border-left: none;
+            }
+        }
+    }
+}

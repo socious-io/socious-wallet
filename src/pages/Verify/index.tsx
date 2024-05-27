@@ -1,13 +1,12 @@
 import { Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
 import verifyImage from 'src/assets/images/verify-image.svg';
 import useVerify from './index.services';
 import styles from './index.module.scss';
+import NavigationBar from 'src/containers/NavigationBar';
 
 function Verify() {
-  const navigate = useNavigate();
   const { submitted, verification } = useVerify();
 
   return (
@@ -38,16 +37,7 @@ function Verify() {
             </Alert>
           )}
         </div>
-        <div className={styles['card__footer']}>
-          <div className={styles['card__nav']}>
-            <Icon name="shield-tick" onClick={() => navigate('/')} />
-            Credentials
-          </div>
-          <div className={styles['card__nav']}>
-            <Icon name="settings" />
-            Settings
-          </div>
-        </div>
+        <NavigationBar />
       </Card>
     </div>
   );

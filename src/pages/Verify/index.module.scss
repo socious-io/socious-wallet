@@ -31,18 +31,4 @@
         @include flex(center, center, column);
         gap: 0.5rem;
     }
-
-    &__footer {
-        width: 100%;
-        @include flex(center, center);
-        padding: 1.5rem 1rem;
-        border-top: 1px solid $border-color;
-        font-size: 12px;
-        font-weight: 500;
-    }
-
-    &__nav {
-        flex: 1;
-        @include flex(center, center, column);
-    }
 }
