@@ -19,12 +19,12 @@ function Intro() {
             className: 'fw-bold w-100 py-2',
             onClick: () => navigate('/register'),
           },
-          {
-            children: 'I already have a wallet',
-            variant: 'inherit',
-            className: 'fw-bold w-100 py-2',
-            onClick: () => navigate('/import'),
-          },
+          // {
+          //   children: 'I already have a wallet',
+          //   variant: 'inherit',
+          //   className: 'fw-bold w-100 py-2',
+          //   onClick: () => navigate('/import'),
+          // },
         ]}
       >
         <div className="mb-3">

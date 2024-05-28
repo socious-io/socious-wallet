@@ -10,6 +10,7 @@ import { useAppContext } from 'src/store';
 import { beautifyText, formatDate } from 'src/utilities';
 import styles from './index.module.scss';
 import cn from 'classnames';
+import NavigationBar from 'src/containers/NavigationBar';
 
 function Credentials() {
   const navigate = useNavigate();
@@ -168,16 +169,7 @@ function Credentials() {
         </div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}
-          <div className={styles['card__footer']}>
-            <div className={styles['card__nav']}>
-              <Icon name="shield-tick" onClick={() => navigate('/')} />
-              Credentials
-            </div>
-            <div className={styles['card__nav']}>
-              <Icon name="settings" />
-              Settings
-            </div>
-          </div>
+          <NavigationBar />
         </>
       </Card>
     </div>

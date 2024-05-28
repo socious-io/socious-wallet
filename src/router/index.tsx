@@ -11,6 +11,7 @@ import Credentials from 'src/pages/Credentials';
 import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
+import Scan from 'src/pages/Scan';
 
 export const blueprint: RouteObject[] = [
   {
@@ -29,6 +30,7 @@ export const blueprint: RouteObject[] = [
       { path: '/verify', element: <Verify /> },
       { path: '/import', element: <Recover /> },
       { path: '/connect', element: <Connection /> },
+      { path: '/scan', element: <Scan /> },
     ],
   },
 ];
