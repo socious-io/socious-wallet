@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import jsQR from 'jsqr';
+import Icon from 'src/components/Icon';
 import styles from './index.module.scss';
 import cn from 'classnames';
 
@@ -81,6 +82,10 @@ const Scan = () => {
   return (
     <>
       <div className={styles['scanner']}>
+        <div className={styles['back']} onClick={() => navigate(-1)}>
+          <Icon name="chevron-left" />
+          Back
+        </div>
         <video ref={videoRef} className={styles['video']} />
         <div className={styles['frame']}>
           <div className={cn(styles['frame__corner'], styles['frame__corner--top'])} />
