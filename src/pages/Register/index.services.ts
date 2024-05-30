@@ -8,6 +8,8 @@ const useRegister = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, mnemonics, pluto } = state || {};
+  const [currentDID, setCurrentDID] = useState();
+  const [privateKey, setPrivateKey] = useState();
 
   useEffect(() => {
     if (!pluto) return;
@@ -19,13 +21,21 @@ const useRegister = () => {
       routingKeys: ['did:example:somemediator#somekey'],
     });
 
-    createDID([exampleService]).then(({ mnemonics }) => {
+    createDID([exampleService]).then(({ mnemonics, privateKey, did }) => {
       dispatch({ type: 'SET_MNEMONICS', payload: mnemonics });
+      setCurrentDID(did);
+      setPrivateKey(privateKey);
     });
   }, [pluto, mnemonics.length, dispatch]);
 
   const onSave = async () => {
-    navigate('/confirm');
+    try {
+      await pluto.storePrismDID(currentDID, privateKey, 'master');
+      dispatch({ type: 'SET_DID', payload: currentDID });
+      navigate('/created');
+    } catch (e) {
+      console.log(e, 'error in saving seed phrase');
+    }
   };
 
   return {
