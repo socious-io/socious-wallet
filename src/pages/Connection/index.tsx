@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import ConfirmModal from 'src/components/ConfirmModal';
 import Loading from 'src/components/Loading';
 import Card from 'src/components/Card';
-import Icon from 'src/components/Icon';
+// import Icon from 'src/components/Icon';
 import useConnection from './index.services';
 import styles from './index.module.scss';
 import NavigationBar from 'src/containers/NavigationBar';
@@ -18,7 +18,7 @@ function Connection() {
         <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
           <div className={styles['card__header']}>
             Connection
-            <Icon name="bell" />
+            {/* <Icon name="bell" /> */}
           </div>
           <div className={styles['card__content']}>
             <Loading show={!openModal} message="Please wait for the connection to be established!" />
