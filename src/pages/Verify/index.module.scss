@@ -1,5 +1,6 @@
 .card {
     &__container {
+        padding-top: env(safe-area-inset-top) !important;
         padding: 0;
         height: 46rem;
         width: 27.5rem;
@@ -24,6 +25,16 @@
         flex: 1;
         padding: 1.5em 1rem;
         @include flex(space-between, center, column);
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 0.25rem;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: $primary;
+            border-radius: 0.5rem;
+        }
     }
 
     &__information {
