@@ -7,7 +7,7 @@ function defineHostname() {
 
 const config: CapacitorConfig = {
   appId: 'socious.wallet.app',
-  appName: 'socious-wallet',
+  appName: 'Socious Wallet',
   webDir: 'build',
   server: {
     hostname: defineHostname(),

@@ -40,6 +40,8 @@
     "test": "craco test",
     "build:android": "npx cap sync android && npx cap open android",
     "build:ios": "npx cap sync ios && npx cap open ios",
+    "generate:assets": "npx @capacitor/assets generate --iconBackgroundColor '#eeeeee' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#eeeeee' --splashBackgroundColorDark '#111111' --assetPath ./public/capacitor-assets",
+    "config:apps": "npx trapeze run trapeze-config.yaml --android-project android --ios-project ios/App",
     "prettier": "prettier -w ."
   },
   "eslintConfig": {
@@ -63,10 +65,12 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@capacitor/android": "^6.0.0",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^6.0.0",
     "@capacitor/core": "^6.0.0",
     "@capacitor/ios": "^6.0.0",
     "@craco/craco": "^7.1.0",
+    "@trapezedev/configure": "^7.0.10",
     "@typescript-eslint/parser": "^5.62.0",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",

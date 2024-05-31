@@ -1,0 +1,43 @@
+vars:
+  PRODUCT_NAME:
+    default: Socious Wallet
+  DISPLAY_NAME:
+    default: Socious Wallet
+  IOS_BUNDLE_ID:
+    default: socious.wallet.app
+  ANDROID_PACKAGE_NAME:
+    default: socious.wallet.app
+  VERSION:
+    default: 1.0.1
+  IOS_BUILD_NUMBER:
+    default: 1
+  ANDROID_VERSION_CODE:
+    default: 2
+  IOS_DEVELOPMENT_TEAM_ID:
+    default: 596H9K48FY
+
+platforms:
+  ios:
+    targets:
+      App:
+        bundleId: $IOS_BUNDLE_ID
+        version: $VERSION
+        buildNumber: $IOS_BUILD_NUMBER
+        productName: $PRODUCT_NAME
+        displayName: $DISPLAY_NAME
+
+        plist:
+          replace: false
+          entries:
+            - NSCameraUsageDescription: We need access to your camera
+
+  android:
+    packageName: $ANDROID_PACKAGE_NAME
+    versionName: $VERSION
+    versionCode: $ANDROID_VERSION_CODE
+
+    manifest:
+      - file: AndroidManifest.xml
+        target: manifest
+        inject: |
+          <uses-permission android:name="android.permission.CAMERA" />
