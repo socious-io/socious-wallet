@@ -1,6 +1,8 @@
 .badge {
     cursor: pointer;
     flex: calc(25% - 0.5rem);
+    font-size: 14px !important;
+    text-align: left !important;
 
     @include media-breakpoint-down(sm) {
         flex: calc(33.3% - 0.5rem);

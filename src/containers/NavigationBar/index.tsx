@@ -18,10 +18,10 @@ const NavigationBar = () => {
           Scan
         </div>
       )}
-      <div className={styles['nav']}>
+      {/* <div className={styles['nav']}>
         <Icon name="settings" />
         Settings
-      </div>
+      </div> */}
     </div>
   );
 };

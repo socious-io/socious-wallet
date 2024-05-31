@@ -1,6 +1,6 @@
 import { Alert } from 'react-bootstrap';
 import Card from 'src/components/Card';
-import Icon from 'src/components/Icon';
+// import Icon from 'src/components/Icon';
 import verifyImage from 'src/assets/images/verify-image.svg';
 import useVerify from './index.services';
 import styles from './index.module.scss';
@@ -14,7 +14,7 @@ function Verify() {
       <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
         <div className={styles['card__header']}>
           Verification
-          <Icon name="bell" />
+          {/* <Icon name="bell" /> */}
         </div>
         <div className={styles['card__content']}>
           <div className={styles['card__information']}>

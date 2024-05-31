@@ -1,5 +1,6 @@
 .card {
     &__container {
+        padding-top: env(safe-area-inset-top) !important;
         padding: 0;
         height: 46rem;
         width: 27.5rem;

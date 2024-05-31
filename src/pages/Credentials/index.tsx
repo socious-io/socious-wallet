@@ -165,7 +165,7 @@ function Credentials() {
       <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
         <div className={styles['card__header']}>
           Credentials
-          <Icon name="bell" />
+          {/* <Icon name="bell" /> */}
         </div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}
