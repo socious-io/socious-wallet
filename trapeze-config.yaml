@@ -12,7 +12,7 @@ vars:
   IOS_BUILD_NUMBER:
     default: 1
   ANDROID_VERSION_CODE:
-    default: 2
+    default: 3
   IOS_DEVELOPMENT_TEAM_ID:
     default: 596H9K48FY
 
@@ -25,6 +25,10 @@ platforms:
         buildNumber: $IOS_BUILD_NUMBER
         productName: $PRODUCT_NAME
         displayName: $DISPLAY_NAME
+
+        buildSettings:
+          DEVELOPMENT_TEAM: $IOS_DEVELOPMENT_TEAM_ID
+          TARGETED_DEVICE_FAMILY: 1 #1: iPhone ,2:iPhone&iPad, 3:iPad
 
         plist:
           replace: false
