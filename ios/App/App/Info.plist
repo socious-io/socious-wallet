@@ -44,8 +44,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera</string>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera</string>	
 </dict>
 </plist>
