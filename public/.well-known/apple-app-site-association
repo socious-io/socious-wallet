@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "596H9K48FY.socious.wallet.app",
+        "paths": [
+          "*"
+        ]
+      }
+    ]
+  }
+}
