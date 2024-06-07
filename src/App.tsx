@@ -8,7 +8,7 @@ import AppUrlListener from './components/AppUrlListener';
 function App() {
   return (
     <AppProvider>
-      <AppUrlListener></AppUrlListener>
+      <AppUrlListener />
       <div className="app__container">
         <Activation />
         <RouterProvider router={routes} />
