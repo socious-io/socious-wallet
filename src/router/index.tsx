@@ -12,6 +12,7 @@ import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
 import Scan from 'src/pages/Scan';
+import AppUrlListener from 'src/components/AppUrlListener';
 
 export const blueprint: RouteObject[] = [
   {
@@ -37,11 +38,16 @@ export const blueprint: RouteObject[] = [
 
 function DefaultRoute(): JSX.Element {
   const { state } = useAppContext();
-  if (state.didLoading) return <Loading show={true} animation="grow" />;
+  const shouldRenderCredentials = !state.didLoading && state.did;
 
-  if (!state.did) return <Navigate to="/intro" />;
-
-  return <Credentials />;
+  return (
+    <>
+      <AppUrlListener />
+      {state.didLoading && <Loading show={true} animation="grow" />}
+      {!shouldRenderCredentials && <Navigate to="/intro" />}
+      {shouldRenderCredentials && <Credentials />}
+    </>
+  );
 }
 
 // function Protect<T extends Record<string, never>>(Component: ComponentType<T>): ComponentType<T> {

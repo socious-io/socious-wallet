@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "socious.wallet.app",
+      "sha256_cert_fingerprints": [
+        "41:67:73:43:3F:A4:29:96:21:65:30:27:73:D2:66:97:FE:B9:45:10:0B:DF:E5:57:28:E4:BD:6F:E2:73:0D:9B"
+      ]
+    }
+  }
+]
