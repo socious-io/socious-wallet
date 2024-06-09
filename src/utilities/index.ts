@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { config } from 'src/config';
 // Utility function to decode JWT and return payload as a JSON object
 export function decodeJwtPayload(jwt: string): any {
   const token = atob(jwt);
@@ -31,4 +33,16 @@ export const formatDate = (date: string | Date, options?: Intl.DateTimeFormatOpt
       ? options
       : ({ year: 'numeric', month: 'short', day: '2-digit' } as Intl.DateTimeFormatOptions);
   return currentDate.toLocaleDateString('en-US', currentOptions);
+};
+
+export const logger = (error: Error) => {
+  const webHookURL = config.DISCORD_WEBHOOK;
+  axios
+    .post(webHookURL, {
+      content: `App: socious-wallet, Status: Error, Message: ${error.toString()}`,
+    })
+    .catch((err: Error) => {
+      console.error('failed logging error : ', error);
+      console.error('Error sending message: ', err);
+    });
 };
