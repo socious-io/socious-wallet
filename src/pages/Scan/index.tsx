@@ -4,6 +4,7 @@ import jsQR from 'jsqr';
 import Icon from 'src/components/Icon';
 import styles from './index.module.scss';
 import cn from 'classnames';
+import axios from 'axios';
 
 const Scan = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const Scan = () => {
     const canvasElement = canvasRef.current;
     if (cameraElement && canvasElement) {
       cameraElement.onloadeddata = () => {
-        cameraScannerIntervalRef.current = setInterval(() => {
+        cameraScannerIntervalRef.current = setInterval(async () => {
           if (cameraElement.videoWidth > 0 && cameraElement.videoHeight > 0) {
             const canvas = canvasElement;
             canvas.width = cameraElement.videoWidth;
@@ -50,9 +51,17 @@ const Scan = () => {
             const codeData = jsQR(imageData.data, imageData.width, imageData.height);
 
             if (codeData) {
-              const { search, searchParams } = new URL(codeData.data);
+              let url = codeData.data;
+              try {
+                const { data } = await axios.get(`${codeData.data}/fetch`);
+                url = data.long_url;
+              } catch {
+                alert('QR code is not valid! Please try again.');
+                return;
+              }
+              const { search, searchParams } = new URL(url);
               if (searchParams.get('_oob')) {
-                navigate(`/connect/?${search}`);
+                navigate(`/connect/${search}`);
                 if (cameraElement) {
                   cameraElement.pause();
                 }

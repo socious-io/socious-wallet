@@ -13,9 +13,10 @@ const useConnection = () => {
   const verifyConnection = callback?.includes('verify/claims');
   const [openModal, setOpenModal] = useState(true);
   const [established, setEstablished] = useState(false);
+  const [timeExceed, setTimeExceed] = useState(false);
 
   useEffect(() => {
-    if (established && message.length > 0) {
+    if ((established && message.length > 0) || timeExceed) {
       if (callback)
         axios
           .get(callback, { params: { accept: true } })
@@ -23,7 +24,7 @@ const useConnection = () => {
           .catch(err => console.log(err));
       navigate('/');
     }
-  }, [message, established, callback, navigate]);
+  }, [message, established, callback, navigate, timeExceed]);
 
   useEffect(() => {
     if (verification === null && oob && !verifyConnection) {
@@ -42,6 +43,7 @@ const useConnection = () => {
     const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
     await agent.acceptInvitation(parsed);
     setEstablished(true);
+    setTimeout(() => setTimeExceed(true), 30000);
   };
 
   const handleCancel = () => {
