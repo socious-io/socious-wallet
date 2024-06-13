@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-    <string>Socious Wallet</string>
+        <string>socious-wallet</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -46,6 +46,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Socious Wallet requires access to your camera to capture facial images for identity verification. This process helps to ensure that you are the rightful owner of the account and prevents unauthorized access. For example, your face data will be matched with your provided ID documents to confirm your identity.</string>	
+	<string>We need access to your camera</string>	
 </dict>
 </plist>
