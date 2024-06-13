@@ -43,7 +43,7 @@ const useConnection = () => {
     const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
     await agent.acceptInvitation(parsed);
     setEstablished(true);
-    setTimeout(() => setTimeExceed(true), 30000);
+    setTimeout(() => setTimeExceed(true), 2400000);
   };
 
   const handleCancel = () => {
