@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Container, Toast, ToastContainer } from 'react-bootstrap';
 import Loading from 'src/components/Loading';
 import { useAppContext } from 'src/store';
+import AppUrlListener from 'src/components/AppUrlListener';
 
 const Layout = () => {
   const { state } = useAppContext();
@@ -23,29 +24,32 @@ const Layout = () => {
   if (didLoading) return <Loading show={true} animation="grow" />;
 
   return (
-    <Container>
-      {error && errorShow && (
-        <ToastContainer position="top-end" style={{ zIndex: 1 }}>
-          <Toast bg="danger">
-            <Toast.Header closeButton={false} className="fw-bold font-size-lg">
-              {error.section}
-            </Toast.Header>
-            <Toast.Body>{error.err.message}</Toast.Body>
-          </Toast>
-        </ToastContainer>
-      )}
-      {warn && warnShow && (
-        <ToastContainer position="top-end" style={{ zIndex: 1 }}>
-          <Toast bg="warning">
-            <Toast.Header closeButton={false} className="fw-bold font-size-lg">
-              {warn.section}
-            </Toast.Header>
-            <Toast.Body>{warn.err.message}</Toast.Body>
-          </Toast>
-        </ToastContainer>
-      )}
-      <Outlet />
-    </Container>
+    <>
+      <AppUrlListener />
+      <Container>
+        {error && errorShow && (
+          <ToastContainer position="top-end" style={{ zIndex: 1 }}>
+            <Toast bg="danger">
+              <Toast.Header closeButton={false} className="fw-bold font-size-lg">
+                {error.section}
+              </Toast.Header>
+              <Toast.Body>{error.err.message}</Toast.Body>
+            </Toast>
+          </ToastContainer>
+        )}
+        {warn && warnShow && (
+          <ToastContainer position="top-end" style={{ zIndex: 1 }}>
+            <Toast bg="warning">
+              <Toast.Header closeButton={false} className="fw-bold font-size-lg">
+                {warn.section}
+              </Toast.Header>
+              <Toast.Body>{warn.err.message}</Toast.Body>
+            </Toast>
+          </ToastContainer>
+        )}
+        <Outlet />
+      </Container>
+    </>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { StateType, ActionType, AppProviderProps } from './types';
 import { usePluto } from 'src/services/pluto';
 import { useAgent } from 'src/services/agent';
+import { Device } from '@capacitor/device';
 
 const initialState: StateType = {
   did: null,
@@ -15,6 +16,7 @@ const initialState: StateType = {
   verification: undefined,
   submitted: !!localStorage.getItem('submitted_kyc'),
   mnemonics: [],
+  device: undefined,
 };
 
 const AppContext = createContext<{
@@ -34,6 +36,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return { ...state, verification: action.payload };
     case 'SET_SUBMIT':
       return { ...state, submitted: action.payload };
+    case 'SET_DEVICE':
+      return { ...state, device: action.payload };
     case 'SET_PLUTO':
       return { ...state, pluto: action.payload };
     case 'SET_AGENT':
@@ -61,6 +65,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
   const { agent } = useAgent(pluto, dispatch);
+
+  Device.getInfo().then(info => dispatch({ type: 'SET_DEVICE', payload: info }));
 
   useEffect(() => {
     if (!pluto || !agent) return;

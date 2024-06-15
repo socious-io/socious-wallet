@@ -1,9 +1,17 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useAppContext } from 'src/store';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
+import { useNavigate } from 'react-router-dom';
 
-const AppUrlListener: React.FC<unknown> = () => {
+const AppUrlListener: React.FC = () => {
   const navigate = useNavigate();
+  const { state } = useAppContext();
+  const { device } = state || {};
+
+  useEffect(() => {
+    if (device.platform === 'web') navigate('/download');
+  }, [device]);
+
   useEffect(() => {
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       const slug = event.url.split('.io').pop();

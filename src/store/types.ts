@@ -1,9 +1,10 @@
 import SDK from '@atala/prism-wallet-sdk';
-
+import { DeviceInfo } from '@capacitor/device';
 export interface Err {
   err: Error;
   section: string;
 }
+
 export interface StateType {
   did?: SDK.Domain.DID;
   mnemonics: string[];
@@ -16,6 +17,7 @@ export interface StateType {
   message: SDK.Domain.Message[];
   error: Err;
   warn: Err;
+  device: DeviceInfo;
 }
 
 export type ActionType =
@@ -31,6 +33,7 @@ export type ActionType =
   | { type: 'SET_SUBMIT'; payload: boolean }
   | { type: 'LOADING_END' }
   | { type: 'LOADING_START' }
+  | { type: 'SET_DEVICE'; payload: DeviceInfo }
   | { type: 'LOADING_END' };
 
 export type AppProviderProps = { children: React.ReactNode };

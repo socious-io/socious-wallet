@@ -16,7 +16,7 @@ import { APP_VERSION } from 'src/config';
 function Credentials() {
   const navigate = useNavigate();
   const { state } = useAppContext();
-  const { credentials, verification, submitted } = state || {};
+  const { credentials, verification, submitted, device } = state || {};
   const { id } = useParams();
   const isKyc = type => type === 'verification';
   const generateNonKycTypeText = claim => {
@@ -167,7 +167,7 @@ function Credentials() {
         <div className={styles['card__header']}>
           Credentials
           {/* <Icon name="bell" /> */}
-          <Icon name="alert_simple" onClick={() => alert(`Wallet version ${APP_VERSION}`)} />
+          <Icon name="alert_simple" onClick={() => alert(`Wallet ( ${device?.platform} ) version ${APP_VERSION}`)} />
         </div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}

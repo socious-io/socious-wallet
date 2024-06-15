@@ -1,10 +1,11 @@
 {
   "name": "socious-wallet",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "private": true,
   "dependencies": {
     "@atala/prism-wallet-sdk": "5.0.0",
     "@capacitor/app": "^6.0.0",
+    "@capacitor/device": "^6.0.0",
     "@pluto-encrypted/indexdb": "^1.12.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

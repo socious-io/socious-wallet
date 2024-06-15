@@ -12,7 +12,7 @@ import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
 import Scan from 'src/pages/Scan';
-import AppUrlListener from 'src/components/AppUrlListener';
+import Doownload from 'src/pages/Download';
 
 export const blueprint: RouteObject[] = [
   {
@@ -24,6 +24,7 @@ export const blueprint: RouteObject[] = [
         element: <DefaultRoute />,
         children: [{ path: ':id' }],
       },
+      { path: '/download', element: <Doownload /> },
       { path: '/intro', element: <Intro /> },
       { path: '/register', element: <Register /> },
       // { path: '/confirm', element: <Confirm /> },
@@ -39,10 +40,8 @@ export const blueprint: RouteObject[] = [
 function DefaultRoute(): JSX.Element {
   const { state } = useAppContext();
   const shouldRenderCredentials = !state.didLoading && state.did;
-
   return (
     <>
-      <AppUrlListener />
       {state.didLoading && <Loading show={true} animation="grow" />}
       {!shouldRenderCredentials && <Navigate to="/intro" />}
       {shouldRenderCredentials && <Credentials />}
