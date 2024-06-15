@@ -9,7 +9,7 @@ const AppUrlListener: React.FC = () => {
   const { device } = state || {};
 
   useEffect(() => {
-    if (device.platform === 'web') navigate('/download');
+    if (device?.platform === 'web') navigate('/download');
   }, [device]);
 
   useEffect(() => {
