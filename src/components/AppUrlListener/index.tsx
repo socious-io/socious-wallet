@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppContext } from 'src/store';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { useNavigate } from 'react-router-dom';
+import { config } from 'src/config';
 
 const AppUrlListener: React.FC = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const AppUrlListener: React.FC = () => {
   const { device } = state || {};
 
   useEffect(() => {
-    if (device?.platform === 'web') navigate('/download');
+    if (device?.platform === 'web' && !config.DEBUG) navigate('/download');
   }, [device]);
 
   useEffect(() => {
