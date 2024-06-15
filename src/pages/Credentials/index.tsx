@@ -11,6 +11,7 @@ import { beautifyText, formatDate } from 'src/utilities';
 import styles from './index.module.scss';
 import cn from 'classnames';
 import NavigationBar from 'src/containers/NavigationBar';
+import { APP_VERSION } from 'src/config';
 
 function Credentials() {
   const navigate = useNavigate();
@@ -166,6 +167,7 @@ function Credentials() {
         <div className={styles['card__header']}>
           Credentials
           {/* <Icon name="bell" /> */}
+          <Icon name="alert_simple" onClick={() => alert(`Wallet version ${APP_VERSION}`)} />
         </div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}
