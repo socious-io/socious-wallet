@@ -42,9 +42,15 @@ function DefaultRoute(): JSX.Element {
   const shouldRenderCredentials = !state.didLoading && state.did;
   return (
     <>
-      {state.didLoading && <Loading show={true} animation="grow" />}
-      {!shouldRenderCredentials && <Navigate to="/intro" />}
-      {shouldRenderCredentials && <Credentials />}
+      {state.didLoading ? (
+        <Loading show={true} animation="grow" />
+      ) : (
+        <>
+          <AppUrlListener />
+          {!shouldRenderCredentials && <Navigate to="/intro" />}
+          {shouldRenderCredentials && <Credentials />}
+        </>
+      )}
     </>
   );
 }
