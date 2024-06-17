@@ -13,6 +13,7 @@ import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
 import Scan from 'src/pages/Scan';
 import Doownload from 'src/pages/Download';
+import AppUrlListener from 'src/components/AppUrlListener';
 
 export const blueprint: RouteObject[] = [
   {
