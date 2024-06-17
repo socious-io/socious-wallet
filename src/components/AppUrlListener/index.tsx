@@ -15,11 +15,15 @@ const AppUrlListener: React.FC = () => {
 
   useEffect(() => {
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-      const slug = event.url.split('.io').pop();
-      if (slug && slug !== '/') {
-        navigate(slug);
-      } else {
-        navigate('/intro');
+      try {
+        const slug = event.url.split('.io').pop();
+        if (slug && slug !== '/') {
+          navigate(slug);
+        } else {
+          navigate('/intro');
+        }
+      } catch (error) {
+        console.log('No url present');
       }
     });
   }, []);
