@@ -20,9 +20,9 @@ if (module.hot) {
 }
 
 window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
-  const error = event.reason;
+  // const error = event.reason;
   // Call your logging utility function here
-  logger(error);
+  // logger(error);
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
