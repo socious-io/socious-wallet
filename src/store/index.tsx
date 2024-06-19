@@ -2,7 +2,8 @@ import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { StateType, ActionType, AppProviderProps } from './types';
 import { usePluto } from 'src/services/pluto';
 import { useAgent } from 'src/services/agent';
-import { Device } from '@capacitor/device';
+import { Device, DeviceInfo } from '@capacitor/device';
+import { config } from 'src/config';
 
 const initialState: StateType = {
   did: null,
@@ -66,7 +67,18 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const { pluto } = usePluto();
   const { agent } = useAgent(pluto, dispatch);
 
-  Device.getInfo().then(info => dispatch({ type: 'SET_DEVICE', payload: info }));
+  useEffect(() => {
+    if (!config.PLATFORM) {
+      Device.getInfo().then(info => {
+        dispatch({ type: 'SET_DEVICE', payload: info });
+      });
+    } else {
+      dispatch({
+        type: 'SET_DEVICE',
+        payload: { platform: config.PLATFORM as 'ios' | 'android' | 'web' } as DeviceInfo,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (!pluto || !agent) return;
