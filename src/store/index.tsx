@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
-import { StateType, ActionType, AppProviderProps } from './types';
+import { StateType, ActionType, AppProviderProps, VerifyStatus } from './types';
 import { usePluto } from 'src/services/pluto';
 import { useAgent } from 'src/services/agent';
 import { Device, DeviceInfo } from '@capacitor/device';
@@ -15,7 +15,7 @@ const initialState: StateType = {
   warn: null,
   message: [],
   verification: undefined,
-  submitted: !!localStorage.getItem('submitted_kyc'),
+  submitted: (localStorage.getItem('submitted_kyc') || '') as VerifyStatus,
   mnemonics: [],
   device: undefined,
 };

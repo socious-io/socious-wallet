@@ -20,7 +20,7 @@ const useVerify = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, credentials, verification } = state || {};
-  const [submitted, setSubmitted] = useState(localStorage.getItem(FLAG_KEY) ? true : false);
+  const [submitted, setSubmitted] = useState(localStorage.getItem(FLAG_KEY) === 'APPROVED');
 
   const veriff = Veriff({
     apiKey: config.VERIFF_API_KEY,
@@ -30,10 +30,10 @@ const useVerify = () => {
         url: response.verification.url,
         onEvent: async function (msg) {
           if (msg === 'FINISHED') {
-            localStorage.setItem(FLAG_KEY, `${true}`);
+            localStorage.setItem(FLAG_KEY, 'APPROVED');
             localStorage.setItem('session', response.verification.id);
             setSubmitted(true);
-            dispatch({ type: 'SET_SUBMIT', payload: true });
+            dispatch({ type: 'SET_SUBMIT', payload: 'APPROVED' });
             await startKYC(did.methodId, response.verification.id);
           }
         },
@@ -65,11 +65,19 @@ const useVerify = () => {
           .then(r => {
             switch (r.data.verification?.status) {
               case 'declined':
-              case 'expired':
-              case 'abandoned':
-                localStorage.removeItem(FLAG_KEY);
+                localStorage.setItem(FLAG_KEY, 'DECLINED');
                 setSubmitted(false);
-                dispatch({ type: 'SET_SUBMIT', payload: false });
+                dispatch({ type: 'SET_SUBMIT', payload: 'DECLINED' });
+                break;
+              case 'expired':
+                localStorage.setItem(FLAG_KEY, 'EXPIRED');
+                setSubmitted(false);
+                dispatch({ type: 'SET_SUBMIT', payload: 'EXPIRED' });
+                break;
+              case 'abandoned':
+                localStorage.setItem(FLAG_KEY, 'ABANDONED');
+                setSubmitted(false);
+                dispatch({ type: 'SET_SUBMIT', payload: 'ABANDONED' });
                 break;
               case 'approved': {
                 const url = new URL(r.data.connection.url);

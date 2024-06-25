@@ -28,7 +28,7 @@ function Verify() {
           {!submitted && <div id="veriff-root"></div>}
           {submitted && !verification && (
             <Alert variant="primary" className="w-100">
-              Your verfication request has been submitted.
+              Your verification request has been submitted.
             </Alert>
           )}
           {verification && (
