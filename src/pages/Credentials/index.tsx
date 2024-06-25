@@ -1,8 +1,9 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Alert, ListGroup } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ListGroup } from 'react-bootstrap';
 import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
 import CredentialCard from 'src/containers/CredentialCard';
+import CredentialAlert from 'src/containers/CredentialAlert';
 // import sampleAvatar from 'src/assets/images/sample-avatar.png';
 import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
@@ -12,6 +13,8 @@ import styles from './index.module.scss';
 import cn from 'classnames';
 import NavigationBar from 'src/containers/NavigationBar';
 import { APP_VERSION } from 'src/config';
+import { VerifyStatus } from 'src/store/types';
+import { CredentialAlertProps } from 'src/containers/CredentialAlert/index.types';
 
 function Credentials() {
   const navigate = useNavigate();
@@ -48,46 +51,62 @@ function Credentials() {
     );
   };
 
-  const renderAlert = (iconName: string, title: string, subtitle: string, link?: { to: string; text: string }) => {
-    return (
-      <Alert variant="warning" className={styles['alert']}>
-        <Icon name={iconName} className={styles['alert__icon']} />
-        <div className="d-flex flex-column">
-          <span className="fw-bold">{title}</span>
-          <p className="mt-1 mb-2">{subtitle}</p>
-          {link?.to && (
-            <Link to={link.to} className={styles['alert__link']}>
-              {link.text}
-            </Link>
-          )}
-        </div>
-      </Alert>
-    );
-  };
-
   const renderCredentialsList = () => {
+    let props = null;
+    switch (submitted) {
+      case 'APPROVED':
+        props = {
+          variant: 'warning',
+          iconName: 'alert-submit',
+          title: 'Verification request submitted',
+          subtitle: "Your identity is being reviewed. We'll notify you as soon as it's complete.",
+          links: [
+            {
+              to: '/verify',
+              label: 'Check verification',
+            },
+          ],
+        };
+        break;
+      case 'ABANDONED':
+      case 'EXPIRED':
+      case 'DECLINED':
+        props = {
+          variant: 'danger',
+          iconName: 'alert-danger',
+          title: 'Verification rejected',
+          subtitle: 'Your verification request was denied, please',
+          links: [
+            {
+              to: '/verify',
+              label: 'Verify again',
+            },
+            {
+              to: 'mailto:support@socious.io',
+              label: 'Contact us',
+            },
+          ],
+        };
+        break;
+      default:
+        props = {
+          variant: 'warning',
+          iconName: 'alert-warning',
+          title: 'Verification Required',
+          subtitle: 'To receive verifiable credentials you need to verify your identity.',
+          links: [
+            {
+              to: '/verify',
+              label: 'Verify now',
+            },
+          ],
+        };
+        break;
+    }
+
     return (
       <>
-        {!verification &&
-          (submitted
-            ? renderAlert(
-                'alert-submit',
-                'Verification request submitted',
-                "Your identity is being reviewed. We'll notify you as soon as it's complete.",
-                {
-                  to: '/verify',
-                  text: 'Check verification',
-                },
-              )
-            : renderAlert(
-                'alert',
-                'Verification Required',
-                'To receive verifiable credentials you need to verify your identity.',
-                {
-                  to: '/verify',
-                  text: 'Verify now',
-                },
-              ))}
+        {!verification && <CredentialAlert {...props} />}
         <div className={styles['card__content']}>
           {credentials.length ? (
             <div className="w-100 d-flex flex-column gap-3">
