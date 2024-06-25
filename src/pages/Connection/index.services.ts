@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { useAppContext } from 'src/store';
+import { config } from 'src/config';
+
+const CONN_PEER_SUCCESS_STATUS = 'ConnectionResponseSent';
 
 const useConnection = () => {
-  const { state } = useAppContext();
-  const { agent, message, verification } = state || {};
+  const { state, dispatch } = useAppContext();
+  const { agent, verification } = state || {};
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const oob = searchParams.get('_oob');
@@ -14,9 +17,24 @@ const useConnection = () => {
   const [openModal, setOpenModal] = useState(true);
   const [established, setEstablished] = useState(false);
   const [timeExceed, setTimeExceed] = useState(false);
+  const [connId, setConnId] = useState();
+  const [didPeer, setDidPeer] = useState(false);
 
   useEffect(() => {
-    if ((established && message.length > 0) || timeExceed) {
+    if (timeExceed) {
+      dispatch({
+        type: 'SET_WARN',
+        payload: {
+          err: new Error('Establishing connection timeout please try with different QR'),
+          section: 'Establish Connection',
+        },
+      });
+      navigate('/');
+    }
+  }, [timeExceed]);
+
+  useEffect(() => {
+    if (established && didPeer) {
       if (callback)
         axios
           .get(callback, { params: { accept: true } })
@@ -24,7 +42,7 @@ const useConnection = () => {
           .catch(err => console.log(err));
       navigate('/');
     }
-  }, [message, established, callback, navigate, timeExceed]);
+  }, [established, didPeer]);
 
   useEffect(() => {
     if (verification === null && oob && !verifyConnection) {
@@ -32,7 +50,18 @@ const useConnection = () => {
       localStorage.setItem('callback', callback);
       navigate('/intro');
     }
-  }, [verification, oob, callback]);
+  }, [verification, oob]);
+
+  useEffect(() => {
+    if (connId) {
+      const checkStatus = async () => {
+        const { data } = await axios.get(`${config.BACKUP_AGENT}/connections/${connId}?t=${new Date().getTime()}`);
+        setDidPeer(data.state === CONN_PEER_SUCCESS_STATUS);
+      };
+      const intervalId = setInterval(checkStatus, 3000);
+      return () => clearInterval(intervalId);
+    }
+  }, [connId]);
 
   const handleConfirm = async () => {
     if (!agent) {
@@ -41,6 +70,7 @@ const useConnection = () => {
     }
     setOpenModal(false);
     const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
+    setConnId(parsed.id);
     await agent.acceptInvitation(parsed);
     setEstablished(true);
     setTimeout(() => setTimeExceed(true), 2400000);

@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.1.3';
+export const APP_VERSION = '1.2.3';
 export const config = {
   DEBUG: process.env.REACT_APP_DEBUG,
   SECRET_KEY: process.env.REACT_APP_SECRET_KEY,
