@@ -8,13 +8,15 @@ const CONN_PEER_SUCCESS_STATUS = 'ConnectionResponseSent';
 
 const useConnection = () => {
   const { state, dispatch } = useAppContext();
-  const { agent, verification } = state || {};
+  const { agent, verification, listenerActive } = state || {};
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const oob = searchParams.get('_oob');
   const callback = searchParams.get('callback');
   const verifyConnection = callback?.includes('verify/claims');
+
   const [openModal, setOpenModal] = useState(true);
+  const [confirmed, setConfirmed] = useState(false);
   const [established, setEstablished] = useState(false);
   const [timeExceed, setTimeExceed] = useState(false);
   const [connId, setConnId] = useState();
@@ -63,17 +65,22 @@ const useConnection = () => {
     }
   }, [connId]);
 
-  const handleConfirm = async () => {
-    if (!agent) {
-      alert('wait more please');
-      return;
+  useEffect(() => {
+    if (confirmed && agent?.state === 'running' && listenerActive) {
+      const establish = async () => {
+        const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
+        setConnId(parsed.id);
+        await agent.acceptInvitation(parsed);
+        setEstablished(true);
+        setTimeout(() => setTimeExceed(true), 2400000);
+      };
+      establish();
     }
+  }, [confirmed, agent, listenerActive]);
+
+  const handleConfirm = async () => {
+    setConfirmed(true);
     setOpenModal(false);
-    const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
-    setConnId(parsed.id);
-    await agent.acceptInvitation(parsed);
-    setEstablished(true);
-    setTimeout(() => setTimeExceed(true), 2400000);
   };
 
   const handleCancel = () => {

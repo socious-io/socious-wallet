@@ -20,6 +20,7 @@ export interface StateType {
   error: Err;
   warn: Err;
   device: DeviceInfo;
+  listenerActive: boolean;
 }
 
 export type ActionType =
@@ -36,6 +37,7 @@ export type ActionType =
   | { type: 'LOADING_END' }
   | { type: 'LOADING_START' }
   | { type: 'SET_DEVICE'; payload: DeviceInfo }
+  | { type: 'SET_LISTENER_STATE'; payload: boolean }
   | { type: 'LOADING_END' };
 
 export type AppProviderProps = { children: React.ReactNode };
