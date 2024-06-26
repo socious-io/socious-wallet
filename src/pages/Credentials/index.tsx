@@ -75,7 +75,7 @@ function Credentials() {
           variant: 'danger',
           iconName: 'alert-danger',
           title: 'Verification rejected',
-          subtitle: 'Your verification request was denied, please',
+          subtitle: 'Your verification request was denied.',
           links: [
             {
               to: '/verify',
