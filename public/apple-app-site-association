@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "596H9K48FY.socious.wallet.app",
+        "appID": "596H9K48FY.socious.mobile-wallet.app",
         "paths": [
           "*"
         ]
