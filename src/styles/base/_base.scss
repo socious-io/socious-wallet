@@ -50,6 +50,16 @@ body {
         border: 1px solid #fecdca;
     }
 
+    .alert-warning {
+        --bs-alert-bg: #fffaeb !important;
+        --bs-alert-border-color: #fedf89 !important;
+    }
+
+    .alert-danger {
+        --bs-alert-bg: #fffbfa !important;
+        --bs-alert-border-color: #fecdca !important;
+    }
+
     textarea.form-control {
         background-color: white;
         resize: none;

@@ -5,12 +5,14 @@ export interface Err {
   section: string;
 }
 
+export type VerifyStatus = 'APPROVED' | 'DECLINED' | 'EXPIRED' | 'ABANDONED' | '';
+
 export interface StateType {
   did?: SDK.Domain.DID;
   mnemonics: string[];
   credentials: SDK.Domain.Credential[];
   verification: SDK.Domain.Credential | null | undefined;
-  submitted: boolean;
+  submitted: VerifyStatus;
   didLoading: boolean;
   pluto: SDK.Domain.Pluto;
   agent: SDK.Agent;
@@ -30,7 +32,7 @@ export type ActionType =
   | { type: 'SET_WARN'; payload: Err }
   | { type: 'SET_NEW_MESSAGE'; payload: SDK.Domain.Message[] }
   | { type: 'SET_VERIFICATION'; payload: SDK.Domain.Credential }
-  | { type: 'SET_SUBMIT'; payload: boolean }
+  | { type: 'SET_SUBMIT'; payload: VerifyStatus }
   | { type: 'LOADING_END' }
   | { type: 'LOADING_START' }
   | { type: 'SET_DEVICE'; payload: DeviceInfo }
