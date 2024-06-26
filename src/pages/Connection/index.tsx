@@ -11,7 +11,7 @@ function Connection() {
   const { oob, openModal, handleConfirm, handleCancel, verification, verifyConnection } = useConnection();
 
   if (!oob) return <Navigate to="/" />;
-  // if (!verification && !verifyConnection) return <></>;
+  if (!verification && !verifyConnection) return <Navigate to="/" />;
   return (
     <>
       <div className="h-100 d-flex align-items-center justify-content-center">
