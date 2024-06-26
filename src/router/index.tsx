@@ -12,7 +12,7 @@ import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
 import Scan from 'src/pages/Scan';
-import Doownload from 'src/pages/Download';
+import Download from 'src/pages/Download';
 import AppUrlListener from 'src/components/AppUrlListener';
 
 export const blueprint: RouteObject[] = [
@@ -25,7 +25,7 @@ export const blueprint: RouteObject[] = [
         element: <DefaultRoute />,
         children: [{ path: ':id' }],
       },
-      { path: '/download', element: <Doownload /> },
+      { path: '/download', element: <Download /> },
       { path: '/intro', element: <Intro /> },
       { path: '/register', element: <Register /> },
       // { path: '/confirm', element: <Confirm /> },

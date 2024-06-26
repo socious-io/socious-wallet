@@ -1,4 +1,4 @@
-function Doownload() {
+function Download() {
   return (
     <>
       <h5>Self-Sovereign Identity (SSI) Wallet</h5>
@@ -26,4 +26,4 @@ function Doownload() {
   );
 }
 
-export default Doownload;
+export default Download;
