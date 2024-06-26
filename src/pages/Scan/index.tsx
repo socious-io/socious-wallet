@@ -95,7 +95,7 @@ const Scan = () => {
           <Icon name="chevron-left" />
           Back
         </div>
-        <video ref={videoRef} className={styles['video']} />
+        <video ref={videoRef} className={styles['video']} playsInline />
         <div className={styles['frame']}>
           <div className={cn(styles['frame__corner'], styles['frame__corner--top'])} />
           <div className={cn(styles['frame__corner'], styles['frame__corner--right'])} />
