@@ -1,6 +1,6 @@
 import styles from './index.module.scss';
 
-function Doownload() {
+function Download() {
   return (
     <div className={styles['download']}>
       <div className={styles['title']}>
