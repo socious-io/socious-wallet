@@ -186,7 +186,6 @@ function Credentials() {
         <div className={styles['card__header']}>
           Credentials
           {/* <Icon name="bell" /> */}
-          <Icon name="alert_simple" onClick={() => alert(`Wallet ( ${device?.platform} ) version ${APP_VERSION}`)} />
         </div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}
