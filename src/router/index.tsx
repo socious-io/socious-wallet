@@ -14,6 +14,7 @@ import Loading from 'src/components/Loading';
 import Scan from 'src/pages/Scan';
 import Download from 'src/pages/Download';
 import AppUrlListener from 'src/components/AppUrlListener';
+import Settings from 'src/pages/Settings';
 
 export const blueprint: RouteObject[] = [
   {
@@ -33,6 +34,7 @@ export const blueprint: RouteObject[] = [
       { path: '/verify', element: <Verify /> },
       // { path: '/import', element: <Recover /> },
       { path: '/connect', element: <Connection /> },
+      { path: '/settings', element: <Settings /> },
       { path: '/scan', element: <Scan /> },
     ],
   },

@@ -8,8 +8,8 @@ const NavigationBar = () => {
 
   return (
     <div className={styles['footer']}>
-      <div className={styles['nav']}>
-        <Icon name="shield-tick" onClick={() => navigate('/')} />
+      <div className={styles['nav']} onClick={() => navigate('/')}>
+        <Icon name="shield-tick" />
         Credentials
       </div>
       {isMobile && (
@@ -18,10 +18,10 @@ const NavigationBar = () => {
           Scan
         </div>
       )}
-      {/* <div className={styles['nav']}>
+      <div className={styles['nav']} onClick={() => navigate('/settings')}>
         <Icon name="settings" />
         Settings
-      </div> */}
+      </div>
     </div>
   );
 };
