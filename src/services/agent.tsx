@@ -13,7 +13,7 @@ const handleMessages =
   async (newMessages: SDK.Domain.Message[]) => {
     console.log('new message -> ', newMessages);
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
-
+    dispatch({ type: 'SET_LISTENER_STATE', payload: true });
     const credentialOffers = newMessages.filter(
       message => message.piuri === 'https://didcomm.org/issue-credential/3.0/offer-credential',
     );
