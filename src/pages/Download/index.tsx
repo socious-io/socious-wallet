@@ -41,4 +41,4 @@ function Doownload() {
   );
 }
 
-export default Doownload;
+export default Download;
