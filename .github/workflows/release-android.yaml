@@ -41,13 +41,13 @@ jobs:
 
       - name: Making Android Release Code
         run: |
-          echo 'REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}
-          echo 'REACT_APP_PLUTO_PASSWD=${{ secrets.REACT_APP_PLUTO_PASSWD }}
-          echo 'REACT_APP_PLUTO_DB_NAME=${{ secrets.REACT_APP_PLUTO_DB_NAME }}
-          echo 'REACT_APP_MEDIATOR_DID=${{ secrets.REACT_APP_MEDIATOR_DID }}
-          echo 'REACT_APP_BACKUP_AGENT=${{ vars.REACT_APP_BACKUP_AGENT }}
-          echo 'REACT_APP_BACKUP_AGENT_API_KEY=${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
-          echo 'REACT_APP_VERIFF_API_KEY=${{ secrets.REACT_APP_VERIFF_API_KEY }}
+          echo 'REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}' >> .env
+          echo 'REACT_APP_PLUTO_PASSWD=${{ secrets.REACT_APP_PLUTO_PASSWD }}' >> .env
+          echo 'REACT_APP_PLUTO_DB_NAME=${{ secrets.REACT_APP_PLUTO_DB_NAME }}' >> .env
+          echo 'REACT_APP_MEDIATOR_DID=${{ secrets.REACT_APP_MEDIATOR_DID }}' >> .env
+          echo 'REACT_APP_BACKUP_AGENT=${{ vars.REACT_APP_BACKUP_AGENT }}' >> .env
+          echo 'REACT_APP_BACKUP_AGENT_API_KEY=${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}' >> .env
+          echo 'REACT_APP_VERIFF_API_KEY=${{ secrets.REACT_APP_VERIFF_API_KEY }}' >> .env
           npm run build
           npm run make:android
           
