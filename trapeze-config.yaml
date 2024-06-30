@@ -53,21 +53,14 @@ platforms:
       - file: app/build.gradle
         target:
           android:
-        insert: |
-          signingConfigs {
-            release {
-              // You need to specify either an absolute path or include the
-              // keystore file in the same directory as the build.gradle file.
-              storeFile file("$ANDROID_KEY_STORE_LOCATION")
-              storePassword "$ANDROID_KEY_STORE_PASSWORD"
-              keyAlias "$ANDROID_KEY_ALIAS"
-              keyPassword "$ANDROID_KEY_PASSWORD"
-            }
-          }
-      - file: app/build.gradle
-        target:
-          android:
             buildTypes:
               release:
-        insert:
-          - signingConfig: 'signingConfigs.release'
+        insert: |
+          signingConfig {
+            // You need to specify either an absolute path or include the
+            // keystore file in the same directory as the build.gradle file.
+            storeFile file("$ANDROID_KEY_STORE_LOCATION")
+            storePassword "$ANDROID_KEY_STORE_PASSWORD"
+            keyAlias "$ANDROID_KEY_ALIAS"
+            keyPassword "$ANDROID_KEY_PASSWORD"
+          }
