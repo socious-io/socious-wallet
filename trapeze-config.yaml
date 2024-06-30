@@ -50,17 +50,43 @@ platforms:
         inject: |
           <uses-permission android:name="android.permission.CAMERA" />
     gradle:
-      - file: app/build.gradle
+      - file: app/build.gradle # Removing buildTypes
         target:
           android:
             buildTypes:
-              release:
+        replace:
+          '': ''
+      - file: app/build.gradle
+        target:
+          android:
         insert: |
-          signingConfig {
-            // You need to specify either an absolute path or include the
-            // keystore file in the same directory as the build.gradle file.
-            storeFile file("$ANDROID_KEY_STORE_LOCATION")
-            storePassword "$ANDROID_KEY_STORE_PASSWORD"
-            keyAlias "$ANDROID_KEY_ALIAS"
-            keyPassword "$ANDROID_KEY_PASSWORD"
+          signingConfigs {
+            release {
+              // You need to specify either an absolute path or include the
+              // keystore file in the same directory as the build.gradle file.
+              storeFile file("$ANDROID_KEY_STORE_LOCATION")
+              storePassword "$ANDROID_KEY_STORE_PASSWORD"
+              keyAlias "$ANDROID_KEY_ALIAS"
+              keyPassword "$ANDROID_KEY_PASSWORD"
+            }
           }
+      - file: app/build.gradle
+        target:
+          android:
+        insert: |
+          buildTypes {
+            release {
+              minifyEnabled false
+              proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+              signingConfig signingConfigs.release
+            }
+          }
+
+
+
+
+
+
+
+
+          
