@@ -27,7 +27,7 @@ jobs:
         uses: Vacxe/google-play-cli-kt@0.4.8
         with:
           service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          package-name: $ANDROID_PACKAGE_NAME
+          package-name: ${{ env.ANDROID_PACKAGE_NAME }}
           custom-script: "echo $(google-play-cli bundles list)"
 
       # - name: Checkout repository
