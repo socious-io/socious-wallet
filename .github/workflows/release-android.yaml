@@ -80,16 +80,6 @@ jobs:
         run: |
           npm run generate:assets
 
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4.2.1
-        with:
-          distribution: 'oracle' # See 'Supported distributions' for available options
-          java-version: '21'
-          cache: 'gradle'
-
-      - name: Test java installed
-        run: |
-          java -version
 
       - name: Extracting Android Key for Signing the App
         run: |
@@ -113,6 +103,13 @@ jobs:
       - name: Test versionCode
         run: |
           echo $LATEST_PLAYSTORE_VERSION_CODE
+          
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'oracle' # See 'Supported distributions' for available options
+          java-version: '21'
+          cache: 'gradle'
       
       - if: ${{ github.event.release.prerelease == true }}
         name: Building Assemble release for Github (.APK)
