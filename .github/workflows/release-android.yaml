@@ -22,6 +22,47 @@ jobs:
   setup-fastlane:
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      # Command line: google-play-cli bundles list --config-file ./Downloads/fastlane-automated-release-key-data-file.json --package-name socious.wallet.app | jq '.bundles.[-1].versionCode'
+
+      - name: Install Node.js dependencies
+        run: |
+          npm cache clean --force
+          npm install
+
+      # - name: Making Android Release Code
+      #   run: |
+      #     echo 'REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}' >> .env
+      #     echo 'REACT_APP_PLUTO_PASSWD=${{ secrets.REACT_APP_PLUTO_PASSWD }}' >> .env
+      #     echo 'REACT_APP_PLUTO_DB_NAME=${{ secrets.REACT_APP_PLUTO_DB_NAME }}' >> .env
+      #     echo 'REACT_APP_MEDIATOR_DID=${{ secrets.REACT_APP_MEDIATOR_DID }}' >> .env
+      #     echo 'REACT_APP_BACKUP_AGENT=${{ vars.REACT_APP_BACKUP_AGENT }}' >> .env
+      #     echo 'REACT_APP_BACKUP_AGENT_API_KEY=${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}' >> .env
+      #     echo 'REACT_APP_VERIFF_API_KEY=${{ secrets.REACT_APP_VERIFF_API_KEY }}' >> .env
+      #     npm run build
+      #     npm run make:android
+          
+      - name: Making Android Release Code
+        run: |
+          npm run build
+          npm run make:android
+        env:
+          REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
+          REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
+          REACT_APP_PLUTO_DB_NAME: ${{ secrets.REACT_APP_PLUTO_DB_NAME }}
+          REACT_APP_MEDIATOR_DID: ${{ secrets.REACT_APP_MEDIATOR_DID }}
+          REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
+          REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
+          REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
+
       - name: Get the latest version code using 
         uses: Vacxe/google-play-cli-kt@0.4.8
         with:
@@ -37,107 +78,65 @@ jobs:
           echo $X
           echo $Y
 
-      # - name: Checkout repository
-      #   uses: actions/checkout@v4
+      - name: Configuring apps (using Trapeze)
+        run: |
+          npm run config:apps
+          cat android/app/build.gradle
+        env:
+          ANDROID_KEY_STORE_LOCATION: ${{ github.workspace }}/android/build-release.keystore
+          ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_VERSION_CODE: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }} # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
 
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '20'
+      - name: Generating Assets
+        run: |
+          npm run generate:assets
 
-      # # Command line: google-play-cli bundles list --config-file ./Downloads/fastlane-automated-release-key-data-file.json --package-name socious.wallet.app | jq '.bundles.[-1].versionCode'
+      - name: Extracting Android Key for Signing the App
+        run: |
+          cd android
+          echo ${{ secrets.ANDROID_KEY_STORE_BASE64 }} >> build-release.keystore-base64
+          cat build-release.keystore-base64 | base64 --decode > build-release.keystore
 
-      # - name: Install Node.js dependencies
-      #   run: |
-      #     npm cache clean --force
-      #     npm install
-
-      # # - name: Making Android Release Code
-      # #   run: |
-      # #     echo 'REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}' >> .env
-      # #     echo 'REACT_APP_PLUTO_PASSWD=${{ secrets.REACT_APP_PLUTO_PASSWD }}' >> .env
-      # #     echo 'REACT_APP_PLUTO_DB_NAME=${{ secrets.REACT_APP_PLUTO_DB_NAME }}' >> .env
-      # #     echo 'REACT_APP_MEDIATOR_DID=${{ secrets.REACT_APP_MEDIATOR_DID }}' >> .env
-      # #     echo 'REACT_APP_BACKUP_AGENT=${{ vars.REACT_APP_BACKUP_AGENT }}' >> .env
-      # #     echo 'REACT_APP_BACKUP_AGENT_API_KEY=${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}' >> .env
-      # #     echo 'REACT_APP_VERIFF_API_KEY=${{ secrets.REACT_APP_VERIFF_API_KEY }}' >> .env
-      # #     npm run build
-      # #     npm run make:android
-          
-      # - name: Making Android Release Code
-      #   run: |
-      #     npm run build
-      #     npm run make:android
-      #   env:
-      #     REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
-      #     REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
-      #     REACT_APP_PLUTO_DB_NAME: ${{ secrets.REACT_APP_PLUTO_DB_NAME }}
-      #     REACT_APP_MEDIATOR_DID: ${{ secrets.REACT_APP_MEDIATOR_DID }}
-      #     REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
-      #     REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
-      #     REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
-
-
-
-      # - name: Configuring apps (using Trapeze)
-      #   run: |
-      #     npm run config:apps
-      #     cat android/app/build.gradle
-      #   env:
-      #     ANDROID_KEY_STORE_LOCATION: ${{ github.workspace }}/android/build-release.keystore
-      #     ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-      #     ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
-      #     ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      #     ANDROID_VERSION_CODE: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }} # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
-
-      # - name: Generating Assets
-      #   run: |
-      #     npm run generate:assets
-
-      # - name: Extracting Android Key for Signing the App
+      # - name: Extracting Google Service Account (For using Google Playstore API)
       #   run: |
       #     cd android
-      #     echo ${{ secrets.ANDROID_KEY_STORE_BASE64 }} >> build-release.keystore-base64
-      #     cat build-release.keystore-base64 | base64 --decode > build-release.keystore
+      #     echo ${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }} >> fastlane/service-account.json-base64
+      #     cat fastlane/service-account.json-base64 | base64 --decode > fastlane/service-account.json
 
-      # # - name: Extracting Google Service Account (For using Google Playstore API)
-      # #   run: |
-      # #     cd android
-      # #     echo ${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }} >> fastlane/service-account.json-base64
-      # #     cat fastlane/service-account.json-base64 | base64 --decode > fastlane/service-account.json
-
-      # - name: Setup Java JDK
-      #   uses: actions/setup-java@v4.2.1
-      #   with:
-      #     distribution: 'oracle' # See 'Supported distributions' for available options
-      #     java-version: '21'
-      #     cache: 'gradle'
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'oracle' # See 'Supported distributions' for available options
+          java-version: '21'
+          cache: 'gradle'
       
-      # - if: ${{ github.event.release.prerelease == true }}
-      #   name: Building Assemble release for Github (.APK)
-      #   run: |
-      #     cd android
-      #     ./gradlew assembleRelease --info
+      - if: ${{ github.event.release.prerelease == true }}
+        name: Building Assemble release for Github (.APK)
+        run: |
+          cd android
+          ./gradlew assembleRelease --info
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Building bundle release for Playstore (.AAB)
+        run: |
+          cd android
+          ./gradlew bundleRelease --info 
+
+      - if: ${{ github.event.release.prerelease == true }}
+        name: Upload Building Assemble release (.APK) to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./android/app/build/outputs/apk/release/app-release.apk # AAB -> ./android/app/build/outputs/bundle/app-release.aab
+          asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.apk
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
 
       # - if: ${{ github.event.release.prerelease != true }}
-      #   name: Building bundle release for Playstore (.AAB)
+      #   name: Deploying to Google Play
       #   run: |
       #     cd android
-      #     ./gradlew bundleRelease --info 
-
-      # - if: ${{ github.event.release.prerelease == true }}
-      #   name: Upload Building Assemble release (.APK) to release
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: ./android/app/build/outputs/apk/release/app-release.apk # AAB -> ./android/app/build/outputs/bundle/app-release.aab
-      #     asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.apk
-      #     tag: ${{ github.ref }}
-      #     overwrite: true
-      #     body: ${{ github.event.release.body }}
-
-      # # - if: ${{ github.event.release.prerelease != true }}
-      # #   name: Deploying to Google Play
-      # #   run: |
-      # #     cd android
-      # #     fastlane deploy --verbose
+      #     fastlane deploy --verbose
