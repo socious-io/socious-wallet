@@ -3,16 +3,20 @@ vars:
     default: Socious Wallet
   DISPLAY_NAME:
     default: Socious Wallet
-  IOS_BUNDLE_ID:
-    default: socious.wallet.app
-  ANDROID_PACKAGE_NAME:
-    default: socious.wallet.app
   VERSION:
     default: 1.0.1
-  IOS_BUILD_NUMBER:
-    default: 1
   ANDROID_VERSION_CODE:
     default: 3
+  ANDROID_PACKAGE_NAME:
+    default: socious.wallet.app
+  ANDROID_KEY_STORE_LOCATION:
+  ANDROID_KEY_STORE_PASSWORD:
+  ANDROID_KEY_ALIAS:
+  ANDROID_KEY_PASSWORD:
+  IOS_BUILD_NUMBER:
+    default: 1
+  IOS_BUNDLE_ID:
+    default: socious.wallet.app
   IOS_DEVELOPMENT_TEAM_ID:
     default: 596H9K48FY
 
@@ -45,3 +49,26 @@ platforms:
         target: manifest
         inject: |
           <uses-permission android:name="android.permission.CAMERA" />
+    gradle:
+      - file: app/build.gradle
+        target:
+          android:
+        insert: |
+          signingConfigs {
+            release {
+              // You need to specify either an absolute path or include the
+              // keystore file in the same directory as the build.gradle file.
+              storeFile file("$ANDROID_KEY_STORE_LOCATION")
+              storePassword "$ANDROID_KEY_STORE_PASSWORD"
+              keyAlias "$ANDROID_KEY_ALIAS"
+              keyPassword "$ANDROID_KEY_PASSWORD"
+            }
+          }
+      - file: app/build.gradle
+        target:
+          android:
+            buildTypes:
+              release:
+        insertType: 'variable'
+        insert:
+          - signingConfig: 'signingConfig signingConfigs.release'
