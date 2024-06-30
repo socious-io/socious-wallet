@@ -28,11 +28,11 @@ jobs:
         with:
           service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           package-name: ${{ env.ANDROID_PACKAGE_NAME }}
-          custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode')\" >> $GITHUB_ENV"
+          custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$((google-play-cli bundles list | jq '.bundles[-1].versionCode' + 1))\" >> $GITHUB_ENV"
 
-      - name: Test versionCode
+      - name: Increment versionCode
         run: |
-          echo $LATEST_PLAYSTORE_VERSION_CODE'
+          echo $LATEST_PLAYSTORE_VERSION_CODE
 
       # - name: Checkout repository
       #   uses: actions/checkout@v4
