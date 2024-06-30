@@ -29,7 +29,8 @@ jobs:
 
       - name: Install necessary command line tools
         run: |
-          apt install jq
+          sudo apt-get update
+          sudo apt-get install jq
 
       # Command line: google-play-cli bundles list --config-file ./Downloads/fastlane-automated-release-key-data-file.json --package-name socious.wallet.app | jq '.bundles.[-1].versionCode'
 
