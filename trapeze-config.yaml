@@ -69,6 +69,5 @@ platforms:
           android:
             buildTypes:
               release:
-        insertType: 'variable'
         insert:
-          - signingConfig: 'signingConfig signingConfigs.release'
+          - signingConfig: 'signingConfigs.release'
