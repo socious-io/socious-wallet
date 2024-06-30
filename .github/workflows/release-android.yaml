@@ -70,6 +70,11 @@ jobs:
           package-name: 
           custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
 
+      - name: Tesing version code
+        run: |
+          echo $LATEST_PLAYSTORE_VERSION_CODE
+          echo ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
+
 
       - name: Configuring apps (using Trapeze)
         run: |
