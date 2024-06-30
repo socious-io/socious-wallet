@@ -41,18 +41,31 @@ jobs:
           npm cache clean --force
           npm install
 
+      # - name: Making Android Release Code
+      #   run: |
+      #     echo 'REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}' >> .env
+      #     echo 'REACT_APP_PLUTO_PASSWD=${{ secrets.REACT_APP_PLUTO_PASSWD }}' >> .env
+      #     echo 'REACT_APP_PLUTO_DB_NAME=${{ secrets.REACT_APP_PLUTO_DB_NAME }}' >> .env
+      #     echo 'REACT_APP_MEDIATOR_DID=${{ secrets.REACT_APP_MEDIATOR_DID }}' >> .env
+      #     echo 'REACT_APP_BACKUP_AGENT=${{ vars.REACT_APP_BACKUP_AGENT }}' >> .env
+      #     echo 'REACT_APP_BACKUP_AGENT_API_KEY=${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}' >> .env
+      #     echo 'REACT_APP_VERIFF_API_KEY=${{ secrets.REACT_APP_VERIFF_API_KEY }}' >> .env
+      #     npm run build
+      #     npm run make:android
+          
       - name: Making Android Release Code
         run: |
-          echo 'REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}' >> .env
-          echo 'REACT_APP_PLUTO_PASSWD=${{ secrets.REACT_APP_PLUTO_PASSWD }}' >> .env
-          echo 'REACT_APP_PLUTO_DB_NAME=${{ secrets.REACT_APP_PLUTO_DB_NAME }}' >> .env
-          echo 'REACT_APP_MEDIATOR_DID=${{ secrets.REACT_APP_MEDIATOR_DID }}' >> .env
-          echo 'REACT_APP_BACKUP_AGENT=${{ vars.REACT_APP_BACKUP_AGENT }}' >> .env
-          echo 'REACT_APP_BACKUP_AGENT_API_KEY=${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}' >> .env
-          echo 'REACT_APP_VERIFF_API_KEY=${{ secrets.REACT_APP_VERIFF_API_KEY }}' >> .env
           npm run build
           npm run make:android
-          
+        env:
+          REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
+          REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
+          REACT_APP_PLUTO_DB_NAME: ${{ secrets.REACT_APP_PLUTO_DB_NAME }}
+          REACT_APP_MEDIATOR_DID: ${{ secrets.REACT_APP_MEDIATOR_DID }}
+          REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
+          REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
+          REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
+
       - name: Configuring apps (using Trapeze)
         run: |
           npm run config:apps
@@ -60,7 +73,7 @@ jobs:
         env:
           ANDROID_KEY_STORE_LOCATION: ${{ github.workspace }}/android/build-release.keystore
           ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Generating Assets
@@ -91,7 +104,7 @@ jobs:
         with:
           service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           package-name: my.package.name
-          custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles.[-1].versionCode')\""
+          custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles.[-1].versionCode')\" >> $GITHUB_ENV"
 
       - name: Test versionCode
         run: |

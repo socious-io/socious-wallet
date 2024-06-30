@@ -45,7 +45,7 @@
     "make:android": "rm -rf android && npx cap add android && npx cap open android",
     "make:ios": "rm -rf android && npx cap add ios && npx cap open ios",
     "generate:assets": "npx @capacitor/assets generate --iconBackgroundColor '#eeeeee' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#eeeeee' --splashBackgroundColorDark '#111111' --assetPath ./public/capacitor-assets",
-    "config:apps": "npx trapeze run trapeze-config.yaml --android-project android --ios-project ios/App",
+    "config:apps": "npx trapeze run trapeze-config.yaml --android-project android --ios-project ios/App -y",
     "prettier": "prettier -w ."
   },
   "eslintConfig": {
