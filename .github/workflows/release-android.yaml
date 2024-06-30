@@ -80,7 +80,7 @@ jobs:
           ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ANDROID_VERSION_CODE: $((${{ env.ANDROID_PACKAGE_NAME }}+1)) # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
+          ANDROID_VERSION_CODE: $((${{ env.LATEST_PLAYSTORE_VERSION_CODE }}+1)) # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
 
       - name: Generating Assets
         run: |
