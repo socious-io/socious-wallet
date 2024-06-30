@@ -29,15 +29,76 @@ body {
         border: 1px solid #d0d5dd;
         box-shadow: 0px 1px 2px 0px #1018280d;
     }
-}
 
-.app__container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+    // My Custom Styles
+    .app__container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
 
-    .container {
-        flex: 1;
+        .container {
+            flex: 1;
+        }
+    }
+
+    .font-size-sm {
+        font-size: 12px;
+    }
+
+    .font-size-md {
+        font-size: 14px;
+    }
+
+    .font-size-default {
+        font-size: 16px;
+    }
+
+    .font-size-lg {
+        font-size: 18px;
+    }
+
+    .font-size-xl {
+        font-size: 20px;
+    }
+
+    .text-gray {
+        color: #475467;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    // Bootstrap Styles
+    .btn-inherit:hover {
+        --bs-btn-hover-color: #003f3c;
+    }
+
+    .alert-warning {
+        --bs-alert-bg: #fffaeb !important;
+        --bs-alert-border-color: #fedf89 !important;
+    }
+
+    .alert-danger {
+        --bs-alert-bg: #fffbfa !important;
+        --bs-alert-border-color: #fecdca !important;
+    }
+
+    .badge {
+        padding: 0.25rem 0.75rem !important;
+        border-radius: 1000px !important;
+    }
+
+    .badge-primary {
+        background-color: #f3f6f6 !important;
+        color: #004a46 !important;
+        border: 1px solid #ccdbda;
+    }
+
+    .badge-error {
+        background-color: #fef3f2 !important;
+        color: #b42318 !important;
+        border: 1px solid #fecdca;
     }
 }
 
@@ -50,63 +111,4 @@ body {
             overflow: hidden;
         }
     }
-}
-
-.btn-inherit:hover {
-    --bs-btn-hover-color: #003f3c;
-}
-
-.badge {
-    padding: 0.25rem 0.75rem !important;
-    border-radius: 1000px !important;
-}
-
-.badge-primary {
-    background-color: #f3f6f6 !important;
-    color: #004a46 !important;
-    border: 1px solid #ccdbda;
-}
-
-.badge-error {
-    background-color: #fef3f2 !important;
-    color: #b42318 !important;
-    border: 1px solid #fecdca;
-}
-
-.alert-warning {
-    --bs-alert-bg: #fffaeb !important;
-    --bs-alert-border-color: #fedf89 !important;
-}
-
-.alert-danger {
-    --bs-alert-bg: #fffbfa !important;
-    --bs-alert-border-color: #fecdca !important;
-}
-
-.font-size-sm {
-    font-size: 12px;
-}
-
-.font-size-md {
-    font-size: 14px;
-}
-
-.font-size-default {
-    font-size: 16px;
-}
-
-.font-size-lg {
-    font-size: 18px;
-}
-
-.font-size-xl {
-    font-size: 20px;
-}
-
-.text-gray {
-    color: #475467;
-}
-
-.pointer {
-    cursor: pointer;
 }
