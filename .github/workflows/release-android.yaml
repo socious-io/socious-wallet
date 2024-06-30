@@ -22,6 +22,17 @@ jobs:
   setup-fastlane:
     runs-on: ubuntu-latest
     steps:
+      - name: Get the latest version code using 
+        uses: Vacxe/google-play-cli-kt@0.4.8
+        with:
+          service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          package-name: 
+          custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
+
+      - name: Tesing version code
+        run: |
+          echo $LATEST_PLAYSTORE_VERSION_CODE
+          echo ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -63,17 +74,6 @@ jobs:
           REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
           REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
 
-      - name: Get the latest version code using 
-        uses: Vacxe/google-play-cli-kt@0.4.8
-        with:
-          service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          package-name: 
-          custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
-
-      - name: Tesing version code
-        run: |
-          echo $LATEST_PLAYSTORE_VERSION_CODE
-          echo ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
 
 
       - name: Configuring apps (using Trapeze)
