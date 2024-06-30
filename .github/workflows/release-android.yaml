@@ -67,7 +67,7 @@ jobs:
         uses: Vacxe/google-play-cli-kt@0.4.8
         with:
           service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          package-name: ${{ env.ANDROID_PACKAGE_NAME }}
+          package-name: 
           custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode')\" >> $GITHUB_ENV"
 
 
@@ -80,7 +80,7 @@ jobs:
           ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ANDROID_VERSION_CODE: $(($LATEST_PLAYSTORE_VERSION_CODE+1)) # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
+          ANDROID_VERSION_CODE: $((${{ env.ANDROID_PACKAGE_NAME }}+1)) # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
 
       - name: Generating Assets
         run: |
