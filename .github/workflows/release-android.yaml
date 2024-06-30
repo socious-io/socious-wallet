@@ -32,7 +32,7 @@ jobs:
 
       - name: Test versionCode
         run: |
-          echo $LATEST_PLAYSTORE_VERSION_CODE
+          echo $LATEST_PLAYSTORE_VERSION_CODE | jq '.bundles.[-1].versionCode'
 
       # - name: Checkout repository
       #   uses: actions/checkout@v4
