@@ -84,8 +84,12 @@ jobs:
         uses: actions/setup-java@v4.2.1
         with:
           distribution: 'oracle' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
+
+      - name: Test java installed
+        run: |
+          java -version
 
       - name: Extracting Android Key for Signing the App
         run: |
