@@ -164,6 +164,6 @@ jobs:
           service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           package-name: ${{ env.ANDROID_PACKAGE_NAME }}
           version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
-          path-to-bundle: ${{ env.ANDROID_AAB_BUILD_PATH }}
+          path-to-bundle: ./Socious-Wallet-${{ github.event.release.tag_name }}.aab
           track: ${{ vars.ANDROID_RELEASE_TRACK }}
           status: ${{ vars.ANDROID_RELEASE_STATUS }}
