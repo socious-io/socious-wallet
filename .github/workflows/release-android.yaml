@@ -133,7 +133,7 @@ jobs:
       - if: ${{ github.event.release.prerelease != true }}
         name: Restoring original java home
         run: |
-          export JAVA_HOME=${{ env.OLD_JAVA_HOME }}
+          echo "JAVA_HOME=${{ env.OLD_JAVA_HOME }}" >> $GITHUB_ENV
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Building bundle release for Playstore (.AAB)
