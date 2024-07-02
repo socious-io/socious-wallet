@@ -1,5 +1,5 @@
 // import { ComponentType } from 'react';
-import { RouteObject, createBrowserRouter, Navigate } from 'react-router-dom';
+import { RouteObject, createBrowserRouter, Navigate, useRouteError } from 'react-router-dom';
 import { useAppContext } from 'src/store';
 import Layout from 'src/containers/Layout';
 import Intro from 'src/pages/Intro';
@@ -37,6 +37,7 @@ export const blueprint: RouteObject[] = [
       { path: '/settings', element: <Settings /> },
       { path: '/scan', element: <Scan /> },
     ],
+    errorElement: <ErrorBoundary />,
   },
 ];
 
@@ -56,6 +57,11 @@ function DefaultRoute(): JSX.Element {
       )}
     </>
   );
+}
+
+function ErrorBoundary() {
+  const error: any = useRouteError();
+  return <p>Oops, {error?.data}</p>;
 }
 
 // function Protect<T extends Record<string, never>>(Component: ComponentType<T>): ComponentType<T> {
