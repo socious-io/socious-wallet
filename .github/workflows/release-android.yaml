@@ -130,16 +130,17 @@ jobs:
           body: ${{ github.event.release.body }}
 
       # On Relase
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Restoring original java home
-        run: |
-          echo "JAVA_HOME=${{ env.OLD_JAVA_HOME }}" >> $GITHUB_ENV
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Building bundle release for Playstore (.AAB)
         run: |
           cd android
           ./gradlew bundleRelease
+          
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Restoring original java home
+        run: |
+          echo "JAVA_HOME=${{ env.OLD_JAVA_HOME }}" >> $GITHUB_ENV
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Upload bundle release (.AAB) to Google Playstore
