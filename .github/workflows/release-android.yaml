@@ -18,7 +18,7 @@ env:
   CI: false
   ANDROID_PACKAGE_NAME: socious.wallet.app
   ANDROID_APK_BUILD_PATH: ./android/app/build/outputs/apk/release/app-release.apk
-  ANDROID_AAB_BUILD_PATH: ./android/app/build/outputs/bundle/app-release.aab
+  ANDROID_AAB_BUILD_PATH: ./android/app/build/outputs/bundle/release/app-release.aab
 
 jobs:
   build-android:
