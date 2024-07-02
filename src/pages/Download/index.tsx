@@ -19,7 +19,7 @@ function Download() {
               alt="Download Socious on the Play Store"
             ></img>
           </a>
-          <a href="https://play.google.com/store/apps/details?id=socious.wallet.app" target="_blank" rel="noreferrer">
+          <a href="https://wallet.socious.io/ios" target="_blank" rel="noreferrer">
             <img
               src="https://cdn.prod.website-files.com/641bae61d957fd6fba23ae35/64223647a6067be415883965_Apple%20Store%20Badge.webp"
               loading="lazy"
