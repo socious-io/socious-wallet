@@ -25,6 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
         with:
@@ -38,9 +41,6 @@ jobs:
           service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           package-name: ${{ env.ANDROID_PACKAGE_NAME }}
           custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
-
-      # - name: Checkout repository
-      #   uses: actions/checkout@v4
 
       # - name: Set up Node.js
       #   uses: actions/setup-node@v2
