@@ -17,6 +17,8 @@ on:
 env: 
   CI: false
   ANDROID_PACKAGE_NAME: socious.wallet.app
+  ANDROID_APK_BUILD_PATH: ./android/app/build/outputs/apk/release/app-release.apk
+  ANDROID_AAB_BUILD_PATH: ./android/app/build/outputs/bundle/app-release.aab
 
 jobs:
   setup-fastlane:
@@ -90,7 +92,6 @@ jobs:
           cd android
           echo ${{ secrets.ANDROID_KEY_STORE_BASE64 }} >> build-release.keystore-base64
           cat build-release.keystore-base64 | base64 --decode > build-release.keystore
-          cat build-release.keystore
 
       # - name: Extracting Google Service Account (For using Google Playstore API)
       #   run: |
@@ -104,33 +105,40 @@ jobs:
           distribution: 'oracle' # See 'Supported distributions' for available options
           java-version: '21'
           cache: 'gradle'
-      
+
+      # On Pre-Relase
       - if: ${{ github.event.release.prerelease == true }}
         name: Building Assemble release for Github (.APK)
         run: |
           cd android
           ./gradlew assembleRelease
-          ls ./app/build/outputs/apk/release
-
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Building bundle release for Playstore (.AAB)
-        run: |
-          cd android
-          ./gradlew bundleRelease
 
       - if: ${{ github.event.release.prerelease == true }}
         name: Upload Building Assemble release (.APK) to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./android/app/build/outputs/apk/release/app-release.apk # AAB -> ./android/app/build/outputs/bundle/app-release.aab
+          file: ${{ env.ANDROID_APK_BUILD_PATH }}
           asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.apk
           tag: ${{ github.ref }}
           overwrite: true
           body: ${{ github.event.release.body }}
 
-      # - if: ${{ github.event.release.prerelease != true }}
-      #   name: Deploying to Google Play
-      #   run: |
-      #     cd android
-      #     fastlane deploy --verbose
+      # On Relase
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Building bundle release for Playstore (.AAB)
+        run: |
+          cd android
+          ./gradlew bundleRelease
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Upload bundle release (.AAB) to Google Playstore
+        uses: vacxe/google-play-cli-kt@master
+        with:
+          template: bundles-upload
+          service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          package-name: ${{ env.ANDROID_PACKAGE_NAME }}
+          version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
+          path-to-bundle: ${{ env.ANDROID_AAB_BUILD_PATH }}
+          track: ${{ vars.ANDROID_RELEASE_TRACK }}
+          status: ${{ vars.ANDROID_RELEASE_STATUS }}
