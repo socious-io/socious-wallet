@@ -25,21 +25,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Checking java home
+      - name: Saving original java home before setting up the new JDK
         run: |
-          java -version
-          echo ---------
-          echo $JAVA_HOME
-          echo ---------
           echo "OLD_JAVA_HOME=$(echo $JAVA_HOME)" >> $GITHUB_ENV
-          echo ---------
-          cat $GITHUB_ENV
 
-
-      - name: Checking java home
+      - name: Restoring original java home
         run: |
-          echo ---------
-          echo ${{ env.OLD_JAVA_HOME }}
+          export JAVA_HOME=${{ env.OLD_JAVA_HOME }}
+
+      - name: Restoring original java home
+        run: |
+          echo $JAVA_HOME
 
       # - name: Checkout repository
       #   uses: actions/checkout@v4
@@ -115,6 +111,11 @@ jobs:
       # #     echo ${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }} >> fastlane/service-account.json-base64
       # #     cat fastlane/service-account.json-base64 | base64 --decode > fastlane/service-account.json
 
+      # - if: ${{ github.event.release.prerelease != true }}
+      #   name: Saving original java home before setting up the new JDK
+      #   run: |
+      #     echo "OLD_JAVA_HOME=$(echo $JAVA_HOME)" >> $GITHUB_ENV
+
       # - name: Setup Java JDK
       #   uses: actions/setup-java@v4.2.1
       #   with:
@@ -141,6 +142,11 @@ jobs:
       #     body: ${{ github.event.release.body }}
 
       # # On Relase
+      # - if: ${{ github.event.release.prerelease != true }}
+      #   name: Restoring original java home
+      #   run: |
+      #     export ${{ env.OLD_JAVA_HOME }}
+
       # - if: ${{ github.event.release.prerelease != true }}
       #   name: Building bundle release for Playstore (.AAB)
       #   run: |
