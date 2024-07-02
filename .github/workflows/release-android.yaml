@@ -22,6 +22,7 @@ env:
 
 jobs:
   build-android:
+    name: Building Android
     runs-on: ubuntu-latest
     steps:
 
@@ -99,7 +100,6 @@ jobs:
       #     echo ${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }} >> fastlane/service-account.json-base64
       #     cat fastlane/service-account.json-base64 | base64 --decode > fastlane/service-account.json
 
-
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
         with:
@@ -143,10 +143,12 @@ jobs:
           overwrite: true
           body: ${{ github.event.release.body }}
 
-  deploy-android-to-playstore:
+  deploy-playstore:
+    name: Deploy to Google Playstore
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
-    
+
       - uses: robinraju/release-downloader@v1.11
         with:
           latest: true
