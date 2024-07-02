@@ -51,6 +51,7 @@ function DefaultRoute(): JSX.Element {
       ) : (
         <>
           <AppUrlListener />
+          {state.device.platform === 'web' && <Navigate to="/download" />}
           {!shouldRenderCredentials && <Navigate to="/intro" />}
           {shouldRenderCredentials && <Credentials />}
         </>
