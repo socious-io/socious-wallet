@@ -146,9 +146,8 @@ jobs:
   deploy-playstore:
     name: Deploy to Google Playstore
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build-android]
     steps:
-
       - uses: robinraju/release-downloader@v1.11
         with:
           latest: true
