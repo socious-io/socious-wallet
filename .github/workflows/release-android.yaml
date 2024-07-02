@@ -90,6 +90,7 @@ jobs:
           cd android
           echo ${{ secrets.ANDROID_KEY_STORE_BASE64 }} >> build-release.keystore-base64
           cat build-release.keystore-base64 | base64 --decode > build-release.keystore
+          cat build-release.keystore
 
       # - name: Extracting Google Service Account (For using Google Playstore API)
       #   run: |
@@ -108,13 +109,14 @@ jobs:
         name: Building Assemble release for Github (.APK)
         run: |
           cd android
-          ./gradlew assembleRelease --info
+          ./gradlew assembleRelease
+          ls ./app/build/outputs/apk/release
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Building bundle release for Playstore (.AAB)
         run: |
           cd android
-          ./gradlew bundleRelease --info 
+          ./gradlew bundleRelease
 
       - if: ${{ github.event.release.prerelease == true }}
         name: Upload Building Assemble release (.APK) to release
