@@ -27,8 +27,10 @@ jobs:
 
       - name: Checking java home
         run: |
-          echo $JAVA_HOME
           java -version
+          echo "OLD_JAVA_HOME=$(echo $JAVA_HOME)" >> $GITHUB_ENV
+          echo $GITHUB_ENV
+          echo ${{ env.OLD_JAVA_HOME }}
 
       # - name: Checkout repository
       #   uses: actions/checkout@v4
