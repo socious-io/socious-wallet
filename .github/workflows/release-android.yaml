@@ -75,10 +75,11 @@ jobs:
           package-name: ${{ env.ANDROID_PACKAGE_NAME }}
           custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
 
-      - name: Output the incremented version code
+      - name: Output the incremented version code and export the version to env
         id: version-code
         run: |
           echo "LATEST_PLAYSTORE_VERSION_CODE=${{ env.LATEST_PLAYSTORE_VERSION_CODE }}" >> $GITHUB_OUTPUT
+          echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
 
       - name: Configuring apps (using Trapeze)
         run: |
@@ -90,6 +91,7 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_VERSION_CODE: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }} # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
+          VERSION: ${{ env.APP_VERSION }}
 
       - name: Generating Assets
         run: |
