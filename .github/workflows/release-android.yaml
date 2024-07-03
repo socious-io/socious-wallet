@@ -1,13 +1,13 @@
 name: CD - Release - Android
 
 on:
-  push:
+  # push:
     # tags:
     #   - v*
-    branches:
-      - ci
-  # release:
-  #   types: [prereleased, released]
+    # branches:
+    #   - ci
+  release:
+    types: [prereleased, released]
 
 # echo ${{ github.event.release.tag_name }} -> tagname
 # echo ${{ github.event.release.prerelease }} -> true,false (${{ github.event.release.prerelease == true }})
