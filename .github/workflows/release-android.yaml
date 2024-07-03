@@ -23,6 +23,8 @@ env:
 jobs:
   build-android:
     name: Building Android
+    outputs:
+      LATEST_PLAYSTORE_VERSION_CODE: ${{ steps.version-code.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
     runs-on: ubuntu-latest
     steps:
 
@@ -72,6 +74,11 @@ jobs:
           service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           package-name: ${{ env.ANDROID_PACKAGE_NAME }}
           custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
+
+      - name: Output the incremented version code
+        id: version-code
+        run: |
+          echo "LATEST_PLAYSTORE_VERSION_CODE=${{ env.LATEST_PLAYSTORE_VERSION_CODE }}" >> $GITHUB_OUTPUT
 
       - name: Configuring apps (using Trapeze)
         run: |
@@ -147,6 +154,8 @@ jobs:
     name: Deploy to Google Playstore
     runs-on: ubuntu-latest
     needs: [build-android]
+    env:
+      LATEST_PLAYSTORE_VERSION_CODE: ${{ needs.build-android.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
     steps:
       - uses: robinraju/release-downloader@v1.11
         with:
