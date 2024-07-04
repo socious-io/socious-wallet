@@ -19,16 +19,18 @@ env:
   IOS_BUNDLE_ID: socious.wallet.app
 
 jobs:
-  build-android:
-    name: Building Android
+  build-ios:
+    name: Building iOS
     outputs:
-      LATEST_PLAYSTORE_VERSION_CODE: ${{ steps.version-code.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
+      LATEST_APPSTORE_BUILD_NUMBER: ${{ steps.build-number.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
     runs-on: macos-latest
     steps:
-      - name: Install Node.js dependencies
+      - name: Fetching the Appstore Connect latest version code
         run: |
           python -m pip install codemagic-cli-tools
-          app-store-connect -h
+          app-store-connect get-latest-build-number ${{ env.IOS_BUNDLE_ID }}
+          app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
+          app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
 
       # - name: Checkout repository
       #   uses: actions/checkout@v4
@@ -56,18 +58,11 @@ jobs:
   #         REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
   #         REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
 
-  #     - name: Get the latest version code using 
-  #       uses: Vacxe/google-play-cli-kt@0.4.8
-  #       with:
-  #         service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-  #         package-name: ${{ env.ANDROID_PACKAGE_NAME }}
-  #         custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
 
-  #     - name: Output the incremented version code and export the version to env
-  #       id: version-code
-  #       run: |
-  #         echo "LATEST_PLAYSTORE_VERSION_CODE=${{ env.LATEST_PLAYSTORE_VERSION_CODE }}" >> $GITHUB_OUTPUT
-  #         echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
+      # - name: Output the incremented build number
+      #   id: build-number
+      #   run: |
+      #     echo "LATEST_APPSTORE_BUILD_NUMBER=${{ env.LATEST_APPSTORE_BUILD_NUMBER }}" >> $GITHUB_OUTPUT
 
   #     - name: Configuring apps (using Trapeze)
   #       run: |
