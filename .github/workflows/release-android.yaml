@@ -1,0 +1,180 @@
+name: CD - Release - Android
+
+on:
+  # push:
+    # tags:
+    #   - v*
+    # branches:
+    #   - ci
+  release:
+    types: [prereleased, released]
+
+# echo ${{ github.event.release.tag_name }} -> tagname
+# echo ${{ github.event.release.prerelease }} -> true,false (${{ github.event.release.prerelease == true }})
+# echo '${{ github.event.release.name }}' -> title
+# echo '${{ github.event.release.body }}' -> body
+
+env: 
+  CI: false
+  ANDROID_PACKAGE_NAME: socious.wallet.app
+  ANDROID_APK_BUILD_PATH: ./android/app/build/outputs/apk/release/app-release.apk
+  ANDROID_AAB_BUILD_PATH: ./android/app/build/outputs/bundle/release/app-release.aab
+
+jobs:
+  build-android:
+    name: Building Android
+    outputs:
+      LATEST_PLAYSTORE_VERSION_CODE: ${{ steps.version-code.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      # Command line: google-play-cli bundles list --config-file ./Downloads/fastlane-automated-release-key-data-file.json --package-name socious.wallet.app | jq '.bundles.[-1].versionCode'
+
+      - name: Install Node.js dependencies
+        run: |
+          npm cache clean --force
+          npm install
+
+      # - name: Making Android Release Code
+      #   run: |
+      #     echo 'REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}' >> .env
+      #     echo 'REACT_APP_PLUTO_PASSWD=${{ secrets.REACT_APP_PLUTO_PASSWD }}' >> .env
+      #     echo 'REACT_APP_PLUTO_DB_NAME=${{ secrets.REACT_APP_PLUTO_DB_NAME }}' >> .env
+      #     echo 'REACT_APP_MEDIATOR_DID=${{ secrets.REACT_APP_MEDIATOR_DID }}' >> .env
+      #     echo 'REACT_APP_BACKUP_AGENT=${{ vars.REACT_APP_BACKUP_AGENT }}' >> .env
+      #     echo 'REACT_APP_BACKUP_AGENT_API_KEY=${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}' >> .env
+      #     echo 'REACT_APP_VERIFF_API_KEY=${{ secrets.REACT_APP_VERIFF_API_KEY }}' >> .env
+      #     npm run build
+      #     npm run make:android
+          
+      - name: Making Android Release Code
+        run: |
+          npm run build
+          npm run make:android
+        env:
+          REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
+          REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
+          REACT_APP_PLUTO_DB_NAME: ${{ secrets.REACT_APP_PLUTO_DB_NAME }}
+          REACT_APP_MEDIATOR_DID: ${{ secrets.REACT_APP_MEDIATOR_DID }}
+          REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
+          REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
+          REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
+
+      - name: Get the latest version code using 
+        uses: Vacxe/google-play-cli-kt@0.4.8
+        with:
+          service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          package-name: ${{ env.ANDROID_PACKAGE_NAME }}
+          custom-script: "echo \"LATEST_PLAYSTORE_VERSION_CODE=$(google-play-cli bundles list | jq '.bundles[-1].versionCode' | awk '{print $1 + 1}')\" >> $GITHUB_ENV"
+
+      - name: Output the incremented version code and export the version to env
+        id: version-code
+        run: |
+          echo "LATEST_PLAYSTORE_VERSION_CODE=${{ env.LATEST_PLAYSTORE_VERSION_CODE }}" >> $GITHUB_OUTPUT
+          echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
+
+      - name: Configuring apps (using Trapeze)
+        run: |
+          npm run config:apps
+          cat android/app/build.gradle
+        env:
+          ANDROID_KEY_STORE_LOCATION: ${{ github.workspace }}/android/build-release.keystore
+          ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_VERSION_CODE: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }} # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
+          VERSION: ${{ env.APP_VERSION }}
+
+      - name: Generating Assets
+        run: |
+          npm run generate:assets
+
+      - name: Extracting Android Key for Signing the App
+        run: |
+          cd android
+          echo ${{ secrets.ANDROID_KEY_STORE_BASE64 }} >> build-release.keystore-base64
+          cat build-release.keystore-base64 | base64 --decode > build-release.keystore
+
+      # - name: Extracting Google Service Account (For using Google Playstore API)
+      #   run: |
+      #     cd android
+      #     echo ${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }} >> fastlane/service-account.json-base64
+      #     cat fastlane/service-account.json-base64 | base64 --decode > fastlane/service-account.json
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'oracle' # See 'Supported distributions' for available options
+          java-version: '21'
+          cache: 'gradle'
+
+      # On Pre-Relase
+      - if: ${{ github.event.release.prerelease == true }}
+        name: Building Assemble release for Github (.APK)
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      - if: ${{ github.event.release.prerelease == true }}
+        name: Upload Building Assemble release (.APK) to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.ANDROID_APK_BUILD_PATH }}
+          asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.apk
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+
+      # On Relase
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Building bundle release for Playstore (.AAB)
+        run: |
+          cd android
+          ./gradlew bundleRelease
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Upload bundle release (.AAB) to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.ANDROID_AAB_BUILD_PATH }}
+          asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.aab
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+
+  deploy-playstore:
+    name: Deploy to Google Playstore
+    runs-on: ubuntu-latest
+    needs: [build-android]
+    env:
+      LATEST_PLAYSTORE_VERSION_CODE: ${{ needs.build-android.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
+    steps:
+      - uses: robinraju/release-downloader@v1.11
+        with:
+          latest: true
+          fileName: Socious-Wallet-${{ github.event.release.tag_name }}.aab
+
+      - run: |
+          ls
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Upload bundle release (.AAB) to Google Playstore
+        uses: vacxe/google-play-cli-kt@master
+        with:
+          template: bundles-upload
+          service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          package-name: ${{ env.ANDROID_PACKAGE_NAME }}
+          version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
+          path-to-bundle: ./Socious-Wallet-${{ github.event.release.tag_name }}.aab
+          track: ${{ vars.ANDROID_RELEASE_TRACK }}
+          status: ${{ vars.ANDROID_RELEASE_STATUS }}
