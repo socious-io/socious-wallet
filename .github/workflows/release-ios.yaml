@@ -97,7 +97,7 @@ jobs:
           IOS_BUILD_NUMBER: 2
           IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
           IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
-          VERSION: ${{ env.APP_VERSION }}
+          # VERSION: ${{ env.APP_VERSION }}
 
       - name: Generating Assets
         run: |
