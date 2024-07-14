@@ -74,7 +74,7 @@ jobs:
 
       - name: Extracting Provisioning Profile (Distribution) for Signing the App
         run: |
-          cd android
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }} >> provisioning-profile.mobileprovision-base64
           cat provisioning-profile.mobileprovision-base64 | base64 --decode > ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision
 
