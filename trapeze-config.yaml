@@ -38,6 +38,7 @@ platforms:
           DEVELOPMENT_TEAM: $IOS_DEVELOPMENT_TEAM_ID
           TARGETED_DEVICE_FAMILY: 1 #1: iPhone ,2:iPhone&iPad, 3:iPad
           CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: iPhone Distribution
 
         plist:
           replace: false
