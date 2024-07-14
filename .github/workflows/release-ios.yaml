@@ -110,12 +110,6 @@ jobs:
         name: Building iOS App
         run: |
           cd ios/App
-          xcodebuild -scheme App -configuration Release -archivePath Actions -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
-
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Archiving iOS App exporting
-        run: |
-          cd ios/App
           xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
       - if: ${{ github.event.release.prerelease != true }}
