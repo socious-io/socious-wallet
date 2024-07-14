@@ -16,7 +16,7 @@ vars:
   IOS_BUILD_NUMBER:
     default: 1
   IOS_BUNDLE_ID:
-    default: socious.wallet.app
+    default: socious.wallet-mobile.app
   IOS_DEVELOPMENT_TEAM_ID:
     default: 596H9K48FY
 
@@ -33,6 +33,7 @@ platforms:
         buildSettings:
           DEVELOPMENT_TEAM: $IOS_DEVELOPMENT_TEAM_ID
           TARGETED_DEVICE_FAMILY: 1 #1: iPhone ,2:iPhone&iPad, 3:iPad
+          CODE_SIGN_STYLE: Manual
 
         plist:
           replace: false

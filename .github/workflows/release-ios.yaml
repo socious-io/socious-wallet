@@ -16,7 +16,9 @@ on:
 
 env: 
   CI: false
-  IOS_BUNDLE_ID: socious.wallet.app
+  IOS_BUNDLE_ID: socious.wallet-mobile.app
+  MOBILE_PROVISIONING_PATH: ~/Library/MobileDevice/Provisioning\ Profiles
+  BUILD_PATH_IOS: ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
 
 jobs:
   build-ios:
@@ -25,139 +27,152 @@ jobs:
       LATEST_APPSTORE_BUILD_NUMBER: ${{ steps.build-number.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
     runs-on: macos-latest
     steps:
-      - name: Fetching the Appstore Connect latest version code
-        run: |
-          python -m pip install codemagic-cli-tools
-          app-store-connect get-latest-build-number ${{ env.IOS_BUNDLE_ID }}
-          app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
-          app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
-
-      # - name: Checkout repository
-      #   uses: actions/checkout@v4
-
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: '20'
-
-  #     - name: Install Node.js dependencies
-  #       run: |
-  #         npm cache clean --force
-  #         npm install
-          
-  #     - name: Making Android Release Code
-  #       run: |
-  #         npm run build
-  #         npm run make:ios
-  #       env:
-  #         REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
-  #         REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
-  #         REACT_APP_PLUTO_DB_NAME: ${{ secrets.REACT_APP_PLUTO_DB_NAME }}
-  #         REACT_APP_MEDIATOR_DID: ${{ secrets.REACT_APP_MEDIATOR_DID }}
-  #         REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
-  #         REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
-  #         REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
-
-
+      # - name: Fetching the Appstore Connect latest version code
+      #   run: |
+      #     python -m pip install codemagic-cli-tools
+      #     app-store-connect get-latest-build-number ${{ env.IOS_BUNDLE_ID }}
+      #     app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
+      #     app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
+      #   env:
+      #     APP_STORE_CONNECT_ISSUER_ID: 
+      #
       # - name: Output the incremented build number
       #   id: build-number
       #   run: |
       #     echo "LATEST_APPSTORE_BUILD_NUMBER=${{ env.LATEST_APPSTORE_BUILD_NUMBER }}" >> $GITHUB_OUTPUT
 
-  #     - name: Configuring apps (using Trapeze)
-  #       run: |
-  #         npm run config:apps
-  #         cat android/app/build.gradle
-  #       env:
-  #         ANDROID_KEY_STORE_LOCATION: ${{ github.workspace }}/android/build-release.keystore
-  #         ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-  #         ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
-  #         ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-  #         ANDROID_VERSION_CODE: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }} # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
-  #         VERSION: ${{ env.APP_VERSION }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Generating Assets
-  #       run: |
-  #         npm run generate:assets
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
 
-  #     - name: Extracting Android Key for Signing the App
-  #       run: |
-  #         cd android
-  #         echo ${{ secrets.ANDROID_KEY_STORE_BASE64 }} >> build-release.keystore-base64
-  #         cat build-release.keystore-base64 | base64 --decode > build-release.keystore
+      - name: Install Node.js dependencies
+        run: |
+          npm cache clean --force
+          npm install
+          
+      - name: Making Android Release Code
+        run: |
+          npm run build
+          npm run make:ios
+        env:
+          REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
+          REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
+          REACT_APP_PLUTO_DB_NAME: ${{ secrets.REACT_APP_PLUTO_DB_NAME }}
+          REACT_APP_MEDIATOR_DID: ${{ secrets.REACT_APP_MEDIATOR_DID }}
+          REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
+          REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
+          REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
 
-  #     # - name: Extracting Google Service Account (For using Google Playstore API)
-  #     #   run: |
-  #     #     cd android
-  #     #     echo ${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }} >> fastlane/service-account.json-base64
-  #     #     cat fastlane/service-account.json-base64 | base64 --decode > fastlane/service-account.json
 
-  #     - name: Setup Java JDK
-  #       uses: actions/setup-java@v4.2.1
-  #       with:
-  #         distribution: 'oracle' # See 'Supported distributions' for available options
-  #         java-version: '21'
-  #         cache: 'gradle'
+      - name: Configuring apps (using Trapeze)
+        run: |
+          npm run config:apps
+        env:
+          ANDROID_KEY_STORE_LOCATION: ${{ github.workspace }}/android/build-release.keystore
+          ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_VERSION_CODE: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }} # Incremented version of the LATEST_PLAYSTORE_VERSION_CODE
+          VERSION: ${{ env.APP_VERSION }}
 
-  #     # On Pre-Relase
-  #     - if: ${{ github.event.release.prerelease == true }}
-  #       name: Building Assemble release for Github (.APK)
-  #       run: |
-  #         cd android
-  #         ./gradlew assembleRelease
+      - name: Generating Assets
+        run: |
+          npm run generate:assets
 
-  #     - if: ${{ github.event.release.prerelease == true }}
-  #       name: Upload Building Assemble release (.APK) to release
-  #       uses: svenstaro/upload-release-action@v2
-  #       with:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #         file: ${{ env.ANDROID_APK_BUILD_PATH }}
-  #         asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.apk
-  #         tag: ${{ github.ref }}
-  #         overwrite: true
-  #         body: ${{ github.event.release.body }}
+      - name: Extracting Provisioning Profile (Distribution) for Signing the App
+        run: |
+          cd android
+          echo ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }} >> provisioning-profile.mobileprovision-base64
+          cat provisioning-profile.mobileprovision-base64 | base64 --decode > ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision
+          echo "MOBILE_PROVISIONING_UUID=$(security cms -D -i ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision | grep UUID -A1 -m1 | grep string | sed -e 's/<string>//' -e 's/<\/string>//' | xargs)" > $GITHUB_ENV
 
-  #     # On Relase
-  #     - if: ${{ github.event.release.prerelease != true }}
-  #       name: Building bundle release for Playstore (.AAB)
-  #       run: |
-  #         cd android
-  #         ./gradlew bundleRelease
 
-  #     - if: ${{ github.event.release.prerelease != true }}
-  #       name: Upload bundle release (.AAB) to release
-  #       uses: svenstaro/upload-release-action@v2
-  #       with:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #         file: ${{ env.ANDROID_AAB_BUILD_PATH }}
-  #         asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.aab
-  #         tag: ${{ github.ref }}
-  #         overwrite: true
-  #         body: ${{ github.event.release.body }}
+      # # On Pre-Relase
+      # - if: ${{ github.event.release.prerelease == true }}
+      #   name: Building Assemble release for Github (.IPA)
+      #   run: |
+      #     cd ios/App
+      #     xcodebuild -scheme "App" -configuration "Release" -archivePath "Actions" -workspace ./ios/App/App.xcworkspace PROVISIONING_PROFILE="UUID" # in ios/App
+      #     xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="60e730ee-38a3-4c41-86f9-b7a6f20d8c07" # in ios/App
+      #     xcodebuild -exportArchive -archivePath ./Actions.xcarchive -exportPath ./build -exportOptionsPlist App/Info.plist
 
-  # deploy-playstore:
-  #   name: Deploy to Google Playstore
-  #   runs-on: ubuntu-latest
-  #   needs: [build-android]
-  #   env:
-  #     LATEST_PLAYSTORE_VERSION_CODE: ${{ needs.build-android.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
-  #   steps:
-  #     - uses: robinraju/release-downloader@v1.11
-  #       with:
-  #         latest: true
-  #         fileName: Socious-Wallet-${{ github.event.release.tag_name }}.aab
+      # - if: ${{ github.event.release.prerelease == true }}
+      #   name: Upload Building Assemble release (.APK) to release
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: ${{ env.ANDROID_APK_BUILD_PATH }}
+      #     asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
+      #     tag: ${{ github.ref }}
+      #     overwrite: true
+      #     body: ${{ github.event.release.body }}
 
-  #     - run: |
-  #         ls
+      # On Relase
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Building iOS App
+        run: |
+          cd ios/App
+          xcodebuild -scheme App -configuration Release -archivePath Actions -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
-  #     - if: ${{ github.event.release.prerelease != true }}
-  #       name: Upload bundle release (.AAB) to Google Playstore
-  #       uses: vacxe/google-play-cli-kt@master
-  #       with:
-  #         template: bundles-upload
-  #         service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-  #         package-name: ${{ env.ANDROID_PACKAGE_NAME }}
-  #         version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
-  #         path-to-bundle: ./Socious-Wallet-${{ github.event.release.tag_name }}.aab
-  #         track: ${{ vars.ANDROID_RELEASE_TRACK }}
-  #         status: ${{ vars.ANDROID_RELEASE_STATUS }}
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Archiving iOS App exporting
+        run: |
+          cd ios/App
+          xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Exporting archive for releasing to Appstore (.IPA)
+        run: |
+          cd ios/App
+          xcodebuild -exportArchive -archivePath ./Actions.xcarchive -exportPath ./build -exportOptionsPlist ./Export.plist PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Verifying build for releasing to Appstore (.IPA)
+        run: |
+          cd ios/App
+          xcrun altool --validate-app -f ./build/Socious\ Wallet.ipa -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Releasing the build to Appstore (.IPA)
+        run: |
+          cd ios/App
+          xcrun altool --upload-app -f ./build/Socious\ Wallet.ipa -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Upload bundle release (.AAB) to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./build/Socious\ Wallet.ipa
+          asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+
+  deploy-appstore:
+    name: Deploy to Apple Appstore
+    runs-on: macos-latest
+    needs: [build-ios]
+    env:
+      LATEST_PLAYSTORE_VERSION_CODE: ${{ needs.build-android.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
+    steps:
+      - uses: robinraju/release-downloader@v1.11
+        with:
+          latest: true
+          fileName: Socious-Wallet-${{ github.event.release.tag_name }}.aab
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Upload bundle release (.IPA) to Apple Appstore
+        uses: vacxe/google-play-cli-kt@master
+        with:
+          template: bundles-upload
+          service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          package-name: ${{ env.IOS_BUNDLE_ID }}
+          version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
+          path-to-bundle: ./Socious-Wallet-${{ github.event.release.tag_name }}.aab
+          track: ${{ vars.ANDROID_RELEASE_TRACK }}
+          status: ${{ vars.ANDROID_RELEASE_STATUS }}
