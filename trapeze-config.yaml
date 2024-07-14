@@ -10,9 +10,13 @@ vars:
   ANDROID_PACKAGE_NAME:
     default: socious.wallet.app
   ANDROID_KEY_STORE_LOCATION:
+    default: ./android/build-release.keystore
   ANDROID_KEY_STORE_PASSWORD:
+    default: P@$$w0rd
   ANDROID_KEY_ALIAS:
+    default: key_number_one
   ANDROID_KEY_PASSWORD:
+    default: P@$$w0rd
   IOS_BUILD_NUMBER:
     default: 1
   IOS_BUNDLE_ID:
