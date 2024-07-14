@@ -89,8 +89,6 @@ jobs:
           sed -ie 's/IOS_DEVELOPMENT_TEAM_ID/${{ env.IOS_DEVELOPMENT_TEAM_ID }}/g' Export.plist
           sed -ie 's/IOS_BUNDLE_ID/${{ env.IOS_BUNDLE_ID }}/g' Export.plist
           sed -ie 's/MOBILE_PROVISIONING_UUID/${{ env.MOBILE_PROVISIONING_UUID }}/g' Export.plist
-          cat Export.plist
-          cat App.xcodeproj/project.pbxproj
 
       - name: Configuring apps (using Trapeze)
         run: |
