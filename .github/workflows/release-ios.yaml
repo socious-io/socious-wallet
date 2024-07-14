@@ -147,7 +147,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./build/Socious\ Wallet.ipa
+          file: ${{ env.BUILD_PATH_IOS }}
           asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
           tag: ${{ github.ref }}
           overwrite: true
