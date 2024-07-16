@@ -20,6 +20,9 @@ env:
   IOS_DEVELOPMENT_TEAM_ID: ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
   MOBILE_PROVISIONING_PATH: ~/Library/MobileDevice/Provisioning\ Profiles
   BUILD_PATH_IOS: ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
+  SIGNING_CERTIFICATE_PATH: ${{ github.workspace }}/ios/App/signing-certificate.p12
+  KEYCHAIN_PATH: "${{ github.workspace }}/ios/keychain/app-signing.keychain-db"
+  KEYCHAIN_PASSWORD: keychain_password
 
 jobs:
   build-ios:
@@ -72,11 +75,28 @@ jobs:
       #   run: |
       #     echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
 
-      - name: Extracting Provisioning Profile (Distribution) for Signing the App
+      - name: Extracting provisioning profile (Distribution)
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }} >> provisioning-profile.mobileprovision-base64
-          cat provisioning-profile.mobileprovision-base64 | base64 --decode > ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision
+          echo ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }} | base64 --decode > ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision
+
+      - name: Extracting and Installing signing certificate (.p12)
+        run: |
+
+          SIGNING_CERTIFICATE_PATH="${{ env.SIGNING_CERTIFICATE_PATH }}"
+          KEYCHAIN_PATH="${{ env.KEYCHAIN_PATH }}"
+          KEYCHAIN_PASSWORD="${{ env.KEYCHAIN_PASSWORD }}"
+          P12_PASSWORD="${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}"
+
+          echo ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }} | base64 --decode > $SIGNING_CERTIFICATE_PATH
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security import $SIGNING_CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
 
       - name: Adding Provisioning Profile UUID to Github Env
         run: |
@@ -131,6 +151,12 @@ jobs:
           cd ios/App
           xcrun altool --upload-app -f ./build/Socious\ Wallet.ipa -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
 
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
+  
       - if: ${{ github.event.release.prerelease != true }}
         name: Upload bundle release (.AAB) to release
         uses: svenstaro/upload-release-action@v2
