@@ -68,9 +68,9 @@ jobs:
           REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
           REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
 
-      - name: Extracting App Version
-        run: |
-          echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
+      # - name: Extracting App Version
+      #   run: |
+      #     echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
 
       - name: Extracting Provisioning Profile (Distribution) for Signing the App
         run: |
@@ -110,7 +110,7 @@ jobs:
         name: Building iOS App
         run: |
           cd ios/App
-          cat App.xcodeproj/project.pbxproj
+          cat Export.plist
           xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
       - if: ${{ github.event.release.prerelease != true }}
