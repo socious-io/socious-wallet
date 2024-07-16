@@ -85,6 +85,7 @@ jobs:
         run: |
           mkdir -p ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
           echo ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ secrets.IOS_APPSTORECONNECT_API_KEY }}.p8
+          cat ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ secrets.IOS_APPSTORECONNECT_API_KEY }}.p8
 
       - name: Extracting and Installing signing certificate (.p12)
         run: |
