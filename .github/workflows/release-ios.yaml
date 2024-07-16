@@ -137,7 +137,6 @@ jobs:
         name: Building iOS App
         run: |
           cd ios/App
-          cat Export.plist
           xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
       - if: ${{ github.event.release.prerelease != true }}
@@ -150,13 +149,13 @@ jobs:
         name: Verifying build for releasing to Appstore (.IPA)
         run: |
           cd ios/App
-          xcrun altool --validate-app -f ./build/Socious\ Wallet.ipa -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
+          xcrun altool --validate-app -f "./build/Socious\ Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }} --verbose
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Releasing the build to Appstore (.IPA)
         run: |
           cd ios/App
-          xcrun altool --upload-app -f ./build/Socious\ Wallet.ipa -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
+          xcrun altool --upload-app -f "./build/Socious\ Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
 
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}
