@@ -20,6 +20,7 @@ env:
   IOS_DEVELOPMENT_TEAM_ID:              ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
   IOS_APPSTORECONNECT_AUTH_KEY_BASE64:  ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
   IOS_APPSTORECONNECT_API_KEY:          ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
+  IOS_APPSTORECONNECT_API_ISSUER:       ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
   #Defined ENVs
   CI:                                   false
   APPSTORECONNECT_AUTH_KEY_PATH:        ~/private_keys
@@ -28,6 +29,7 @@ env:
   BUILD_PATH:                           ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
   KEYCHAIN_PATH:                        ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
   KEYCHAIN_PASSWORD:                    keychain_password
+  
 
 jobs:
   build-ios:
@@ -49,12 +51,15 @@ jobs:
 
       - name: Fetching the Appstore Connect latest version code
         run: |
+          BUNDLE_ID="${{ env.IOS_BUNDLE_ID }}"
+
           python -m pip install codemagic-cli-tools
-          app-store-connect get-latest-build-number ${{ env.IOS_BUNDLE_ID }}
+          app-store-connect get-latest-build-number $BUNDLE_ID
           app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
           app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
         env:
-          APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
       
       - name: Output the incremented build number
         id: build-number
@@ -162,14 +167,18 @@ jobs:
   #     - if: ${{ github.event.release.prerelease != true }}
   #       name: Verifying build for releasing to Appstore (.IPA)
   #       run: |
+            # API_ISSUER="${{ env.IOS_APPSTORECONNECT_API_ISSUER }}"
+            # API_KEY="${{ secrets.IOS_APPSTORECONNECT_API_KEY }}"
   #         cd ios/App
-  #         xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
+  #         xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
 
   #     - if: ${{ github.event.release.prerelease != true }}
   #       name: Releasing the build to Appstore (.IPA)
   #       run: |
+              # API_ISSUER="${{ env.IOS_APPSTORECONNECT_API_ISSUER }}"
+            # API_KEY="${{ secrets.IOS_APPSTORECONNECT_API_KEY }}"
   #         cd ios/App
-  #         xcrun altool --upload-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
+  #         xcrun altool --upload-app -f "./build/Socious Wallet.ipa" -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
 
   #     - if: ${{ github.event.release.prerelease != true }}
   #       name: Upload bundle release (.AAB) to release
