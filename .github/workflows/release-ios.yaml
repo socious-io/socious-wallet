@@ -156,6 +156,7 @@ jobs:
         name: Build and archiving the app
         run: |
           cd ios/App
+          cat App.xcodeproj/project.pbxproj
           xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
       - if: ${{ github.event.release.prerelease != true }}
