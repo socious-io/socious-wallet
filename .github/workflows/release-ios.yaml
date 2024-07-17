@@ -62,7 +62,7 @@ jobs:
           echo ${{ env.APP_STORE_CONNECT_PRIVATE_KEY }}
           python -m pip install codemagic-cli-tools
           echo "LATEST_APPSTORE_BUILD_NUMBER=$(app-store-connect get-latest-build-number $APPLICATION_ID_RESOURCE_ID | awk '{print $1 + 1}')" >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
 
           app-store-connect get-latest-app-store-build-number $APPLICATION_ID_RESOURCE_ID
           app-store-connect get-latest-testflight-build-number $APPLICATION_ID_RESOURCE_ID
