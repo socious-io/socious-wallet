@@ -52,7 +52,7 @@ jobs:
       - name: Fetching the Appstore Connect latest version code
         run: |
           BUNDLE_ID="${{ env.IOS_BUNDLE_ID }}"
-
+          echo ${{ env.APP_STORE_CONNECT_PRIVATE_KEY }}
           python -m pip install codemagic-cli-tools
           app-store-connect get-latest-build-number $BUNDLE_ID
           app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
@@ -60,7 +60,7 @@ jobs:
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
-          APP_STORE_CONNECT_PRIVATE_KEY: "${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
+          APP_STORE_CONNECT_PRIVATE_KEY: cat "${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
       
       - name: Output the incremented build number
         id: build-number
