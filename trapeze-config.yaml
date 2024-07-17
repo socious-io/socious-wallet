@@ -4,7 +4,7 @@ vars:
   DISPLAY_NAME:
     default: Socious Wallet
   VERSION:
-    default: 1.0.1
+    default: 1.4
   ANDROID_VERSION_CODE:
     default: 3
   ANDROID_PACKAGE_NAME:
