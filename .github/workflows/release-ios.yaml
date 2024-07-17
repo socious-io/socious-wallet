@@ -21,6 +21,7 @@ env:
   IOS_APPSTORECONNECT_AUTH_KEY_BASE64:  ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
   IOS_APPSTORECONNECT_API_KEY:          ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
   IOS_APPSTORECONNECT_API_ISSUER:       ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
+  IOS_APP_APPLE_ID:                     6504291754
   #Defined ENVs
   CI:                                   false
   APPSTORECONNECT_AUTH_KEY_PATH:        ~/private_keys
@@ -51,11 +52,13 @@ jobs:
       - name: Fetching the Appstore Connect latest version code
         run: |
           BUNDLE_ID="${{ env.IOS_BUNDLE_ID }}"
+          APPLICATION_ID_RESOURCE_ID="${{ env.IOS_APP_APPLE_ID }}"
+
           echo ${{ env.APP_STORE_CONNECT_PRIVATE_KEY }}
           python -m pip install codemagic-cli-tools
-          app-store-connect get-latest-build-number 6504291754
-          app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
-          app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
+          app-store-connect get-latest-build-number $APPLICATION_ID_RESOURCE_ID
+          app-store-connect get-latest-app-store-build-number $APPLICATION_ID_RESOURCE_ID
+          app-store-connect get-latest-testflight-build-number $APPLICATION_ID_RESOURCE_ID
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
