@@ -15,15 +15,19 @@ on:
 # echo '${{ github.event.release.body }}' -> body
 
 env: 
-  CI: false
-  IOS_BUNDLE_ID: socious.wallet-mobile.app
-  IOS_DEVELOPMENT_TEAM_ID: ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
-  MOBILE_PROVISIONING_PATH: ~/Library/MobileDevice/Provisioning\ Profiles
-  BUILD_PATH_IOS: ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
-  SIGNING_CERTIFICATE_PATH: ${{ github.workspace }}/ios/App/signing-certificate.p12
-  KEYCHAIN_PATH: "${{ github.workspace }}/ios/keychain/app-signing.keychain-db"
-  KEYCHAIN_PASSWORD: keychain_password
-  APPSTORECONNECT_AUTH_KEY_PATH: ~/private_keys
+  #Github ENVs
+  IOS_BUNDLE_ID:                        socious.wallet-mobile.app
+  IOS_DEVELOPMENT_TEAM_ID:              ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
+  IOS_APPSTORECONNECT_AUTH_KEY_BASE64:  ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
+  IOS_APPSTORECONNECT_API_KEY:          ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
+  #Defined ENVs
+  CI:                                   false
+  APPSTORECONNECT_AUTH_KEY_PATH:        ~/private_keys
+  MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
+  SIGNING_CERTIFICATE_PATH:             ${{ github.workspace }}/ios/App/signing-certificate.p12
+  BUILD_PATH:                           ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
+  KEYCHAIN_PATH:                        ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
+  KEYCHAIN_PASSWORD:                    keychain_password
 
 jobs:
   build-ios:
@@ -35,8 +39,13 @@ jobs:
 
       - name: Extracting auth key file (Apple API)
         run: |
-          mkdir -p ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
-          echo ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ secrets.IOS_APPSTORECONNECT_API_KEY }}.p8
+          API_KEY="${{ env.IOS_APPSTORECONNECT_API_KEY }}"
+          KEY_PATH="${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}"
+          KEY_FILE_PATH="$KEY_PATH/AuthKey_$API_KEY.p8"
+
+          mkdir -p $KEY_PATH
+          echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
+          cat $KEY_FILE_PATH
 
       - name: Fetching the Appstore Connect latest version code
         run: |
@@ -45,7 +54,7 @@ jobs:
           app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
           app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
         env:
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
       
       - name: Output the incremented build number
         id: build-number
@@ -167,7 +176,7 @@ jobs:
   #       uses: svenstaro/upload-release-action@v2
   #       with:
   #         repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #         file: ${{ env.BUILD_PATH_IOS }}
+  #         file: ${{ env.BUILD_PATH }}
   #         asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
   #         tag: ${{ github.ref }}
   #         overwrite: true
