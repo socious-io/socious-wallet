@@ -136,14 +136,14 @@ jobs:
       #     sed -ie 's/IOS_BUNDLE_ID/${{ env.IOS_BUNDLE_ID }}/g' Export.plist
       #     sed -ie 's/MOBILE_PROVISIONING_UUID/${{ env.MOBILE_PROVISIONING_UUID }}/g' Export.plist
 
-      - name: Configuring apps (using Trapeze)
-        env:
-          IOS_BUILD_NUMBER: ${{ env.LATEST_APPSTORE_BUILD_NUMBER }}
-          IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
-          IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
-          # VERSION: ${{ env.APP_VERSION }}
-        run: |
-          npm run config:apps
+      # - name: Configuring apps (using Trapeze)
+      #   env:
+      #     IOS_BUILD_NUMBER: ${{ env.LATEST_APPSTORE_BUILD_NUMBER }}
+      #     IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
+      #     IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
+      #     # VERSION: ${{ env.APP_VERSION }}
+      #   run: |
+      #     npm run config:apps
         
       # - name: Generating Assets
       #   run: |
