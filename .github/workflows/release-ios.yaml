@@ -15,19 +15,19 @@ on:
 # echo '${{ github.event.release.body }}' -> body
 
 env:
-  CI:                                   false
   IOS_BUNDLE_ID:                        socious.mobile-wallet.app
   IOS_DEVELOPMENT_TEAM_ID:              ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
   IOS_APPSTORECONNECT_AUTH_KEY_BASE64:  ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
   IOS_APPSTORECONNECT_API_KEY:          ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
   IOS_APPSTORECONNECT_API_ISSUER:       ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
-  # IOS_APP_APPLE_ID:                     "6504291754"
-  APPSTORECONNECT_AUTH_KEY_PATH:        ~/private_keys
-  MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
-  SIGNING_CERTIFICATE_PATH:             ${{ github.workspace }}/ios/App/signing-certificate.p12
-  BUILD_PATH:                           ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
-  KEYCHAIN_PATH:                        ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
-  KEYCHAIN_PASSWORD:                    keychain_password
+  IOS_APP_APPLE_ID:                     6504291754
+  CI:                                   false
+  # APPSTORECONNECT_AUTH_KEY_PATH:        ~/private_keys
+  # MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
+  # SIGNING_CERTIFICATE_PATH:             ${{ github.workspace }}/ios/App/signing-certificate.p12
+  # BUILD_PATH:                           ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
+  # KEYCHAIN_PATH:                        ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
+  # KEYCHAIN_PASSWORD:                    keychain_password
   
 
 jobs:
