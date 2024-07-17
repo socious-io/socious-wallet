@@ -41,8 +41,8 @@ jobs:
 
       - name: Extracting auth key file (Apple API)
         run: |
-          API_KEY="${{ env.IOS_APPSTORECONNECT_API_KEY }}"
           KEY_PATH="${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}"
+          API_KEY="${{ env.IOS_APPSTORECONNECT_API_KEY }}"
           KEY_FILE_PATH="$KEY_PATH/AuthKey_$API_KEY.p8"
 
           mkdir -p $KEY_PATH
@@ -60,6 +60,7 @@ jobs:
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
+          APP_STORE_CONNECT_PRIVATE_KEY: "${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
       
       - name: Output the incremented build number
         id: build-number
