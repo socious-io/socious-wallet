@@ -1,0 +1,199 @@
+name: CD - Release - iOS
+
+on:
+  push:
+    # tags:
+    #   - v*
+    branches:
+      - ios-ci
+  # release:
+  #   types: [prereleased, released]
+
+# echo ${{ github.event.release.tag_name }} -> tagname
+# echo ${{ github.event.release.prerelease }} -> true,false (${{ github.event.release.prerelease == true }})
+# echo '${{ github.event.release.name }}' -> title
+# echo '${{ github.event.release.body }}' -> body
+
+env: 
+  CI: false
+  IOS_BUNDLE_ID: socious.wallet-mobile.app
+  IOS_DEVELOPMENT_TEAM_ID: ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
+  MOBILE_PROVISIONING_PATH: ~/Library/MobileDevice/Provisioning\ Profiles
+  BUILD_PATH_IOS: ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
+  SIGNING_CERTIFICATE_PATH: ${{ github.workspace }}/ios/App/signing-certificate.p12
+  KEYCHAIN_PATH: "${{ github.workspace }}/ios/keychain/app-signing.keychain-db"
+  KEYCHAIN_PASSWORD: keychain_password
+  APPSTORECONNECT_AUTH_KEY_PATH: ~/private_keys
+
+jobs:
+  build-ios:
+    name: Building iOS
+    outputs:
+      LATEST_APPSTORE_BUILD_NUMBER: ${{ steps.build-number.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
+    runs-on: macos-latest
+    steps:
+      # - name: Fetching the Appstore Connect latest version code
+      #   run: |
+      #     python -m pip install codemagic-cli-tools
+      #     app-store-connect get-latest-build-number ${{ env.IOS_BUNDLE_ID }}
+      #     app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
+      #     app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
+      #   env:
+      #     APP_STORE_CONNECT_ISSUER_ID: 
+      #
+      # - name: Output the incremented build number
+      #   id: build-number
+      #   run: |
+      #     echo "LATEST_APPSTORE_BUILD_NUMBER=${{ env.LATEST_APPSTORE_BUILD_NUMBER }}" >> $GITHUB_OUTPUT
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install Node.js dependencies
+        run: |
+          npm cache clean --force
+          npm install
+          
+      - name: Making iOS Release Code
+        run: |
+          npm run build
+          npm run make:ios
+        env:
+          REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
+          REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
+          REACT_APP_PLUTO_DB_NAME: ${{ secrets.REACT_APP_PLUTO_DB_NAME }}
+          REACT_APP_MEDIATOR_DID: ${{ secrets.REACT_APP_MEDIATOR_DID }}
+          REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
+          REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
+          REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
+
+      # - name: Extracting App Version
+      #   run: |
+      #     echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
+
+      - name: Extracting provisioning profile (Distribution)
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }} | base64 --decode > ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision
+
+      - name: Extracting auth key file (Apple API)
+        run: |
+          mkdir -p ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
+          echo ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ secrets.IOS_APPSTORECONNECT_API_KEY }}.p8
+          cat ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ secrets.IOS_APPSTORECONNECT_API_KEY }}.p8
+
+      - name: Extracting and Installing signing certificate (.p12)
+        run: |
+
+          SIGNING_CERTIFICATE_PATH="${{ env.SIGNING_CERTIFICATE_PATH }}"
+          KEYCHAIN_PATH="${{ env.KEYCHAIN_PATH }}"
+          KEYCHAIN_PASSWORD="${{ env.KEYCHAIN_PASSWORD }}"
+          P12_PASSWORD="${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}"
+
+          echo ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }} | base64 --decode > $SIGNING_CERTIFICATE_PATH
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security import $SIGNING_CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+
+      - name: Adding Provisioning Profile UUID to Github Env
+        run: |
+          echo "MOBILE_PROVISIONING_UUID=$(security cms -D -i ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision | grep UUID -A1 -m1 | grep string | sed -e 's/<string>//' -e 's/<\/string>//' | xargs)" > $GITHUB_ENV
+
+      - name: Creating Export.plist
+        run: |
+          cd ios/App
+          cp ../../.github/workflows/ios-export.plist Export.plist
+          sed -ie 's/IOS_DEVELOPMENT_TEAM_ID/${{ env.IOS_DEVELOPMENT_TEAM_ID }}/g' Export.plist
+          sed -ie 's/IOS_BUNDLE_ID/${{ env.IOS_BUNDLE_ID }}/g' Export.plist
+          sed -ie 's/MOBILE_PROVISIONING_UUID/${{ env.MOBILE_PROVISIONING_UUID }}/g' Export.plist
+
+      - name: Configuring apps (using Trapeze)
+        run: |
+          npm run config:apps
+        env:
+          IOS_BUILD_NUMBER: 2
+          IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
+          IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
+          # VERSION: ${{ env.APP_VERSION }}
+
+      - name: Generating Assets
+        run: |
+          npm run generate:assets
+
+      # On Pre-Relase
+
+      # On Relase
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Building iOS App
+        run: |
+          cd ios/App
+          xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Exporting archive for releasing to Appstore (.IPA)
+        run: |
+          cd ios/App
+          xcodebuild -exportArchive -archivePath ./Actions.xcarchive -exportPath ./build -exportOptionsPlist ./Export.plist PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Verifying build for releasing to Appstore (.IPA)
+        run: |
+          cd ios/App
+          xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey 9BXH3SHQ5J --apiIssuer 1039f1cf-9e4f-43c7-898c-52425fe97f64 --verbose
+
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Releasing the build to Appstore (.IPA)
+        run: |
+          cd ios/App
+          xcrun altool --upload-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
+
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
+  
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Upload bundle release (.AAB) to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.BUILD_PATH_IOS }}
+          asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+
+  # deploy-appstore:
+  #   name: Deploy to Apple Appstore
+  #   runs-on: macos-latest
+  #   needs: [build-ios]
+  #   env:
+  #     LATEST_PLAYSTORE_VERSION_CODE: ${{ needs.build-android.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
+  #   steps:
+  #     - uses: robinraju/release-downloader@v1.11
+  #       with:
+  #         latest: true
+  #         fileName: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
+
+  #     - if: ${{ github.event.release.prerelease != true }}
+  #       name: Upload bundle release (.IPA) to Apple Appstore
+  #       uses: vacxe/google-play-cli-kt@master
+  #       with:
+  #         template: bundles-upload
+  #         service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+  #         package-name: ${{ env.IOS_BUNDLE_ID }}
+  #         version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
+  #         path-to-bundle: ./Socious-Wallet-${{ github.event.release.tag_name }}.aab
+  #         track: ${{ vars.ANDROID_RELEASE_TRACK }}
+  #         status: ${{ vars.ANDROID_RELEASE_STATUS }}
