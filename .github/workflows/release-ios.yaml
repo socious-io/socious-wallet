@@ -20,7 +20,7 @@ env:
   IOS_APPSTORECONNECT_AUTH_KEY_BASE64:  ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
   IOS_APPSTORECONNECT_API_KEY:          ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
   IOS_APPSTORECONNECT_API_ISSUER:       ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
-  IOS_APP_APPLE_ID:                     6504291754
+  IOS_APP_APPLE_ID:                     "6504291754"
   CI:                                   false
   APPSTORECONNECT_AUTH_KEY_PATH:        ~/private_keys
   MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
