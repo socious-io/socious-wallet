@@ -149,7 +149,7 @@ jobs:
         name: Verifying build for releasing to Appstore (.IPA)
         run: |
           cd ios/App
-          xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }} --verbose
+          xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer 1039f1cf-9e4f-43c7-898c-52425fe97f64 --verbose
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Releasing the build to Appstore (.IPA)
