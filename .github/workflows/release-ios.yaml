@@ -33,12 +33,19 @@ jobs:
     runs-on: macos-latest
     steps:
 
+      - name: Extracting auth key file (Apple API)
+        run: |
+          mkdir -p ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
+          echo ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ secrets.IOS_APPSTORECONNECT_API_KEY }}.p8
+
       - name: Fetching the Appstore Connect latest version code
         run: |
           python -m pip install codemagic-cli-tools
           app-store-connect get-latest-build-number ${{ env.IOS_BUNDLE_ID }}
           app-store-connect get-latest-app-store-build-number APPLICATION_ID_RESOURCE_ID
           app-store-connect get-latest-testflight-build-number APPLICATION_ID_RESOURCE_ID
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
       
       - name: Output the incremented build number
         id: build-number
