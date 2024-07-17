@@ -138,7 +138,7 @@ jobs:
 
       - name: Configuring apps (using Trapeze)
         env:
-          IOS_BUILD_NUMBER: ${{ env.LATEST_APPSTORE_BUILD_NUMBER }}
+          IOS_BUILD_NUMBER: 3
           IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
           IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
           # VERSION: ${{ env.APP_VERSION }}
