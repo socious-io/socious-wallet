@@ -47,7 +47,6 @@ jobs:
 
           mkdir -p $KEY_PATH
           echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
-          cat $KEY_FILE_PATH
 
       - name: Fetching the Appstore Connect latest version code
         run: |
