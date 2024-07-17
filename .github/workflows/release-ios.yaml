@@ -26,7 +26,7 @@ env:
   MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
   SIGNING_CERTIFICATE_PATH:             ${{ github.workspace }}/ios/App/signing-certificate.p12
   BUILD_PATH:                           ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
-  # KEYCHAIN_PATH:                        ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
+  KEYCHAIN_PATH:                        ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
   # KEYCHAIN_PASSWORD:                    keychain_password
   
 jobs:
