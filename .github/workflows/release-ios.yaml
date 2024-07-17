@@ -1,13 +1,13 @@
 name: CD - Release - iOS
 
 on:
-  push:
-    # tags:
-    #   - v*
-    branches:
-      - ios-ci
-  # release:
-  #   types: [prereleased, released]
+  # push:
+  #   # tags:
+  #   #   - v*
+  #   branches:
+  #     - ios-ci
+  release:
+    types: [prereleased, released]
 
 # echo ${{ github.event.release.tag_name }} -> tagname
 # echo ${{ github.event.release.prerelease }} -> true,false (${{ github.event.release.prerelease == true }})
@@ -70,84 +70,84 @@ jobs:
       #   run: |
       #     echo "APP_VERSION=$(echo '${{ github.event.release.tag_name }}' | cut -c2-)" >> $GITHUB_ENV
 
-      # - name: Extracting provisioning profile (Distribution)
-      #   run: |
-      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-      #     echo ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }} | base64 --decode > ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision
+      - name: Extracting provisioning profile (Distribution)
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }} | base64 --decode > ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision
 
-      # - name: Extracting auth key file (Apple API)
-      #   run: |
-      #     KEY_PATH="${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}"
-      #     API_KEY="${{ env.IOS_APPSTORECONNECT_API_KEY }}"
-      #     KEY_FILE_PATH="$KEY_PATH/AuthKey_$API_KEY.p8"
+      - name: Extracting auth key file (Apple API)
+        run: |
+          KEY_PATH="${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}"
+          API_KEY="${{ env.IOS_APPSTORECONNECT_API_KEY }}"
+          KEY_FILE_PATH="$KEY_PATH/AuthKey_$API_KEY.p8"
 
-      #     mkdir -p $KEY_PATH
-      #     echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
+          mkdir -p $KEY_PATH
+          echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
 
-      # - name: Extracting signing certificate
-      #   run: |
-      #     echo ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }} | base64 --decode > $SIGNING_CERTIFICATE_PATH
+      - name: Extracting signing certificate
+        run: |
+          echo ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }} | base64 --decode > $SIGNING_CERTIFICATE_PATH
 
-      # - name: Extracting and Installing signing certificate (.p12)
-      #   run: |
-      #     SIGNING_CERTIFICATE_PATH="${{ env.SIGNING_CERTIFICATE_PATH }}"
-      #     KEYCHAIN_PATH="${{ env.KEYCHAIN_PATH }}"
-      #     KEYCHAIN_PASSWORD="${{ env.KEYCHAIN_PASSWORD }}"
-      #     P12_PASSWORD="${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}"
+      - name: Extracting and Installing signing certificate (.p12)
+        run: |
+          SIGNING_CERTIFICATE_PATH="${{ env.SIGNING_CERTIFICATE_PATH }}"
+          KEYCHAIN_PATH="${{ env.KEYCHAIN_PATH }}"
+          KEYCHAIN_PASSWORD="${{ env.KEYCHAIN_PASSWORD }}"
+          P12_PASSWORD="${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}"
 
-      #     security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-      #     security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-      #     security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-      #     security import $SIGNING_CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-      #     security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-      #     security list-keychain -d user -s $KEYCHAIN_PATH
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security import $SIGNING_CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
 
 
-      # - name: Adding Provisioning Profile UUID to Github Env
-      #   run: |
-      #     echo "MOBILE_PROVISIONING_UUID=$(security cms -D -i ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision | grep UUID -A1 -m1 | grep string | sed -e 's/<string>//' -e 's/<\/string>//' | xargs)" > $GITHUB_ENV
+      - name: Adding Provisioning Profile UUID to Github Env
+        run: |
+          echo "MOBILE_PROVISIONING_UUID=$(security cms -D -i ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision | grep UUID -A1 -m1 | grep string | sed -e 's/<string>//' -e 's/<\/string>//' | xargs)" > $GITHUB_ENV
 
-      # - name: Fetching the Appstore Connect latest build number and increment
-      #   id: build-number
-      #   env:
-      #     APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
-      #     APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
-      #     APP_STORE_CONNECT_PRIVATE_KEY: "@file:${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
-      #   run: |
-      #     BUNDLE_ID="${{ env.IOS_BUNDLE_ID }}"
-      #     APPLICATION_ID_RESOURCE_ID="${{ env.IOS_APP_APPLE_ID }}"
+      - name: Fetching the Appstore Connect latest build number and increment
+        id: build-number
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
+          APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
+          APP_STORE_CONNECT_PRIVATE_KEY: "@file:${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
+        run: |
+          BUNDLE_ID="${{ env.IOS_BUNDLE_ID }}"
+          APPLICATION_ID_RESOURCE_ID="${{ env.IOS_APP_APPLE_ID }}"
 
-      #     echo ${{ env.APP_STORE_CONNECT_PRIVATE_KEY }}
-      #     python -m pip install codemagic-cli-tools
+          echo ${{ env.APP_STORE_CONNECT_PRIVATE_KEY }}
+          python -m pip install codemagic-cli-tools
 
-      #     LATEST_APPSTORE_BUILD_NUMBER=$(app-store-connect get-latest-build-number $APPLICATION_ID_RESOURCE_ID | awk '{print $1 + 1}')
+          LATEST_APPSTORE_BUILD_NUMBER=$(app-store-connect get-latest-build-number $APPLICATION_ID_RESOURCE_ID | awk '{print $1 + 1}')
 
-      #     echo "LATEST_APPSTORE_BUILD_NUMBER=$LATEST_APPSTORE_BUILD_NUMBER" >> $GITHUB_OUTPUT
-      #     echo "LATEST_APPSTORE_BUILD_NUMBER=$LATEST_APPSTORE_BUILD_NUMBER" >> $GITHUB_ENV
+          echo "LATEST_APPSTORE_BUILD_NUMBER=$LATEST_APPSTORE_BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "LATEST_APPSTORE_BUILD_NUMBER=$LATEST_APPSTORE_BUILD_NUMBER" >> $GITHUB_ENV
 
-      #     app-store-connect get-latest-app-store-build-number $APPLICATION_ID_RESOURCE_ID
-      #     app-store-connect get-latest-testflight-build-number $APPLICATION_ID_RESOURCE_ID
+          app-store-connect get-latest-app-store-build-number $APPLICATION_ID_RESOURCE_ID
+          app-store-connect get-latest-testflight-build-number $APPLICATION_ID_RESOURCE_ID
 
-      # - name: Creating Export.plist
-      #   run: |
-      #     cd ios/App
-      #     cp ../../.github/workflows/ios-export.plist Export.plist
-      #     sed -ie 's/IOS_DEVELOPMENT_TEAM_ID/${{ env.IOS_DEVELOPMENT_TEAM_ID }}/g' Export.plist
-      #     sed -ie 's/IOS_BUNDLE_ID/${{ env.IOS_BUNDLE_ID }}/g' Export.plist
-      #     sed -ie 's/MOBILE_PROVISIONING_UUID/${{ env.MOBILE_PROVISIONING_UUID }}/g' Export.plist
+      - name: Creating Export.plist
+        run: |
+          cd ios/App
+          cp ../../.github/workflows/ios-export.plist Export.plist
+          sed -ie 's/IOS_DEVELOPMENT_TEAM_ID/${{ env.IOS_DEVELOPMENT_TEAM_ID }}/g' Export.plist
+          sed -ie 's/IOS_BUNDLE_ID/${{ env.IOS_BUNDLE_ID }}/g' Export.plist
+          sed -ie 's/MOBILE_PROVISIONING_UUID/${{ env.MOBILE_PROVISIONING_UUID }}/g' Export.plist
 
-      # - name: Configuring apps (using Trapeze)
-      #   env:
-      #     IOS_BUILD_NUMBER: ${{ env.LATEST_APPSTORE_BUILD_NUMBER }}
-      #     IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
-      #     IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
-      #     # VERSION: ${{ env.APP_VERSION }}
-      #   run: |
-      #     npm run config:apps
+      - name: Configuring apps (using Trapeze)
+        env:
+          IOS_BUILD_NUMBER: ${{ env.LATEST_APPSTORE_BUILD_NUMBER }}
+          IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
+          IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
+          # VERSION: ${{ env.APP_VERSION }}
+        run: |
+          npm run config:apps
         
-      # - name: Generating Assets
-      #   run: |
-      #     npm run generate:assets
+      - name: Generating Assets
+        run: |
+          npm run generate:assets
 
       # On Pre-Relase
 
@@ -156,8 +156,7 @@ jobs:
         name: Build and archiving the app
         run: |
           cd ios/App
-          cat App.xcodeproj/project.pbxproj
-          xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
+          xcodebuild -scheme App -archivePath ./Actions.xcarchive -configuration Release archive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Exporting archive for releasing to Appstore (.IPA)
