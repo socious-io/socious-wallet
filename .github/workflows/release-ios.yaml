@@ -153,10 +153,10 @@ jobs:
 
       # On Relase
       - if: ${{ github.event.release.prerelease != true }}
-        name: Building iOS App
+        name: Build and archiving the app
         run: |
           cd ios/App
-          xcodebuild -scheme App -configuration Release archive -archivePath ./Actions.xcarchive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
+          xcodebuild -list
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Exporting archive for releasing to Appstore (.IPA)
