@@ -91,7 +91,7 @@ jobs:
 
       - name: Extracting and Installing signing certificate (.p12)
         run: |
-          SIGNING_CERTIFICATE_PATH="${{ env.SIGNING_CERTIFICATE_PATH }}
+          SIGNING_CERTIFICATE_PATH=${{ env.SIGNING_CERTIFICATE_PATH }}
           KEYCHAIN_PATH=${{ env.KEYCHAIN_PATH }}
           KEYCHAIN_PASSWORD=${{ env.KEYCHAIN_PASSWORD }}
           P12_PASSWORD=${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}
