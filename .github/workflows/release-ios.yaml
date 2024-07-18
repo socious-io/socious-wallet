@@ -83,12 +83,6 @@ jobs:
           mkdir -p $KEY_PATH
           echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
           cat ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8
-          cd ~
-          ls
-          pwd
-          cd private_keys
-          ls
-          pwd
 
       - name: Extracting signing certificate
         run: |
@@ -117,7 +111,7 @@ jobs:
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
-          APP_STORE_CONNECT_PRIVATE_KEY: "@file:/Users/runner/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
+          APP_STORE_CONNECT_PRIVATE_KEY: "@file:/Users/runner/private_keys/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
         run: |
           BUNDLE_ID=${{ env.IOS_BUNDLE_ID }}
           APPLICATION_ID_RESOURCE_ID=${{ env.IOS_APP_APPLE_ID }}
