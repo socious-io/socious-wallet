@@ -1,13 +1,13 @@
 name: CD - Release - iOS
 
 on:
-  push:
-    # tags:
-    #   - v*
-    branches:
-      - ios-ci
-  # release:
-  #   types: [prereleased, released]
+  # push:
+  #   # tags:
+  #   #   - v*
+  #   branches:
+  #     - ios-ci
+  release:
+    types: [prereleased, released]
 
 # echo ${{ github.event.release.tag_name }} -> tagname
 # echo ${{ github.event.release.prerelease }} -> true,false (${{ github.event.release.prerelease == true }})
@@ -139,7 +139,7 @@ jobs:
           IOS_BUILD_NUMBER: ${{ env.LATEST_APPSTORE_BUILD_NUMBER }}
           IOS_BUNDLE_ID: ${{ env.IOS_BUNDLE_ID }}
           IOS_DEVELOPMENT_TEAM_ID: ${{ env.IOS_DEVELOPMENT_TEAM_ID }}
-          # VERSION: ${{ env.APP_VERSION }}
+          VERSION: ${{ env.APP_VERSION }}
         run: |
           npm run config:apps
         
@@ -162,7 +162,6 @@ jobs:
           cd ios/App
           xcodebuild -exportArchive -archivePath ./Actions.xcarchive -exportPath ./build -exportOptionsPlist ./Export.plist PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
-
       - if: ${{ github.event.release.prerelease != true }}
         name: Verifying build for releasing to Appstore (.IPA)
         run: |
@@ -172,17 +171,7 @@ jobs:
           cd ios/App
           xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
 
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Releasing the build to Appstore (.IPA)
-        run: |
-          API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
-          API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
-
-          cd ios/App
-          xcrun altool --upload-app -f "./build/Socious Wallet.ipa" -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
-
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Upload bundle release (.AAB) to release
+      - name: Upload bundle release (.AAB) to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -199,26 +188,23 @@ jobs:
   
   #       # if: ${{ always() }}
 
-  # deploy-appstore:
-  #   name: Deploy to Apple Appstore
-  #   runs-on: macos-latest
-  #   needs: [build-ios]
-  #   env:
-  #     LATEST_PLAYSTORE_VERSION_CODE: ${{ needs.build-android.outputs.LATEST_PLAYSTORE_VERSION_CODE }}
-  #   steps:
-  #     - uses: robinraju/release-downloader@v1.11
-  #       with:
-  #         latest: true
-  #         fileName: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
+  deploy-appstore:
+    name: Deploy to Apple Appstore
+    runs-on: macos-latest
+    needs: [build-ios]
+    env:
+      LATEST_APPSTORE_BUILD_NUMBER: ${{ needs.build-ios.outputs.LATEST_APPSTORE_BUILD_NUMBER }}
+    steps:
+      - uses: robinraju/release-downloader@v1.11
+        with:
+          latest: true
+          fileName: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
+          
+      - if: ${{ github.event.release.prerelease != true }}
+        name: Releasing the build to Appstore (.IPA)
+        run: |
+          API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
+          API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
 
-  #     - if: ${{ github.event.release.prerelease != true }}
-  #       name: Upload bundle release (.IPA) to Apple Appstore
-  #       uses: vacxe/google-play-cli-kt@master
-  #       with:
-  #         template: bundles-upload
-  #         service-account-json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-  #         package-name: ${{ env.IOS_BUNDLE_ID }}
-  #         version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
-  #         path-to-bundle: ./Socious-Wallet-${{ github.event.release.tag_name }}.aab
-  #         track: ${{ vars.ANDROID_RELEASE_TRACK }}
-  #         status: ${{ vars.ANDROID_RELEASE_STATUS }}
+          cd ios/App
+          xcrun altool --upload-app -f ./Socious-Wallet-${{ github.event.release.tag_name }}.ipa -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
