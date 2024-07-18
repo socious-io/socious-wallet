@@ -101,7 +101,6 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-
       - name: Adding Provisioning Profile UUID to Github Env
         run: |
           echo "MOBILE_PROVISIONING_UUID=$(security cms -D -i ${{env.MOBILE_PROVISIONING_PATH}}/socious-wallet-provisioing-profile-distribution-appstore.mobileprovision | grep UUID -A1 -m1 | grep string | sed -e 's/<string>//' -e 's/<\/string>//' | xargs)" > $GITHUB_ENV
