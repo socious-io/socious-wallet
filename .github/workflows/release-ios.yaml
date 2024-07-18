@@ -84,6 +84,8 @@ jobs:
           echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
           echo "\n"
           ls $KEY_PATH
+          ls ~
+          ls ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
 
       - name: Extracting signing certificate
         run: |
