@@ -82,6 +82,8 @@ jobs:
 
           mkdir -p $KEY_PATH
           echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
+          echo "\n"
+          ls $KEY_PATH
 
       - name: Extracting signing certificate
         run: |
@@ -164,9 +166,8 @@ jobs:
 
       - name: Check AuthKey file
         run: |
-
-          ls -la ~/private_keys
-          echo "AuthKey file exists: $([[ -f ~/private_keys/AuthKey_${{ env.IOS_APPSTORECONNECT_API_ISSUER }}.p8 ]] && echo 'Yes' || echo 'No')"
+          ls -la ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
+          echo "AuthKey file exists: $([[ -f ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_ISSUER }}.p8 ]] && echo 'Yes' || echo 'No')"
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Verifying build for releasing to Appstore (.IPA)
