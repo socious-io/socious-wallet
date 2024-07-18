@@ -16,12 +16,8 @@ const AppUrlListener: React.FC = () => {
   useEffect(() => {
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       try {
-        const slug = event.url.split('.io').pop();
-        if (slug && slug !== '/') {
-          navigate(slug);
-        } else {
-          navigate('/intro');
-        }
+        const url = new URL(event.url);
+        navigate(`${url.pathname}${url.search}`);
       } catch (error) {
         console.log('No url present');
       }

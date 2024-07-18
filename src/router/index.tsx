@@ -1,5 +1,5 @@
 // import { ComponentType } from 'react';
-import { RouteObject, createBrowserRouter, Navigate } from 'react-router-dom';
+import { RouteObject, createBrowserRouter, Navigate, useRouteError } from 'react-router-dom';
 import { useAppContext } from 'src/store';
 import Layout from 'src/containers/Layout';
 import Intro from 'src/pages/Intro';
@@ -12,8 +12,9 @@ import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
 import Scan from 'src/pages/Scan';
-import Doownload from 'src/pages/Download';
+import Download from 'src/pages/Download';
 import AppUrlListener from 'src/components/AppUrlListener';
+import Settings from 'src/pages/Settings';
 
 export const blueprint: RouteObject[] = [
   {
@@ -25,7 +26,7 @@ export const blueprint: RouteObject[] = [
         element: <DefaultRoute />,
         children: [{ path: ':id' }],
       },
-      { path: '/download', element: <Doownload /> },
+      { path: '/download', element: <Download /> },
       { path: '/intro', element: <Intro /> },
       { path: '/register', element: <Register /> },
       // { path: '/confirm', element: <Confirm /> },
@@ -33,8 +34,10 @@ export const blueprint: RouteObject[] = [
       { path: '/verify', element: <Verify /> },
       // { path: '/import', element: <Recover /> },
       { path: '/connect', element: <Connection /> },
+      { path: '/settings', element: <Settings /> },
       { path: '/scan', element: <Scan /> },
     ],
+    errorElement: <ErrorBoundary />,
   },
 ];
 
@@ -48,12 +51,18 @@ function DefaultRoute(): JSX.Element {
       ) : (
         <>
           <AppUrlListener />
+          {state.device.platform === 'web' && <Navigate to="/download" />}
           {!shouldRenderCredentials && <Navigate to="/intro" />}
           {shouldRenderCredentials && <Credentials />}
         </>
       )}
     </>
   );
+}
+
+function ErrorBoundary() {
+  const error: any = useRouteError();
+  return <p>Oops, {error?.data}</p>;
 }
 
 // function Protect<T extends Record<string, never>>(Component: ComponentType<T>): ComponentType<T> {

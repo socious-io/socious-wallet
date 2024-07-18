@@ -27,6 +27,14 @@
         margin: 1.5rem 0;
         padding: 0 1rem;
         height: 100%;
+
+        .spinner {
+            border-width: 0.5rem;
+            width: 4rem;
+            height: 4rem;
+            color: $color-white-1;
+            border-right-color: $primary;
+        }
     }
 }
 

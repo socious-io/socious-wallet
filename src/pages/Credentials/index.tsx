@@ -75,7 +75,7 @@ function Credentials() {
           variant: 'danger',
           iconName: 'alert-danger',
           title: 'Verification rejected',
-          subtitle: 'Your verification request was denied, please',
+          subtitle: 'Your verification request was denied.',
           links: [
             {
               to: '/verify',
@@ -186,7 +186,6 @@ function Credentials() {
         <div className={styles['card__header']}>
           Credentials
           {/* <Icon name="bell" /> */}
-          <Icon name="alert_simple" onClick={() => alert(`Wallet ( ${device?.platform} ) version ${APP_VERSION}`)} />
         </div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}
