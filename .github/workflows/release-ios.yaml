@@ -83,7 +83,11 @@ jobs:
           mkdir -p $KEY_PATH
           echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
           cat ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8
-          cd $KEY_PATH
+          cd ~
+          ls
+          pwd
+          cd private_keys
+          ls
           pwd
 
       - name: Extracting signing certificate
