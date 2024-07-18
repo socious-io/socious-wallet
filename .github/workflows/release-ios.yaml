@@ -24,7 +24,7 @@ env:
   IOS_APPSTORECONNECT_API_ISSUER:       ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
   IOS_APP_APPLE_ID:                     6504291754
   #Workflow ENVs
-  APPSTORECONNECT_AUTH_KEY_PATH:        ~/private_keys
+  APPSTORECONNECT_AUTH_KEY_PATH:        /Users/runner/private_keys
   MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
   SIGNING_CERTIFICATE_PATH:             ${{ github.workspace }}/ios/App/signing-certificate.p12
   BUILDING_PATH:                        ${{ github.workspace }}/ios/App/build/Socious\ Wallet.ipa
@@ -110,7 +110,7 @@ jobs:
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
-          APP_STORE_CONNECT_PRIVATE_KEY: "@file:~/private_keys/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
+          APP_STORE_CONNECT_PRIVATE_KEY: "@file:${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
         run: |
           BUNDLE_ID=${{ env.IOS_BUNDLE_ID }}
           APPLICATION_ID_RESOURCE_ID=${{ env.IOS_APP_APPLE_ID }}
@@ -162,10 +162,6 @@ jobs:
           cd ios/App
           xcodebuild -exportArchive -archivePath ./Actions.xcarchive -exportPath ./build -exportOptionsPlist ./Export.plist PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
-      - name: Check AuthKey file
-        run: |
-          ls -la ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
-          echo "AuthKey file exists: $([[ -f ${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_ISSUER }}.p8 ]] && echo 'Yes' || echo 'No')"
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Verifying build for releasing to Appstore (.IPA)
