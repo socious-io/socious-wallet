@@ -206,5 +206,4 @@ jobs:
           API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
 
-          cd ios/App
           xcrun altool --upload-app -f ./Socious-Wallet-${{ github.event.release.tag_name }}.ipa -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
