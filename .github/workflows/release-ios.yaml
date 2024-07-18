@@ -113,7 +113,7 @@ jobs:
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
-          APP_STORE_CONNECT_PRIVATE_KEY: "@file:/user/runner/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
+          APP_STORE_CONNECT_PRIVATE_KEY: "@file:/Users/runner/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
         run: |
           BUNDLE_ID=${{ env.IOS_BUNDLE_ID }}
           APPLICATION_ID_RESOURCE_ID=${{ env.IOS_APP_APPLE_ID }}
