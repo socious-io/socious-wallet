@@ -199,7 +199,16 @@ jobs:
         with:
           latest: true
           fileName: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
-          
+
+      - name: Extracting auth key file (Apple API)
+        run: |
+          KEY_PATH=${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
+          API_KEY=${{ env.IOS_APPSTORECONNECT_API_KEY }}
+          KEY_FILE_PATH=$KEY_PATH/AuthKey_$API_KEY.p8
+
+          mkdir -p $KEY_PATH
+          echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
+
       - if: ${{ github.event.release.prerelease != true }}
         name: Releasing the build to Appstore (.IPA)
         run: |
