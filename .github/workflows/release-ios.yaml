@@ -162,15 +162,20 @@ jobs:
           cd ios/App
           xcodebuild -exportArchive -archivePath ./Actions.xcarchive -exportPath ./build -exportOptionsPlist ./Export.plist PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
+      - name: Check AuthKey file
+        run: |
+
+          ls -la ~/private_keys
+          echo "AuthKey file exists: $([[ -f ~/private_keys/AuthKey_${{ env.IOS_APPSTORECONNECT_API_ISSUER }}.p8 ]] && echo 'Yes' || echo 'No')"
+
       - if: ${{ github.event.release.prerelease != true }}
         name: Verifying build for releasing to Appstore (.IPA)
         run: |
           API_ISSUER="${{ env.IOS_APPSTORECONNECT_API_ISSUER }}"
           API_KEY="${{ secrets.IOS_APPSTORECONNECT_API_KEY }}"
-          echo $API_ISSUER
           
           cd ios/App
-          xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
+          xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
 
       - if: ${{ github.event.release.prerelease != true }}
         name: Releasing the build to Appstore (.IPA)
