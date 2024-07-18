@@ -76,9 +76,9 @@ jobs:
 
       - name: Extracting auth key file (Apple API)
         run: |
-          KEY_PATH="${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}"
-          API_KEY="${{ env.IOS_APPSTORECONNECT_API_KEY }}"
-          KEY_FILE_PATH="$KEY_PATH/AuthKey_$API_KEY.p8"
+          KEY_PATH=${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}
+          API_KEY=${{ env.IOS_APPSTORECONNECT_API_KEY }}
+          KEY_FILE_PATH=$KEY_PATH/AuthKey_$API_KEY.p8
 
           mkdir -p $KEY_PATH
           echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
@@ -91,10 +91,10 @@ jobs:
 
       - name: Extracting and Installing signing certificate (.p12)
         run: |
-          SIGNING_CERTIFICATE_PATH="${{ env.SIGNING_CERTIFICATE_PATH }}"
-          KEYCHAIN_PATH="${{ env.KEYCHAIN_PATH }}"
-          KEYCHAIN_PASSWORD="${{ env.KEYCHAIN_PASSWORD }}"
-          P12_PASSWORD="${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}"
+          SIGNING_CERTIFICATE_PATH="${{ env.SIGNING_CERTIFICATE_PATH }}
+          KEYCHAIN_PATH=${{ env.KEYCHAIN_PATH }}
+          KEYCHAIN_PASSWORD=${{ env.KEYCHAIN_PASSWORD }}
+          P12_PASSWORD=${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}
 
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
@@ -114,19 +114,19 @@ jobs:
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
           APP_STORE_CONNECT_PRIVATE_KEY: "@file:${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
         run: |
-          BUNDLE_ID="${{ env.IOS_BUNDLE_ID }}"
-          APPLICATION_ID_RESOURCE_ID="${{ env.IOS_APP_APPLE_ID }}"
+          BUNDLE_ID=${{ env.IOS_BUNDLE_ID }}
+          APPLICATION_ID_RESOURCE_ID=${{ env.IOS_APP_APPLE_ID }}
 
           echo ${{ env.APP_STORE_CONNECT_PRIVATE_KEY }}
           python -m pip install codemagic-cli-tools
 
-          LATEST_APPSTORE_BUILD_NUMBER=$(app-store-connect get-latest-build-number $APPLICATION_ID_RESOURCE_ID | awk '{print $1 + 1}')
+          LATEST_APPSTORE_BUILD_NUMBER=$(app-store-connect get-latest-build-number "$APPLICATION_ID_RESOURCE_ID" | awk '{print $1 + 1}')
 
           echo "LATEST_APPSTORE_BUILD_NUMBER=$LATEST_APPSTORE_BUILD_NUMBER" >> $GITHUB_OUTPUT
           echo "LATEST_APPSTORE_BUILD_NUMBER=$LATEST_APPSTORE_BUILD_NUMBER" >> $GITHUB_ENV
 
-          app-store-connect get-latest-app-store-build-number $APPLICATION_ID_RESOURCE_ID
-          app-store-connect get-latest-testflight-build-number $APPLICATION_ID_RESOURCE_ID
+          app-store-connect get-latest-app-store-build-number "$APPLICATION_ID_RESOURCE_ID"
+          app-store-connect get-latest-testflight-build-number "$APPLICATION_ID_RESOURCE_ID"
 
       - name: Creating Export.plist
         run: |
@@ -172,8 +172,8 @@ jobs:
       - if: ${{ github.event.release.prerelease != true }}
         name: Verifying build for releasing to Appstore (.IPA)
         run: |
-          API_ISSUER="${{ env.IOS_APPSTORECONNECT_API_ISSUER }}"
-          API_KEY="${{ secrets.IOS_APPSTORECONNECT_API_KEY }}"
+          API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
+          API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
           
           cd ios/App
           xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
@@ -181,8 +181,8 @@ jobs:
       - if: ${{ github.event.release.prerelease != true }}
         name: Releasing the build to Appstore (.IPA)
         run: |
-          API_ISSUER="${{ env.IOS_APPSTORECONNECT_API_ISSUER }}"
-          API_KEY="${{ secrets.IOS_APPSTORECONNECT_API_KEY }}"
+          API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
+          API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
 
           cd ios/App
           xcrun altool --upload-app -f "./build/Socious Wallet.ipa" -t ios --apiKey $API_KEY --apiIssuer $API_ISSUER
