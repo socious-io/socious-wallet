@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { useAppContext } from 'src/store';
 import { config } from 'src/config';
+
 const CONN_PEER_SUCCESS_STATUS = 'ConnectionResponseSent';
 
 const useConnection = () => {
@@ -18,6 +19,7 @@ const useConnection = () => {
   const [timeExceed, setTimeExceed] = useState(false);
   const [connId, setConnId] = useState();
   const [didPeer, setDidPeer] = useState(false);
+
   useEffect(() => {
     if (timeExceed) {
       dispatch({
@@ -30,6 +32,7 @@ const useConnection = () => {
       navigate('/');
     }
   }, [timeExceed]);
+
   useEffect(() => {
     if (established && didPeer) {
       if (callback)
@@ -40,6 +43,7 @@ const useConnection = () => {
       navigate('/');
     }
   }, [established, didPeer]);
+
   useEffect(() => {
     if (verification === null && oob && !verifyConnection) {
       localStorage.setItem('oob', oob);
@@ -47,6 +51,7 @@ const useConnection = () => {
       navigate('/intro');
     }
   }, [verification, oob]);
+
   useEffect(() => {
     if (connId) {
       const checkStatus = async () => {
@@ -57,7 +62,6 @@ const useConnection = () => {
       return () => clearInterval(intervalId);
     }
   }, [connId]);
-
   const handleConfirm = async () => {
     if (!agent) {
       alert('wait more please');
@@ -70,7 +74,6 @@ const useConnection = () => {
     setEstablished(true);
     setTimeout(() => setTimeExceed(true), 2400000);
   };
-
   const handleCancel = () => {
     if (callback) {
       axios
@@ -80,6 +83,7 @@ const useConnection = () => {
     }
     navigate('/');
   };
+
   return {
     oob,
     openModal,
@@ -89,4 +93,5 @@ const useConnection = () => {
     verifyConnection,
   };
 };
+
 export default useConnection;

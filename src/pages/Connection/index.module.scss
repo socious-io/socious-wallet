@@ -4,11 +4,13 @@
         padding: 0;
         height: 46rem;
         width: 27.5rem;
+
         @include media-breakpoint-down(md) {
             height: 100%;
             width: 100%;
         }
     }
+
     &__header {
         width: 100%;
         @include flex(space-between, center);
@@ -17,6 +19,7 @@
         font-size: 18px;
         font-weight: 600;
     }
+
     &__content {
         display: flex;
         width: 100%;
@@ -26,12 +29,12 @@
         height: 100%;
     }
 }
-
 .title {
     @include flex(center, flex-start, column);
     gap: 0.25rem;
     font-size: 18px;
     font-weight: 600;
+
     .subtitle {
         font-size: 14px;
         font-weight: 500;

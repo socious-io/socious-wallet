@@ -1,4 +1,5 @@
 import { ButtonProps } from 'react-bootstrap';
+
 export interface ConfirmModalProps {
   open: boolean;
   onClose: () => void;

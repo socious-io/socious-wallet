@@ -15,6 +15,7 @@ import NavigationBar from 'src/containers/NavigationBar';
 import { APP_VERSION } from 'src/config';
 import { VerifyStatus } from 'src/store/types';
 import { CredentialAlertProps } from 'src/containers/CredentialAlert/index.types';
+
 function Credentials() {
   const navigate = useNavigate();
   const { state } = useAppContext();
@@ -29,6 +30,7 @@ function Credentials() {
     const subtitleKey = claim?.type || ('job_category' in claim ? 'experience' : 'education');
     return subtitle[subtitleKey];
   };
+
   const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean) => {
     const props = isKyc(claim?.type)
       ? {
@@ -43,10 +45,12 @@ function Credentials() {
           date: claim['issued_date'] || claim['start_date'],
           // avatar: sampleAvatar,
         };
+
     return (
       <CredentialCard key={id} {...props} verified onCardClick={() => isClickable && navigate(`/credentials/${id}`)} />
     );
   };
+
   const renderCredentialsList = () => {
     let props = null;
     switch (submitted) {
@@ -99,6 +103,7 @@ function Credentials() {
         };
         break;
     }
+
     return (
       <>
         {!verification && <CredentialAlert {...props} />}
@@ -126,6 +131,7 @@ function Credentials() {
       </>
     );
   };
+
   const renderCredentialDetails = () => {
     const filteredCredential = credentials.find(credential => String(credential.id) === id);
     const formatClaimField = (claim, field: string) => {
@@ -138,6 +144,7 @@ function Credentials() {
       };
       return fieldFormatters[field] || claim[field];
     };
+
     return (
       <div className={cn(styles['card__content'], 'd-flex flex-column gap-4')}>
         <div
@@ -172,6 +179,7 @@ function Credentials() {
       </div>
     );
   };
+
   return (
     <div className={styles['home']}>
       <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
@@ -188,4 +196,5 @@ function Credentials() {
     </div>
   );
 }
+
 export default Credentials;

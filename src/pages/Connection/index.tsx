@@ -6,6 +6,7 @@ import Card from 'src/components/Card';
 import useConnection from './index.services';
 import styles from './index.module.scss';
 import NavigationBar from 'src/containers/NavigationBar';
+
 function Connection() {
   const { oob, openModal, handleConfirm, handleCancel, verification, verifyConnection } = useConnection();
 
@@ -42,4 +43,5 @@ function Connection() {
     </>
   );
 }
+
 export default Connection;
