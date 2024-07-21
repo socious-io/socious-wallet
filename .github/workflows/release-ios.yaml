@@ -17,12 +17,12 @@ on:
 env:
   CI:                                   false
   #Github ENVs
-  IOS_BUNDLE_ID:                        socious.mobile-wallet.app
+  IOS_BUNDLE_ID:                        ${{ vars.IOS_BUNDLE_ID }}
   IOS_DEVELOPMENT_TEAM_ID:              ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
   IOS_APPSTORECONNECT_AUTH_KEY_BASE64:  ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
   IOS_APPSTORECONNECT_API_KEY:          ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
   IOS_APPSTORECONNECT_API_ISSUER:       ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
-  IOS_APP_APPLE_ID:                     6504291754
+  IOS_APP_APPLE_ID:                     ${{ vars.IOS_APP_APPLE_ID }}
   #Workflow ENVs
   APPSTORECONNECT_AUTH_KEY_PATH:        /Users/runner/private_keys
   MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
