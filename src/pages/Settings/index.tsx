@@ -38,7 +38,7 @@ function Settings() {
         headerIcon={<Icon name="alert-triangle-danger" className={styles['alert--danger']} />}
         buttons={[
           { children: 'Remove', variant: 'danger', className: 'fw-semibold', onClick: handleRemoveWallet },
-          { children: 'Cancel', variant: 'inherit', className: 'fw-semibold', onClick: handleCloseModal },
+          { children: 'Cancel', variant: 'light', className: 'fw-semibold', onClick: handleCloseModal },
         ]}
         footerClassName="d-flex flex-column align-items-stretch"
       >

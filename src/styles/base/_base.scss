@@ -74,6 +74,14 @@ body {
         --bs-btn-hover-color: #003f3c;
     }
 
+    .btn-light {
+        color: #475467 !important;
+        &:hover {
+            background-color: transparent !important;
+            border: none !important;
+        }
+    }
+
     .alert-warning {
         --bs-alert-bg: #fffaeb !important;
         --bs-alert-border-color: #fedf89 !important;
