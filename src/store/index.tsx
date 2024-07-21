@@ -18,7 +18,6 @@ const initialState: StateType = {
   submitted: (localStorage.getItem('submitted_kyc') || '') as VerifyStatus,
   mnemonics: [],
   device: undefined,
-  listenerActive: false,
 };
 
 const AppContext = createContext<{
@@ -54,8 +53,6 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return { ...state, warn: action.payload };
     case 'SET_NEW_MESSAGE':
       return { ...state, message: action.payload };
-    case 'SET_LISTENER_STATE':
-      return { ...state, listenerActive: action.payload };
     case 'LOADING_START':
       return state;
     case 'LOADING_END':
