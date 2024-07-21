@@ -29,6 +29,7 @@
         height: 100%;
     }
 }
+
 .title {
     @include flex(center, flex-start, column);
     gap: 0.25rem;
