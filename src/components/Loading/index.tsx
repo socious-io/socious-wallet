@@ -21,4 +21,5 @@ const Loading: React.FC<LoadingProps> = ({
     return <></>;
   }
 };
+
 export default Loading;

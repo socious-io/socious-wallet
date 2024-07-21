@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import Icon from 'src/components/Icon';
 import styles from './index.module.scss';
+
 const NavigationBar = () => {
   const navigate = useNavigate();
 
@@ -24,4 +25,5 @@ const NavigationBar = () => {
     </div>
   );
 };
+
 export default NavigationBar;

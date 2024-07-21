@@ -6,12 +6,11 @@ import Card from 'src/components/Card';
 import useConnection from './index.services';
 import styles from './index.module.scss';
 import NavigationBar from 'src/containers/NavigationBar';
-
 function Connection() {
   const { oob, openModal, handleConfirm, handleCancel, verification, verifyConnection } = useConnection();
 
   if (!oob) return <Navigate to="/" />;
-  if (!verification && !verifyConnection) return <Navigate to="/" />;
+  if (!verification && !verifyConnection) return <></>;
   return (
     <>
       <div className="h-100 d-flex align-items-center justify-content-center">
@@ -21,17 +20,7 @@ function Connection() {
             {/* <Icon name="bell" /> */}
           </div>
           <div className={styles['card__content']}>
-            <Loading
-              variant="inherit"
-              className={styles['spinner']}
-              show={!openModal}
-              title="Establishing connection"
-              subtitles={[
-                "We're securely connecting your wallet to your credentials. This process can take up to 5 minutes to complete.",
-                "Please keep the app open and your phone unlocked during this time. If you close the app or lock your phone, the process will be interrupted and you'll need to start over.",
-                'We appreciate your patience as we ensure the security of data.',
-              ]}
-            />
+            <Loading show={!openModal} message="Please wait for the connection to be established!" />
           </div>
           <NavigationBar />
         </Card>
@@ -53,5 +42,4 @@ function Connection() {
     </>
   );
 }
-
 export default Connection;
