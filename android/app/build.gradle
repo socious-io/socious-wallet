@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+
 android {
     namespace "socious.wallet.app"
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -22,12 +23,12 @@ android {
         }
     }
 }
-
 repositories {
     flatDir{
         dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
     }
 }
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
@@ -39,7 +40,9 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
 }
+
 apply from: 'capacitor.build.gradle'
+
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
