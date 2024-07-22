@@ -3,6 +3,7 @@ import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { config } from 'src/config';
 import { decodeJwtPayload } from 'src/utilities';
 import { ActionType } from 'src/store/types';
+import { addAction } from './datadog';
 
 const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
@@ -11,7 +12,6 @@ const RequestPresentation = SDK.RequestPresentation;
 const handleMessages =
   (pluto: SDK.Domain.Pluto, agent: SDK.Agent, dispatch: React.Dispatch<ActionType>) =>
   async (newMessages: SDK.Domain.Message[]) => {
-    console.log('new message -> ', newMessages);
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
     dispatch({ type: 'SET_LISTENER_STATE', payload: true });
     const credentialOffers = newMessages.filter(
@@ -29,6 +29,11 @@ const handleMessages =
         const lastCredentials = await pluto.getAllCredentials();
         // @FIXME: first credential is KYC we select it auto for not
         const lastCredential = lastCredentials[0];
+        addAction('messages', {
+          message: newMessages,
+          type: 'request-presentations',
+          credential: lastCredential,
+        });
         const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
         if (lastCredential === undefined) {
           dispatch({
@@ -53,6 +58,11 @@ const handleMessages =
       for (const credentialOfferMessage of credentialOffers) {
         const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
         const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
+        addAction('messages', {
+          message: newMessages,
+          type: 'offered-credential',
+          credential: requestCredential,
+        });
         try {
           await agent.sendMessage(requestCredential.makeMessage());
         } catch (err) {
@@ -74,6 +84,11 @@ const handleMessages =
         }
 
         const credential = await agent.processIssuedCredentialMessage(issueCredential);
+        addAction('messages', {
+          message: newMessages,
+          type: 'issued-credential',
+          credential,
+        });
         if (!verfiedVC) {
           dispatch({ type: 'SET_VERIFICATION', payload: credential });
         }
@@ -89,7 +104,7 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
   useEffect(() => {
     const handleStart = async () => {
       const a = SDK.Agent.initialize({ mediatorDID: SDK.Domain.DID.fromString(config.MEDIATOR_DID), pluto });
-
+      a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
       setState(await a.start());
       const mediator = a.currentMediatorDID;
       if (!mediator) {
@@ -103,7 +118,6 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
       handleStart().then(a => {
         console.log('agent started');
         dispatch({ type: 'SET_AGENT', payload: a });
-        a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
       });
     }
   }, [pluto, dispatch]);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SDK from '@hyperledger/identus-edge-agent-sdk';
-import axios from 'axios';
+import axios from 'src/services/http';
 import { useAppContext } from 'src/store';
 import { config } from 'src/config';
 import { connect } from 'src/services/pluto';

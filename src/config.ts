@@ -1,5 +1,6 @@
-export const APP_VERSION = '1.3.4';
+export const APP_VERSION = '1.4.0';
 export const config = {
+  ENV: process.env.REACT_APP_ENV || 'development',
   DEBUG: process.env.REACT_APP_DEBUG,
   SECRET_KEY: process.env.REACT_APP_SECRET_KEY,
   PLUTO_PASSWD: new Uint8Array(32).fill(parseInt(process.env.REACT_APP_PLUTO_PASSWD)),
@@ -11,4 +12,6 @@ export const config = {
   VERIFF_API_KEY: process.env.REACT_APP_VERIFF_API_KEY,
   DISCORD_WEBHOOK: process.env.REACT_APP_DISCORD_WEBHOOK,
   PLATFORM: process.env.REACT_APP_PLATFORM,
+  DATADOG_APP_ID: process.env.REACT_APP_DATADOG_APP_ID,
+  DATADOG_CLIENT_TOKEN: process.env.REACT_APP_DATADOG_CLIENT_TOKEN,
 };

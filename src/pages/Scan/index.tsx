@@ -4,7 +4,7 @@ import jsQR from 'jsqr';
 import Icon from 'src/components/Icon';
 import styles from './index.module.scss';
 import cn from 'classnames';
-import axios from 'axios';
+import axios from 'src/services/http';
 
 const Scan = () => {
   const navigate = useNavigate();

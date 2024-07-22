@@ -5,6 +5,7 @@
   "dependencies": {
     "@capacitor/app": "^6.0.0",
     "@capacitor/device": "^6.0.0",
+    "@datadog/browser-rum": "^5.23.0",
     "@hyperledger/identus-edge-agent-sdk": "^6.0.0",
     "@pluto-encrypted/indexdb": "^1.12.2",
     "@testing-library/jest-dom": "^5.16.5",

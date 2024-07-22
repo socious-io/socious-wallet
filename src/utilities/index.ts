@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios from 'src/services/http';
 import { config } from 'src/config';
 import { ErrorInfo } from 'react';
+import { addError } from 'src/services/datadog';
 // Utility function to decode JWT and return payload as a JSON object
 export function decodeJwtPayload(jwt: string): any {
   const token = atob(jwt);
@@ -46,4 +47,5 @@ export const logger = (error: Error, errorInfo: ErrorInfo) => {
       console.error('failed logging error : ', error);
       console.error('Error sending message: ', err);
     });
+  addError(error);
 };

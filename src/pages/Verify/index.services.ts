@@ -4,7 +4,7 @@ import { useAppContext } from 'src/store';
 // @ts-ignore this package types has issue so we ignore error
 import { Veriff } from '@veriff/js-sdk';
 import { createVeriffFrame } from '@veriff/incontext-sdk';
-import axios from 'axios';
+import axios from 'src/services/http';
 import { config } from 'src/config';
 import { useNavigate } from 'react-router-dom';
 

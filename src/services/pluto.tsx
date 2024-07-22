@@ -3,8 +3,10 @@ import { config } from 'src/config';
 import SDK from '@hyperledger/identus-edge-agent-sdk';
 import Storage from '@pluto-encrypted/indexdb';
 
+export const apollo = new SDK.Apollo();
+export const castor = new SDK.Castor(apollo);
+
 export const connect = async (importData?: any) => {
-  const apollo = new SDK.Apollo();
   const store = new SDK.Store({
     name: config.PLUTO_DB_NAME,
     storage: Storage,

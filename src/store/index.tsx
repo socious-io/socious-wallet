@@ -69,7 +69,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
   const { agent } = useAgent(pluto, dispatch);
-
   useEffect(() => {
     if (!config.PLATFORM) {
       Device.getInfo().then(info => {

@@ -2,7 +2,10 @@ import routes from 'src/router';
 import { RouterProvider } from 'react-router-dom';
 import { AppProvider } from './store';
 // import { Backup } from 'src/services/backup';
+import { init } from './services/datadog';
 import { Activation } from 'src/services/activation';
+
+init();
 
 function App() {
   return (

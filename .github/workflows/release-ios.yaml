@@ -15,22 +15,22 @@ on:
 # echo '${{ github.event.release.body }}' -> body
 
 env:
-  CI:                                   false
+  CI: false
   #Github ENVs
-  IOS_BUNDLE_ID:                        ${{ vars.IOS_BUNDLE_ID }}
-  IOS_DEVELOPMENT_TEAM_ID:              ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
-  IOS_APPSTORECONNECT_AUTH_KEY_BASE64:  ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
-  IOS_APPSTORECONNECT_API_KEY:          ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
-  IOS_APPSTORECONNECT_API_ISSUER:       ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
-  IOS_APP_APPLE_ID:                     ${{ vars.IOS_APP_APPLE_ID }}
+  IOS_BUNDLE_ID: ${{ vars.IOS_BUNDLE_ID }}
+  IOS_DEVELOPMENT_TEAM_ID: ${{ vars.IOS_DEVELOPMENT_TEAM_ID }}
+  IOS_APPSTORECONNECT_AUTH_KEY_BASE64: ${{ secrets.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }}
+  IOS_APPSTORECONNECT_API_KEY: ${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
+  IOS_APPSTORECONNECT_API_ISSUER: ${{ vars.IOS_APPSTORECONNECT_API_ISSUER }}
+  IOS_APP_APPLE_ID: ${{ vars.IOS_APP_APPLE_ID }}
   #Workflow ENVs
-  APPSTORECONNECT_AUTH_KEY_PATH:        /Users/runner/private_keys
-  MOBILE_PROVISIONING_PATH:             ~/Library/MobileDevice/Provisioning\ Profiles
-  SIGNING_CERTIFICATE_PATH:             ${{ github.workspace }}/ios/App/signing-certificate.p12
-  BUILDING_PATH:                        ${{ github.workspace }}/ios/App/build/Socious Wallet.ipa
-  KEYCHAIN_PATH:                        ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
-  KEYCHAIN_PASSWORD:                    keychain_password
-  
+  APPSTORECONNECT_AUTH_KEY_PATH: /Users/runner/private_keys
+  MOBILE_PROVISIONING_PATH: ~/Library/MobileDevice/Provisioning\ Profiles
+  SIGNING_CERTIFICATE_PATH: ${{ github.workspace }}/ios/App/signing-certificate.p12
+  BUILDING_PATH: ${{ github.workspace }}/ios/App/build/Socious Wallet.ipa
+  KEYCHAIN_PATH: ${{ github.workspace }}/ios/keychain/app-signing.keychain-db
+  KEYCHAIN_PASSWORD: keychain_password
+
 jobs:
   build-ios:
     name: Building iOS
@@ -38,7 +38,6 @@ jobs:
       LATEST_APPSTORE_BUILD_NUMBER: ${{ steps.build-number.outputs.LATEST_APPSTORE_BUILD_NUMBER }}
     runs-on: macos-latest
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -51,7 +50,7 @@ jobs:
         run: |
           npm cache clean --force
           npm install
-          
+
       - name: Making iOS Release Code
         run: |
           npm run build
@@ -110,7 +109,7 @@ jobs:
         env:
           APP_STORE_CONNECT_ISSUER_ID: ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ env.IOS_APPSTORECONNECT_API_KEY }}
-          APP_STORE_CONNECT_PRIVATE_KEY: "@file:${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8"
+          APP_STORE_CONNECT_PRIVATE_KEY: '@file:${{ env.APPSTORECONNECT_AUTH_KEY_PATH }}/AuthKey_${{ env.IOS_APPSTORECONNECT_API_KEY }}.p8'
         run: |
           BUNDLE_ID=${{ env.IOS_BUNDLE_ID }}
           APPLICATION_ID_RESOURCE_ID=${{ env.IOS_APP_APPLE_ID }}
@@ -142,7 +141,7 @@ jobs:
           VERSION: ${{ env.APP_VERSION }}
         run: |
           npm run config:apps
-        
+
       - name: Generating Assets
         run: |
           npm run generate:assets
@@ -164,7 +163,7 @@ jobs:
         run: |
           API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
-          
+
           cd ios/App
           xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
 
@@ -172,7 +171,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "${{ env.BUILDING_PATH }}"
+          file: '${{ env.BUILDING_PATH }}'
           asset_name: Socious-Wallet-${{ github.event.release.tag_name }}.ipa
           tag: ${{ github.ref }}
           overwrite: true
@@ -182,7 +181,7 @@ jobs:
         run: |
           security delete-keychain ${{ env.KEYCHAIN_PATH }}
           rm -rf ${{ env.MOBILE_PROVISIONING_PATH }}
-  
+
   #       # if: ${{ always() }}
 
   deploy-appstore:

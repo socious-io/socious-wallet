@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './http';
 import FormData from 'form-data';
 import crypto from 'crypto-browserify';
 import { config } from 'src/config';

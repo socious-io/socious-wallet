@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import axios from 'src/services/http';
 import { useAppContext } from 'src/store';
 import { config } from 'src/config';
+import { addAction } from 'src/services/datadog';
 
 const CONN_PEER_SUCCESS_STATUS = 'ConnectionResponseSent';
 
@@ -31,6 +32,11 @@ const useConnection = () => {
           section: 'Establish Connection',
         },
       });
+      addAction('connections', {
+        oob,
+        callback,
+        message: 'timeout',
+      });
       navigate('/');
     }
   }, [timeExceed]);
@@ -43,6 +49,11 @@ const useConnection = () => {
           .then(r => console.log(`callback successfully with status ${r.status}`))
           .catch(err => console.log(err));
       navigate('/');
+      addAction('connections', {
+        oob,
+        callback,
+        message: 'didpeer',
+      });
     }
   }, [established, didPeer]);
 
@@ -51,6 +62,11 @@ const useConnection = () => {
       localStorage.setItem('oob', oob);
       localStorage.setItem('callback', callback);
       navigate('/intro');
+      addAction('connections', {
+        oob,
+        callback,
+        message: 'not-verification-callback',
+      });
     }
   }, [verification, oob]);
 
@@ -66,13 +82,18 @@ const useConnection = () => {
   }, [connId]);
 
   useEffect(() => {
-    if (confirmed && agent?.state === 'running' && listenerActive) {
+    if (confirmed && agent?.state === 'running') {
       const establish = async () => {
         const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
         setConnId(parsed.id);
         await agent.acceptInvitation(parsed);
         setEstablished(true);
         setTimeout(() => setTimeExceed(true), 2400000);
+        addAction('connections', {
+          oob,
+          callback,
+          message: 'established',
+        });
       };
       establish();
     }
@@ -81,6 +102,11 @@ const useConnection = () => {
   const handleConfirm = async () => {
     setConfirmed(true);
     setOpenModal(false);
+    addAction('connections', {
+      oob,
+      callback,
+      message: 'confirmed',
+    });
   };
 
   const handleCancel = () => {
@@ -91,6 +117,11 @@ const useConnection = () => {
         .catch(err => console.log(err));
     }
     navigate('/');
+    addAction('connections', {
+      oob,
+      callback,
+      message: 'canceled',
+    });
   };
 
   return {
