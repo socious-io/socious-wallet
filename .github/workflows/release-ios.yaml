@@ -150,20 +150,17 @@ jobs:
       # On Pre-Relase
 
       # On Relase
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Build and archiving the app
+      - name: Build and archiving the app
         run: |
           cd ios/App
           xcodebuild -scheme App -archivePath ./Actions.xcarchive -configuration Release archive -workspace ./App.xcworkspace PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Exporting archive for releasing to Appstore (.IPA)
+      - name: Exporting archive for releasing to Appstore (.IPA)
         run: |
           cd ios/App
           xcodebuild -exportArchive -archivePath ./Actions.xcarchive -exportPath ./build -exportOptionsPlist ./Export.plist PROVISIONING_PROFILE="${{env.MOBILE_PROVISIONING_UUID}}"
 
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Verifying build for releasing to Appstore (.IPA)
+      - name: Verifying build for releasing to Appstore (.IPA)
         run: |
           API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
@@ -171,7 +168,7 @@ jobs:
           cd ios/App
           xcrun altool --validate-app -f "./build/Socious Wallet.ipa" -t ios --apiKey ${{ secrets.IOS_APPSTORECONNECT_API_KEY }} --apiIssuer ${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
 
-      - name: Upload bundle release (.AAB) to release
+      - name: Upload bundle (.IPA) to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -191,6 +188,7 @@ jobs:
   deploy-appstore:
     name: Deploy to Apple Appstore
     runs-on: macos-latest
+    if: github.event.release.prerelease != true
     needs: [build-ios]
     env:
       LATEST_APPSTORE_BUILD_NUMBER: ${{ needs.build-ios.outputs.LATEST_APPSTORE_BUILD_NUMBER }}
@@ -209,8 +207,7 @@ jobs:
           mkdir -p $KEY_PATH
           echo ${{ env.IOS_APPSTORECONNECT_AUTH_KEY_BASE64 }} | base64 --decode > $KEY_FILE_PATH
 
-      - if: ${{ github.event.release.prerelease != true }}
-        name: Releasing the build to Appstore (.IPA)
+      - name: Releasing the build to Appstore (.IPA)
         run: |
           API_ISSUER=${{ env.IOS_APPSTORECONNECT_API_ISSUER }}
           API_KEY=${{ secrets.IOS_APPSTORECONNECT_API_KEY }}
