@@ -1,4 +1,4 @@
-import SDK from '@atala/prism-wallet-sdk';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { config } from 'src/config';
 
 export const apollo = new SDK.Apollo();

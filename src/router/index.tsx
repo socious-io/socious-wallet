@@ -15,6 +15,7 @@ import Scan from 'src/pages/Scan';
 import Download from 'src/pages/Download';
 import AppUrlListener from 'src/components/AppUrlListener';
 import Settings from 'src/pages/Settings';
+import { config } from 'src/config';
 
 export const blueprint: RouteObject[] = [
   {
@@ -51,7 +52,7 @@ function DefaultRoute(): JSX.Element {
       ) : (
         <>
           <AppUrlListener />
-          {state.device.platform === 'web' && <Navigate to="/download" />}
+          {state.device.platform === 'web' && !config.DEBUG && <Navigate to="/download" />}
           {!shouldRenderCredentials && <Navigate to="/intro" />}
           {shouldRenderCredentials && <Credentials />}
         </>

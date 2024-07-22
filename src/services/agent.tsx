@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import SDK from '@atala/prism-wallet-sdk';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { config } from 'src/config';
 import { decodeJwtPayload } from 'src/utilities';
 import { ActionType } from 'src/store/types';

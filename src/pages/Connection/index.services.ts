@@ -19,7 +19,7 @@ const useConnection = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [established, setEstablished] = useState(false);
   const [timeExceed, setTimeExceed] = useState(false);
-  const [connId, setConnId] = useState();
+  const [connId, setConnId] = useState('');
   const [didPeer, setDidPeer] = useState(false);
 
   useEffect(() => {

@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SDK from '@atala/prism-wallet-sdk';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { useAppContext } from 'src/store';
 import { createDID } from 'src/services/dids';
+import { PrivateKey } from '@hyperledger/identus-edge-agent-sdk/build/typings/domain';
 
 const useRegister = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, mnemonics, pluto } = state || {};
-  const [currentDID, setCurrentDID] = useState();
-  const [privateKey, setPrivateKey] = useState();
+  const [currentDID, setCurrentDID] = useState<SDK.Domain.DID | undefined>();
+  const [privateKey, setPrivateKey] = useState<PrivateKey | undefined>();
 
   useEffect(() => {
     if (!pluto) return;

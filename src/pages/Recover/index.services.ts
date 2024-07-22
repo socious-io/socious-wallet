@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SDK from '@atala/prism-wallet-sdk';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import axios from 'axios';
 import { useAppContext } from 'src/store';
 import { config } from 'src/config';

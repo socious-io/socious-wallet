@@ -1,4 +1,4 @@
-import SDK from '@atala/prism-wallet-sdk';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { DeviceInfo } from '@capacitor/device';
 export interface Err {
   err: Error;

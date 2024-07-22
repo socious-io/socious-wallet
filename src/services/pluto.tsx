@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { config } from 'src/config';
-import SDK from '@atala/prism-wallet-sdk';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import Storage from '@pluto-encrypted/indexdb';
 
 export const connect = async (importData?: any) => {
@@ -9,7 +9,6 @@ export const connect = async (importData?: any) => {
     name: config.PLUTO_DB_NAME,
     storage: Storage,
     password: Buffer.from(config.PLUTO_PASSWD).toString('hex'),
-    importData,
   });
   return new SDK.Pluto(store, apollo);
 };

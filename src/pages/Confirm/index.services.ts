@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppContext } from 'src/store';
 import { arraysEqual } from 'src/utilities';
 import { recoverDID } from 'src/services/dids';
-import SDK from '@atala/prism-wallet-sdk';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 
 const useConfirm = () => {
   const navigate = useNavigate();
