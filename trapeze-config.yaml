@@ -4,19 +4,23 @@ vars:
   DISPLAY_NAME:
     default: Socious Wallet
   VERSION:
-    default: 1.0.1
+    default: 1.4
   ANDROID_VERSION_CODE:
     default: 3
   ANDROID_PACKAGE_NAME:
     default: socious.wallet.app
   ANDROID_KEY_STORE_LOCATION:
+    default: ./android/build-release.keystore
   ANDROID_KEY_STORE_PASSWORD:
+    default: Password
   ANDROID_KEY_ALIAS:
+    default: key_number_one
   ANDROID_KEY_PASSWORD:
+    default: Password
   IOS_BUILD_NUMBER:
     default: 1
   IOS_BUNDLE_ID:
-    default: socious.wallet.app
+    default: socious.mobile-wallet.app
   IOS_DEVELOPMENT_TEAM_ID:
     default: 596H9K48FY
 
@@ -33,6 +37,8 @@ platforms:
         buildSettings:
           DEVELOPMENT_TEAM: $IOS_DEVELOPMENT_TEAM_ID
           TARGETED_DEVICE_FAMILY: 1 #1: iPhone ,2:iPhone&iPad, 3:iPad
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: iPhone Distribution
 
         plist:
           replace: false

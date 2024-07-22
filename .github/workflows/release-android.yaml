@@ -164,9 +164,6 @@ jobs:
           latest: true
           fileName: Socious-Wallet-${{ github.event.release.tag_name }}.aab
 
-      - run: |
-          ls
-
       - if: ${{ github.event.release.prerelease != true }}
         name: Upload bundle release (.AAB) to Google Playstore
         uses: vacxe/google-play-cli-kt@master
