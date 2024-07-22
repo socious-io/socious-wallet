@@ -41,7 +41,7 @@ function Connection() {
         header="invitation"
         onClose={handleCancel}
         buttons={[
-          { children: 'Cancel', variant: 'inherit', onClick: handleCancel, className: 'flex-grow-1 border-solid' },
+          { children: 'Cancel', variant: 'light', onClick: handleCancel, className: 'flex-grow-1 border-solid' },
           { children: 'Confirm', variant: 'primary', onClick: handleConfirm, className: 'flex-grow-1' },
         ]}
       >
