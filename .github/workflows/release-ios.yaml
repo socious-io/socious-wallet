@@ -63,6 +63,9 @@ jobs:
           REACT_APP_BACKUP_AGENT: ${{ vars.REACT_APP_BACKUP_AGENT }}
           REACT_APP_BACKUP_AGENT_API_KEY: ${{ secrets.REACT_APP_BACKUP_AGENT_API_KEY }}
           REACT_APP_VERIFF_API_KEY: ${{ secrets.REACT_APP_VERIFF_API_KEY }}
+          REACT_APP_DATADOG_APP_ID: ${{ secrets.REACT_APP_DATADOG_APP_ID }}
+          REACT_APP_DATADOG_CLIENT_TOKEN: ${{ secrets.REACT_APP_DATADOG_CLIENT_TOKEN }}
+          REACT_APP_PLATFORM: ios
 
       - name: Extracting App Version
         run: |
