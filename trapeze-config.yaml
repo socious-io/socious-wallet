@@ -43,7 +43,8 @@ platforms:
         plist:
           replace: false
           entries:
-            - NSCameraUsageDescription: We need access to your camera
+            - ITSAppUsesNonExemptEncryption: false
+            - NSCameraUsageDescription: Socious Wallet requires access to your camera to capture facial images for identity verification. This process helps to ensure that you are the rightful owner of the account and prevents unauthorized access. For example, your face data will be matched with your provided ID documents to confirm your identity.
 
   android:
     packageName: $ANDROID_PACKAGE_NAME
