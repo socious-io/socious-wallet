@@ -175,5 +175,5 @@ jobs:
           package-name: ${{ env.ANDROID_PACKAGE_NAME }}
           version-code: ${{ env.LATEST_PLAYSTORE_VERSION_CODE }}
           path-to-bundle: ./Socious-Wallet-${{ github.event.release.tag_name }}.aab
-          track: ${{ vars.ANDROID_RELEASE_TRACK }}
-          status: ${{ vars.ANDROID_RELEASE_STATUS }}
+          track: ${{ vars.ANDROID_RELEASE_TRACK }} # google-play-cli tracks list --config-file key-data-file.json --package-name socious.wallet.app | python -m json.tool
+          status: ${{ vars.ANDROID_RELEASE_STATUS }} # More info: https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks#status
