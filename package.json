@@ -1,6 +1,6 @@
 {
   "name": "socious-wallet",
-  "version": "1.6.3",
+  "version": "1.6.5",
   "private": true,
   "dependencies": {
     "@capacitor/app": "^6.0.0",
