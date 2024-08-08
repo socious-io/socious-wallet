@@ -3,5 +3,20 @@
     &__text {
         color: $gray;
         text-align: center;
+        line-height: 1.5rem;
+    }
+
+    &__subtitle {
+        text-align: center;
+    }
+
+    &__secondary_btn {
+        color: $gray !important;
+
+    }
+
+    &__secondary_btn:hover {
+        color: $gray !important;
+        background-color: $light-rgb !important;
     }
 }
