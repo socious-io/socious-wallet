@@ -23,8 +23,7 @@ function Intro() {
             children: 'I already have a wallet',
             variant: 'inherit',
             className: `fw-bold w-100 py-2 ${styles['card__secondary_btn']}`,
-            // TODO: Add navigate to import when import page is implemented
-            // onClick: () => navigate('/import'),
+            onClick: () => navigate('/import'),
           },
         ]}
       >

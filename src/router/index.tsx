@@ -6,7 +6,7 @@ import Intro from 'src/pages/Intro';
 import Register from 'src/pages/Register';
 // import Confirm from 'src/pages/Confirm';
 import Created from 'src/pages/Created';
-// import Recover from 'src/pages/Recover';
+import Recover from 'src/pages/Recover';
 import Credentials from 'src/pages/Credentials';
 import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
@@ -33,7 +33,7 @@ export const blueprint: RouteObject[] = [
       // { path: '/confirm', element: <Confirm /> },
       { path: '/created', element: <Created /> },
       { path: '/verify', element: <Verify /> },
-      // { path: '/import', element: <Recover /> },
+      { path: '/import', element: <Recover /> },
       { path: '/connect', element: <Connection /> },
       { path: '/settings', element: <Settings /> },
       { path: '/scan', element: <Scan /> },
