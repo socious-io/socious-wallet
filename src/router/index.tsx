@@ -15,6 +15,7 @@ import Scan from 'src/pages/Scan';
 import Download from 'src/pages/Download';
 import AppUrlListener from 'src/containers/AppUrlListener';
 import Settings from 'src/pages/Settings';
+import SetupPass from 'src/pages/SetupPass';
 import { config } from 'src/config';
 
 export const blueprint: RouteObject[] = [
@@ -29,6 +30,7 @@ export const blueprint: RouteObject[] = [
       },
       { path: '/download', element: <Download /> },
       { path: '/intro', element: <Intro /> },
+      { path: '/setup-pass', element: <SetupPass /> },
       { path: '/register', element: <Register /> },
       // { path: '/confirm', element: <Confirm /> },
       { path: '/created', element: <Created /> },
