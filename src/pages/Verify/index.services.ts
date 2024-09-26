@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore this package types has issue so we ignore error
 import { Veriff } from '@veriff/js-sdk';

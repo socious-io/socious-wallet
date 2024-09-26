@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { APP_VERSION } from 'src/config';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 
 const useSettings = () => {
   const { state } = useAppContext();

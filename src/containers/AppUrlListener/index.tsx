@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { useNavigate } from 'react-router-dom';
 import { config } from 'src/config';

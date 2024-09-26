@@ -7,14 +7,11 @@ import CredentialAlert from 'src/containers/CredentialAlert';
 // import sampleAvatar from 'src/assets/images/sample-avatar.png';
 import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 import { beautifyText, formatDate } from 'src/utilities';
 import styles from './index.module.scss';
 import cn from 'classnames';
 import NavigationBar from 'src/containers/NavigationBar';
-import { APP_VERSION } from 'src/config';
-import { VerifyStatus } from 'src/store/types';
-import { CredentialAlertProps } from 'src/containers/CredentialAlert/index.types';
 
 function Credentials() {
   const navigate = useNavigate();

@@ -1,13 +1,24 @@
-import routes from 'src/router';
+import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { AppProvider } from './store';
+import routes from 'src/router';
+import i18next from 'i18next';
+import { useSelector } from 'react-redux';
+import { AppProvider } from './store/context';
+import { RootState } from './store/redux';
 import { Backup } from 'src/services/backup';
 import { init } from './services/datadog';
 import { Activation } from 'src/services/activation';
+import 'src/translations/i18n';
 
 init();
 
 function App() {
+  const { language } = useSelector((state: RootState) => state.language);
+
+  useEffect(() => {
+    i18next.changeLanguage(language);
+  }, [language]);
+
   return (
     <AppProvider>
       <Backup />

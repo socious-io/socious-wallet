@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Container, Toast, ToastContainer } from 'react-bootstrap';
+import { useAppContext } from 'src/store/context';
 import Loading from 'src/components/Loading';
-import { useAppContext } from 'src/store';
 import AppUrlListener from 'src/containers/AppUrlListener';
 
 const Layout = () => {

@@ -1,8 +1,10 @@
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './styles/main.scss';
+import { Provider } from 'react-redux';
+import store from './store/redux';
 import reportWebVitals from './reportWebVitals';
+import App from './App';
 import ErrorBoundary from './containers/ErrorBoundary';
+import './styles/main.scss';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -27,7 +29,9 @@ window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <ErrorBoundary>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </ErrorBoundary>,
 );
 

@@ -1,5 +1,5 @@
 import { useNavigate, Navigate } from 'react-router-dom';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 import logo from 'src/assets/images/logo.svg';
 import styles from './index.module.scss';
 import Card from 'src/components/Card';
