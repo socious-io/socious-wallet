@@ -1,0 +1,10 @@
+{
+  "recover-title": "シークレットリカバリーフレーズ",
+  "recover-subtitle": "24単語のシークレットリカバリーフレーズで既存のウォレットを復元します",
+  "recover-import-button": "ウォレットをインポート",
+  "recover-back-button": "戻る",
+  "recover-confirm": {
+    "header": "おっと、間違いです",
+    "button": "了解しました"
+  }
+}

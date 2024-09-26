@@ -1,0 +1,8 @@
+{
+  "verify-card-header": "確認",
+  "verify-title": "本人確認",
+  "verify-subtitle": "Sociousウォレットは、KYC、AML、およびGDPR規制に準拠し、プライバシーとセキュリティを確保しています。個人データは一切保存しません。",
+  "verify-submitted": "確認リクエストが送信されました。",
+  "verify-verified": "本人確認が完了しました。",
+  "verify-veriff-button": "確認を受ける"
+}

@@ -1,17 +1,19 @@
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const useCreated = () => {
+  const { t: translate } = useTranslation();
   const navigate = useNavigate();
   const { hash } = useLocation();
 
   const cardContent = {
     ['']: {
       iconName: 'done',
-      title: 'You are all done!',
-      subtitle: 'You can now use your wallet.',
+      title: translate('created-started-title'),
+      subtitle: translate('created-started-subtitle'),
       buttons: [
         {
-          children: 'Get started',
+          children: translate('created-started-button'),
           variant: 'primary',
           onClick: () => navigate('/'),
           className: 'w-100 border-solid',
@@ -19,11 +21,11 @@ const useCreated = () => {
       ],
     },
     ['#restored']: {
-      title: 'Wallet restored!',
-      subtitle: 'You can now use your wallet.',
+      title: translate('created-restore-title'),
+      subtitle: translate('created-restore-subtitle'),
       buttons: [
         {
-          children: 'Continue',
+          children: translate('created-restore-button'),
           variant: 'primary',
           onClick: () => navigate('/'),
           className: 'w-100 border-solid',

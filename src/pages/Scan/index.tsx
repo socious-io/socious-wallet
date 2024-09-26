@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import jsQR from 'jsqr';
 import Icon from 'src/components/Icon';
 import styles from './index.module.scss';
@@ -7,6 +8,7 @@ import cn from 'classnames';
 import axios from 'src/services/http';
 
 const Scan = () => {
+  const { t: translate } = useTranslation();
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -29,9 +31,9 @@ const Scan = () => {
             cameraElement.play();
           };
         })
-        .catch(error => console.error('Error accessing camera', error));
+        .catch(error => console.error(translate('scan-error-access'), error));
     } else {
-      alert('getUserMedia() is not supported by your browser');
+      alert(`getUserMedia() ${translate('scan-error-support')}`);
     }
   }, []);
 
@@ -56,7 +58,7 @@ const Scan = () => {
                 const { data } = await axios.get(`${codeData.data}/fetch`);
                 url = data.long_url;
               } catch {
-                alert('QR code is not valid! Please try again.');
+                alert(translate('scan-error-qr'));
                 return;
               }
               const { search, searchParams } = new URL(url);
@@ -66,7 +68,7 @@ const Scan = () => {
                   cameraElement.pause();
                 }
               } else {
-                alert('QR code is not valid! Please try again.');
+                alert(translate('scan-error-qr'));
               }
             }
           }
@@ -93,7 +95,7 @@ const Scan = () => {
       <div className={styles['scanner']}>
         <div className={styles['back']} onClick={() => navigate(-1)}>
           <Icon name="chevron-left" />
-          Back
+          {translate('scan-back-button')}
         </div>
         <video ref={videoRef} className={styles['video']} playsInline />
         <div className={styles['frame']}>

@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ListGroup } from 'react-bootstrap';
 import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
@@ -14,15 +15,16 @@ import cn from 'classnames';
 import NavigationBar from 'src/containers/NavigationBar';
 
 function Credentials() {
+  const { t: translate } = useTranslation();
   const navigate = useNavigate();
   const { state } = useAppContext();
-  const { credentials, verification, submitted, device } = state || {};
+  const { credentials, verification, submitted } = state || {};
   const { id } = useParams();
   const isKyc = type => type === 'verification';
   const generateNonKycTypeText = claim => {
     const subtitle = {
-      ['experience']: 'Work Certificate',
-      ['education']: 'Educational Certificate',
+      ['experience']: translate('credential-experience'),
+      ['education']: translate('credential-education'),
     };
     const subtitleKey = claim?.type || ('job_category' in claim ? 'experience' : 'education');
     return subtitle[subtitleKey];
@@ -55,12 +57,12 @@ function Credentials() {
         props = {
           variant: 'warning',
           iconName: 'alert-submit',
-          title: 'Verification request submitted',
-          subtitle: "Your identity is being reviewed. We'll notify you as soon as it's complete.",
+          title: translate('credential-alert.approved-title'),
+          subtitle: translate('credential-alert.approved-subtitle'),
           links: [
             {
               to: '/verify',
-              label: 'Check verification',
+              label: translate('credential-alert.approved-link'),
             },
           ],
         };
@@ -71,16 +73,16 @@ function Credentials() {
         props = {
           variant: 'danger',
           iconName: 'alert-danger',
-          title: 'Verification rejected',
-          subtitle: 'Your verification request was denied.',
+          title: translate('credential-alert.declined-title'),
+          subtitle: translate('credential-alert.declined-subtitle'),
           links: [
             {
               to: '/verify',
-              label: 'Verify again',
+              label: translate('credential-alert.declined-link1'),
             },
             {
               to: 'mailto:support@socious.io',
-              label: 'Contact us',
+              label: translate('credential-alert.declined-link2'),
             },
           ],
         };
@@ -89,12 +91,12 @@ function Credentials() {
         props = {
           variant: 'warning',
           iconName: 'alert-warning',
-          title: 'Verification Required',
-          subtitle: 'To receive verifiable credentials you need to verify your identity.',
+          title: translate('credential-alert.default-title'),
+          subtitle: translate('credential-alert.default-subtitle'),
           links: [
             {
               to: '/verify',
-              label: 'Verify now',
+              label: translate('credential-alert.default-link'),
             },
           ],
         };
@@ -120,8 +122,8 @@ function Credentials() {
                 alt="no credentials"
                 className={styles['card__image']}
               />
-              <h5 className="fw-bold">Connect to an organization to receive your first credential</h5>
-              <span className="text-secondary">Receive, store and share your digital credentials</span>
+              <h5 className="fw-bold">{translate('credential-title')}</h5>
+              <span className="text-secondary">{translate('credential-subtitle')}</span>
             </div>
           )}
         </div>
@@ -133,7 +135,7 @@ function Credentials() {
     const filteredCredential = credentials.find(credential => String(credential.id) === id);
     const formatClaimField = (claim, field: string) => {
       const fieldFormatters = {
-        type: isKyc(claim?.type) ? 'Know Your Customer (KYC)' : generateNonKycTypeText(claim),
+        type: isKyc(claim?.type) ? `${translate('credential-kyc')} (KYC)` : generateNonKycTypeText(claim),
         verified_at: formatDate(claim[field]),
         start_date: formatDate(claim[field]),
         end_date: formatDate(claim[field]),
@@ -149,7 +151,7 @@ function Credentials() {
           onClick={() => navigate('/credentials')}
         >
           <Icon name="arrow-left" />
-          Back
+          {translate('credential-back-button')}
         </div>
         {filteredCredential.claims.map((claim, index) => renderPartialDataCard(claim, index))}
         <ListGroup className="font-size-md">
@@ -181,7 +183,7 @@ function Credentials() {
     <div className={styles['home']}>
       <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
         <div className={styles['card__header']}>
-          Credentials
+          {translate('credential-card-header')}
           {/* <Icon name="bell" /> */}
         </div>
         <>

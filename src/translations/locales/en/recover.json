@@ -1,0 +1,10 @@
+{
+  "recover-title": "Secret Recovery Phrase",
+  "recover-subtitle": "Restore your existing wallet with your 24-word secret recovery phrase",
+  "recover-import-button": "Import wallet",
+  "recover-back-button": "Back",
+  "recover-confirm": {
+    "header": "Opps wrong",
+    "button": "Understood"
+  }
+}

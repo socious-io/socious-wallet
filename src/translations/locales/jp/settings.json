@@ -1,0 +1,14 @@
+{
+  "settings-card-header": "設定",
+  "settings-items": {
+    "remove": "ウォレットを削除",
+    "version": "アプリバージョン",
+    "platform": "プラットフォーム"
+  },
+  "settings-confirm": {
+    "header": "ウォレットを削除",
+    "remove-button": "削除",
+    "cancel-button": "キャンセル",
+    "title": "ウォレットの削除は元に戻せません。バックアップしていない場合、このウォレットのすべての資格情報を失います。"
+  }
+}

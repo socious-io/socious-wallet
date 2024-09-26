@@ -1,0 +1,14 @@
+{
+  "settings-card-header": "Settings",
+  "settings-items": {
+    "remove": "Remove wallet",
+    "version": "App Version",
+    "platform": "Platform"
+  },
+  "settings-confirm": {
+    "header": "Remove wallet",
+    "remove-button": "Remove",
+    "cancel-button": "Cancel",
+    "title": "Removing your wallet cannot be undone. You will lose all the credentials with this wallet if you did not backup."
+  }
+}

@@ -1,14 +1,17 @@
+import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
 
 function Download() {
+  const { t: translate } = useTranslation();
+
   return (
     <div className={styles['download']}>
       <div className={styles['title']}>
-        <h5 className={styles['h5']}>Self-Sovereign Identity (SSI) Wallet</h5>
-        <h1 className={styles['h1']}>Socious Identity Wallet</h1>
+        <h5 className={styles['h5']}>{translate('download-h5')}</h5>
+        <h1 className={styles['h1']}>{translate('download-h1')}</h1>
       </div>
       <div className={styles['cta']}>
-        <h4 className={styles['h4']}>Download now</h4>
+        <h4 className={styles['h4']}>{translate('download-now')}</h4>
         <div className={styles['buttons']}>
           <a href="https://wallet.socious.io/android" target="_blank" rel="noreferrer">
             <img
@@ -31,11 +34,7 @@ function Download() {
         </div>
       </div>
       <div>
-        <p className={styles['footnote']}>
-          The Socious Identity Wallet leverages Self-Sovereign Identity (SSI) to provide secure, decentralized control
-          over personal data. It empowers users to manage and share their identity information seamlessly, ensuring
-          privacy and trust. Ideal for individuals and organizations focused on transparency and impact.
-        </p>
+        <p className={styles['footnote']}>{translate('download-footer')}</p>
       </div>
     </div>
   );

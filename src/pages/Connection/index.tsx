@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ConfirmModal from 'src/components/ConfirmModal';
 import Loading from 'src/components/Loading';
 import Card from 'src/components/Card';
@@ -8,6 +9,7 @@ import styles from './index.module.scss';
 import NavigationBar from 'src/containers/NavigationBar';
 
 function Connection() {
+  const { t: translate } = useTranslation();
   const { oob, openModal, handleConfirm, handleCancel, verification, verifyConnection } = useConnection();
 
   if (!oob) return <Navigate to="/" />;
@@ -17,7 +19,7 @@ function Connection() {
       <div className="h-100 d-flex align-items-center justify-content-center">
         <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
           <div className={styles['card__header']}>
-            Connection
+            {translate('connection-card-header')}
             {/* <Icon name="bell" /> */}
           </div>
           <div className={styles['card__content']}>
@@ -25,11 +27,11 @@ function Connection() {
               variant="inherit"
               className={styles['spinner']}
               show={!openModal}
-              title="Establishing connection"
+              title={translate('connection-loading.title')}
               subtitles={[
-                "We're securely connecting your wallet to your credentials. This process can take up to 5 minutes to complete.",
-                "Please keep the app open and your phone unlocked during this time. If you close the app or lock your phone, the process will be interrupted and you'll need to start over.",
-                'We appreciate your patience as we ensure the security of data.',
+                translate('connection-loading.subtitle1'),
+                translate('connection-loading.subtitle2'),
+                translate('connection-loading.subtitle3'),
               ]}
             />
           </div>
@@ -38,16 +40,26 @@ function Connection() {
       </div>
       <ConfirmModal
         open={openModal}
-        header="invitation"
+        header={translate('connection-confirm.header')}
         onClose={handleCancel}
         buttons={[
-          { children: 'Cancel', variant: 'light', onClick: handleCancel, className: 'flex-grow-1 border-solid' },
-          { children: 'Confirm', variant: 'primary', onClick: handleConfirm, className: 'flex-grow-1' },
+          {
+            children: translate('connection-confirm.cancel-button'),
+            variant: 'light',
+            onClick: handleCancel,
+            className: 'flex-grow-1 border-solid',
+          },
+          {
+            children: translate('connection-confirm.button'),
+            variant: 'primary',
+            onClick: handleConfirm,
+            className: 'flex-grow-1',
+          },
         ]}
       >
         <div className={styles['title']}>
-          Accept credential?
-          <span className={styles['subtitle']}>You received a credential!</span>
+          {translate('connection-confirm.title')}
+          <span className={styles['subtitle']}>{translate('connection-confirm.subtitle')}</span>
         </div>
       </ConfirmModal>
     </>
