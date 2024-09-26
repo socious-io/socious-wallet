@@ -2,8 +2,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/main.scss';
 import reportWebVitals from './reportWebVitals';
-import { logger } from './utilities';
-import ErrorBoundary from './components/ErrorBoundry';
+import ErrorBoundary from './containers/ErrorBoundary';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

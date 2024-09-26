@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Container, Toast, ToastContainer } from 'react-bootstrap';
 import Loading from 'src/components/Loading';
 import { useAppContext } from 'src/store';
-import AppUrlListener from 'src/components/AppUrlListener';
+import AppUrlListener from 'src/containers/AppUrlListener';
 
 const Layout = () => {
   const { state } = useAppContext();
