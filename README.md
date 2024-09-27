@@ -13,7 +13,7 @@ Socious Wallet is an identity wallet that operates on the principle of Self-Sove
 
 To get started with Socious Wallet, follow these steps:
 
-1. **Create a Wallet:** Visit [wallet.socious.io](http://wallet.socious.io) to use the latest version of the wallet.
+1. **Create a Wallet:** Visit [socious.io/wallet](https://socious.io/wallet) to use the latest version of the wallet.
 2. **Get verified:** Open the application and follow the instructions to get verified.
 3. **Connect with Socious:** Link your Socious profile to the wallet to start supporting projects and initiatives.
 
