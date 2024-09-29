@@ -46,7 +46,12 @@ function Credentials() {
         };
 
     return (
-      <CredentialCard key={id} {...props} verified onCardClick={() => isClickable && navigate(`/credentials/${id}`)} />
+      <CredentialCard
+        key={id}
+        {...props}
+        verified={isKyc(claim?.type)}
+        onCardClick={() => isClickable && navigate(`/credentials/${id}`)}
+      />
     );
   };
 
