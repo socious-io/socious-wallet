@@ -1,0 +1,64 @@
+@mixin Slide {
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin: auto;
+    overflow: hidden;
+}
+
+.dialog {
+    &.slide--top {
+        @include Slide;
+        animation: slideInFromTop 0.3s ease forwards;
+        top: 0;
+    }
+
+    &.slide--bottom {
+        @include Slide;
+        animation: slideInFromBottom 0.3s ease forwards;
+        bottom: 0;
+    }
+
+    @keyframes slideInFromTop {
+        from {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInFromBottom {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .header {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .body {
+        padding: 0;
+    }
+
+    .content--bottom {
+        @media (max-width: 768px) {
+            border-radius: 8px 8px 0 0;
+        }
+    }
+
+    .content--top {
+        @media (max-width: 768px) {
+            border-radius: 0 0 8px 8px;
+        }
+    }
+}
