@@ -38,7 +38,6 @@
         }
 
         .item {
-            width: 100%;
             @include flex(flex-start, flex-start, column);
             padding: 1rem 0;
             font-weight: 500;
@@ -53,6 +52,12 @@
                 font-weight: normal;
             }
         }
+
+        .value {
+            @include flex(normal, center);
+            gap: 0.5rem;
+            color: $gray;
+        }
     }
 }
 
@@ -62,4 +67,22 @@
     height: 3rem;
     @include flex(center, center);
     border-radius: 100%;
+}
+
+.lang {
+    padding: 1.5rem;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $black;
+    cursor: pointer;
+
+    & + .lang {
+        border-top: 1px solid $border-color;
+    }
+
+    &--lighter {
+        font-weight: 400;
+        color: $gray;
+    }
 }
