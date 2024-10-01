@@ -1,0 +1,7 @@
+{
+  "create-pass-title": "パスコードの作成",
+  "create-pass-subtitle": "ウォレットへのアクセスを保護するためにパスコードを作成します。",
+  "create-pass-retype-title": "パスコードを再入力",
+  "create-pass-retype-subtitle": "パスコードを確認してください。",
+  "create-pass-error": "パスコードが一致しません"
+}
