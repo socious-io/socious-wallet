@@ -4,7 +4,7 @@ import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
 import CredentialCard from 'src/containers/CredentialCard';
 import CredentialAlert from 'src/containers/CredentialAlert';
-// import sampleAvatar from 'src/assets/images/sample-avatar.png';
+//import sampleAvatar from 'src/assets/images/sample-avatar.png';
 import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
 import { useAppContext } from 'src/store';
@@ -12,14 +12,11 @@ import { beautifyText, formatDate } from 'src/utilities';
 import styles from './index.module.scss';
 import cn from 'classnames';
 import NavigationBar from 'src/containers/NavigationBar';
-import { APP_VERSION } from 'src/config';
-import { VerifyStatus } from 'src/store/types';
-import { CredentialAlertProps } from 'src/containers/CredentialAlert/index.types';
 
 function Credentials() {
   const navigate = useNavigate();
   const { state } = useAppContext();
-  const { credentials, verification, submitted, device } = state || {};
+  const { credentials, verification, submitted } = state || {};
   const { id } = useParams();
   const isKyc = type => type === 'verification';
   const generateNonKycTypeText = claim => {
@@ -41,7 +38,7 @@ function Credentials() {
         }
       : {
           title: claim['company_name'] || claim['institute_name'],
-          subtitle: generateNonKycTypeText(claim),
+          subtitle: claim.type || 'UNKOWN',
           date: claim['issued_date'] || claim['start_date'],
           // avatar: sampleAvatar,
         };
@@ -103,7 +100,6 @@ function Credentials() {
         };
         break;
     }
-
     return (
       <>
         {!verification && <CredentialAlert {...props} />}

@@ -9,6 +9,11 @@ const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
 const RequestPresentation = SDK.RequestPresentation;
 
+type Challenge = {
+  type: string;
+  [key: string]: any; // Additional properties if necessary
+};
+
 const handleMessages =
   (pluto: SDK.Domain.Pluto, agent: SDK.Agent, dispatch: React.Dispatch<ActionType>) =>
   async (newMessages: SDK.Domain.Message[]) => {
@@ -26,15 +31,25 @@ const handleMessages =
 
     if (requestPresentations.length) {
       for (const requestPresentation of requestPresentations) {
-        const lastCredentials = await pluto.getAllCredentials();
-        // @FIXME: first credential is KYC we select it auto for not
-        const lastCredential = lastCredentials[0];
+        const credentials = await pluto.getAllCredentials();
+        // @FIXME: it's just selecting VC by they types and as default for KYC VC
+        const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
+        const data = requestPresentationMessage.attachments[0].data as any;
+        let challenge: Challenge = { type: 'verification' };
+        try {
+          challenge = JSON.parse(data.data.options.challenge);
+          challenge.type = challenge.type || 'verification';
+        } catch {
+          challenge.type = 'verification';
+        }
+        if (challenge.type.toLowerCase() === 'kyc') challenge.type = 'verification';
+        const lastCredential = credentials.filter(c => c.claims[0].type === challenge.type)[0];
         addAction('messages', {
           message: newMessages,
           type: 'request-presentations',
           credential: lastCredential,
         });
-        const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
+
         if (lastCredential === undefined) {
           dispatch({
             type: 'SET_ERROR',
