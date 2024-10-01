@@ -13,4 +13,19 @@
         border-radius: $border-lg;
         margin-bottom: 1rem;
     }
+
+    &__title {
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 32px;
+        color: $black;
+    }
+    
+    &__subtitle {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        color: $gray;
+    }
+    
 }
