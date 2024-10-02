@@ -4,7 +4,9 @@
     "details": [
       {
         "appID": "596H9K48FY.socious.mobile-wallet.app",
-        "paths": ["*"]
+        "paths": [
+          "*"
+        ]
       }
     ]
   }
