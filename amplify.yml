@@ -14,3 +14,8 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+  customHeaders:
+    - pattern: '/apple-app-site-association'
+      headers:
+        - key: 'Content-Type'
+          value: 'application/json'
