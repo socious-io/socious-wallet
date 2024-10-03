@@ -17,6 +17,7 @@ import AppUrlListener from 'src/containers/AppUrlListener';
 import Settings from 'src/pages/Settings';
 import SetupPass from 'src/pages/SetupPass';
 import CreatePass from 'src/pages/CreatePass';
+import EnterPass from 'src/pages/EnterPass';
 import Backup from 'src/pages/Backup';
 import { config } from 'src/config';
 
@@ -34,8 +35,9 @@ export const blueprint: RouteObject[] = [
       { path: '/intro', element: <Intro /> },
       { path: '/setup-pass', element: <SetupPass /> },
       { path: '/create-pass', element: <CreatePass /> },
-      // { path: '/register', element: <Register /> },
+      { path: '/enter-pass', element: <EnterPass /> },
       { path: '/backup', element: <Backup /> },
+      // { path: '/register', element: <Register /> },
       // { path: '/confirm', element: <Confirm /> },
       { path: '/created', element: <Created /> },
       { path: '/verify', element: <Verify /> },
