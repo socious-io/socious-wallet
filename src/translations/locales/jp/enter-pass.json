@@ -1,0 +1,13 @@
+{
+  "enter-pass-title": "パスワードを入力",
+  "enter-pass-subtitle": "このパスワードがウォレットのインポートに必要です",
+  "enter-pass-continue-button": "続ける",
+  "enter-pass-back-button": "戻る",
+  "enter-pass-form": {
+    "input-placeholder": "パスワードを入力してください...",
+    "input-error1": "パスワードは必須です",
+    "input-error2": "8文字以上で入力してください",
+    "input-error3": "パスワードの複雑さが不十分です",
+    "submit-error": "ウォレットのインポート中にエラーが発生しました"
+  }
+}
