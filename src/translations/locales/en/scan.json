@@ -1,0 +1,6 @@
+{
+  "scan-error-access": "Error accessing camera",
+  "scan-error-support": "is not supported by your browser",
+  "scan-error-qr": "QR code is not valid! Please try again.",
+  "scan-back-button": "Back"
+}

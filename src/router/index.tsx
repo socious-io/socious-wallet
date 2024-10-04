@@ -1,6 +1,6 @@
 // import { ComponentType } from 'react';
 import { RouteObject, createBrowserRouter, Navigate, useRouteError } from 'react-router-dom';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 import Layout from 'src/containers/Layout';
 import Intro from 'src/pages/Intro';
 import Register from 'src/pages/Register';
@@ -13,7 +13,7 @@ import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
 import Scan from 'src/pages/Scan';
 import Download from 'src/pages/Download';
-import AppUrlListener from 'src/components/AppUrlListener';
+import AppUrlListener from 'src/containers/AppUrlListener';
 import Settings from 'src/pages/Settings';
 import { config } from 'src/config';
 

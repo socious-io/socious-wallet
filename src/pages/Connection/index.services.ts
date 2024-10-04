@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'src/services/http';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 import { config } from 'src/config';
 import { addAction } from 'src/services/datadog';
 

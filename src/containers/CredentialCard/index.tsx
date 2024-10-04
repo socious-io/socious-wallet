@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Badge } from 'react-bootstrap';
 import Icon from 'src/components/Icon';
 import { beautifyText, formatDate } from 'src/utilities';
@@ -15,6 +16,8 @@ const CredentialCard: React.FC<CredentialCardProps> = ({
   onCardClick,
   className = '',
 }) => {
+  const { t: translate } = useTranslation();
+
   return (
     <div className={cn(styles['container'], className)} onClick={onCardClick}>
       <div className="w-100 d-flex flex-column align-items-start gap-1">
@@ -27,7 +30,11 @@ const CredentialCard: React.FC<CredentialCardProps> = ({
 
       <div className="w-100 d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center gap-3 text-secondary font-size-sm">
-          {date && <>Issued on {formatDate(date)}</>}
+          {date && (
+            <>
+              {translate('credential-card.issued')} {formatDate(date)}
+            </>
+          )}
           <Badge
             className={cn(
               'd-flex align-items-center gap-1 fw-bold font-size-sm',
@@ -35,7 +42,7 @@ const CredentialCard: React.FC<CredentialCardProps> = ({
             )}
           >
             <Icon name={verified ? 'check-verified' : 'invalid'} />
-            {verified ? 'Verified' : 'Invalid'}
+            {verified ? translate('credential-card.verified') : translate('credential-card.invalid')}
           </Badge>
         </div>
         {avatar && <img src={avatar} alt="credential-avatar" width={40} height={40} />}

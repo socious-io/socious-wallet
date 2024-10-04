@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { config } from 'src/config';
 import { decodeJwtPayload } from 'src/utilities';
-import { ActionType } from 'src/store/types';
+import { ActionType } from 'src/store/context/types';
 import { addAction } from './datadog';
 
 const OfferCredential = SDK.OfferCredential;

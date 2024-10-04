@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 import { arraysEqual } from 'src/utilities';
 import { recoverDID } from 'src/services/dids';
 import SDK from '@hyperledger/identus-edge-agent-sdk';

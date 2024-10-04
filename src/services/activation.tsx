@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAppContext } from 'src/store';
+import { useAppContext } from 'src/store/context';
 
 export const Activation: React.FC = () => {
   const { state } = useAppContext();

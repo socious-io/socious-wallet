@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useAppContext } from 'src/store';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useAppContext } from 'src/store/context';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore this package types has issue so we ignore error
 import { Veriff } from '@veriff/js-sdk';
 import { createVeriffFrame } from '@veriff/incontext-sdk';
 import axios from 'src/services/http';
 import { config } from 'src/config';
-import { useNavigate } from 'react-router-dom';
 
 const FLAG_KEY = 'submitted_kyc';
 
@@ -17,6 +18,7 @@ const startKYC = async (did: string, session: string) => {
 };
 
 const useVerify = () => {
+  const { t: translate } = useTranslation();
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, credentials, verification } = state || {};
@@ -51,7 +53,7 @@ const useVerify = () => {
         vendorData: did.methodId,
       });
       veriff.mount({
-        submitBtnText: 'Get verified',
+        submitBtnText: translate('verify-veriff-button'),
       });
     }
   }, [credentials, did, submitted, veriff, verification]);
@@ -101,7 +103,7 @@ const useVerify = () => {
     }
   }, [did, submitted, navigate, dispatch, verification]);
 
-  return { submitted, verification };
+  return { translate, submitted, verification };
 };
 
 export default useVerify;

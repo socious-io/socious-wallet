@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { useAppContext } from 'src/store';
+import { useTranslation } from 'react-i18next';
+import { useAppContext } from 'src/store/context';
 import { Form } from 'react-bootstrap';
 import ConfirmModal from 'src/components/ConfirmModal';
 import Card from 'src/components/Card';
@@ -8,9 +9,11 @@ import useRecover from './index.services';
 import styles from './index.module.scss';
 
 function Recover() {
+  const { t: translate } = useTranslation();
   const navigate = useNavigate();
   const { handleMnemonicValue, onConfirm, disabledConfirm, errorMessage, closeError } = useRecover();
   const { state } = useAppContext();
+
   if (state.did) return <Navigate to="/" />;
   return (
     <>
@@ -20,14 +23,14 @@ function Recover() {
           contentClassName="h-100 flex-row"
           buttons={[
             {
-              children: 'Import wallet',
+              children: translate('recover-import-button'),
               variant: 'primary',
               type: 'submit',
               disabled: disabledConfirm,
               className: 'fw-bold w-100 py-2',
             },
             {
-              children: 'Back',
+              children: translate('recover-back-button'),
               variant: 'inherit',
               type: 'button',
               onClick: () => navigate('/intro'),
@@ -37,14 +40,12 @@ function Recover() {
         >
           <div className={styles['card__form']}>
             <div className="d-flex flex-column gap-2 align-items-center">
-              <h4 className="fw-bold">Secret Recovery Phrase</h4>
-              <span className={styles['card__text']}>
-                Restore your existing wallet with your 24-word secret recovery phrase
-              </span>
+              <h4 className="fw-bold">{translate('recover-title')}</h4>
+              <span className={styles['card__text']}>{translate('recover-subtitle')}</span>
               <Form.Group className="my-3 my-md-5 w-100" controlId="recovery">
                 <Form.Control
                   as="textarea"
-                  placeholder="Secret Recovery Phrase"
+                  placeholder={translate('recover-title')}
                   rows={6}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleMnemonicValue(e.target.value)}
                   onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
@@ -58,10 +59,15 @@ function Recover() {
       </Form>
       <ConfirmModal
         open={errorMessage !== undefined}
-        header="Opps wrong"
+        header={translate('recover-confirm.header')}
         onClose={closeError}
         buttons={[
-          { children: 'Understood', variant: 'secondery', onClick: closeError, className: 'flex-grow-1 border-solid' },
+          {
+            children: translate('recover-confirm.button'),
+            variant: 'secondary',
+            onClick: closeError,
+            className: 'flex-grow-1 border-solid',
+          },
         ]}
       >
         <div className={styles['title']}>

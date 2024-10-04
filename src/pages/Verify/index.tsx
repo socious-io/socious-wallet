@@ -7,33 +7,30 @@ import styles from './index.module.scss';
 import NavigationBar from 'src/containers/NavigationBar';
 
 function Verify() {
-  const { submitted, verification } = useVerify();
+  const { translate, submitted, verification } = useVerify();
 
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
       <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
         <div className={styles['card__header']}>
-          Verification
+          {translate('verify-card-header')}
           {/* <Icon name="bell" /> */}
         </div>
         <div className={styles['card__content']}>
           <div className={styles['card__information']}>
-            <h4 className="fw-bold">Verify your identity</h4>
-            <span className="text-secondary text-center">
-              Socious Wallet is dedicated to complying with KYC, AML, and GDPR regulations to ensure privacy and
-              security. We do not store any personal data.
-            </span>
+            <h4 className="fw-bold">{translate('verify-title')}</h4>
+            <span className="text-secondary text-center">{translate('verify-subtitle')}</span>
             <img src={verifyImage} width={354} height={186} alt="Verify Id Card" />
           </div>
           {!submitted && <div id="veriff-root"></div>}
           {submitted && !verification && (
             <Alert variant="primary" className="w-100">
-              Your verification request has been submitted.
+              {translate('verify-submitted')}
             </Alert>
           )}
           {verification && (
             <Alert variant="warning" className="w-100">
-              Your identity has been verified.
+              {translate('verify-verified')}
             </Alert>
           )}
         </div>
