@@ -16,101 +16,101 @@ type Challenge = {
 
 const handleMessages =
   (pluto: SDK.Domain.Pluto, agent: SDK.Agent, dispatch: React.Dispatch<ActionType>) =>
-  async (newMessages: SDK.Domain.Message[]) => {
-    dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
-    dispatch({ type: 'SET_LISTENER_STATE', payload: true });
-    const credentialOffers = newMessages.filter(
-      message => message.piuri === 'https://didcomm.org/issue-credential/3.0/offer-credential',
-    );
-    const issuedCredentials = newMessages.filter(
-      message => message.piuri === 'https://didcomm.org/issue-credential/3.0/issue-credential',
-    );
-    const requestPresentations = newMessages.filter(
-      message => message.piuri === 'https://didcomm.atalaprism.io/present-proof/3.0/request-presentation',
-    );
+    async (newMessages: SDK.Domain.Message[]) => {
+      dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
+      dispatch({ type: 'SET_LISTENER_STATE', payload: true });
+      const credentialOffers = newMessages.filter(
+        message => message.piuri === 'https://didcomm.org/issue-credential/3.0/offer-credential',
+      );
+      const issuedCredentials = newMessages.filter(
+        message => message.piuri === 'https://didcomm.org/issue-credential/3.0/issue-credential',
+      );
+      const requestPresentations = newMessages.filter(
+        message => message.piuri === 'https://didcomm.atalaprism.io/present-proof/3.0/request-presentation',
+      );
 
-    if (requestPresentations.length) {
-      for (const requestPresentation of requestPresentations) {
-        const credentials = await pluto.getAllCredentials();
-        // @FIXME: it's just selecting VC by they types and as default for KYC VC
-        const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
-        const data = requestPresentationMessage.attachments[0].data as any;
-        let challenge: Challenge = { type: 'verification' };
-        try {
-          challenge = JSON.parse(data.data.options.challenge);
-          challenge.type = challenge.type || 'verification';
-        } catch {
-          challenge.type = 'verification';
-        }
-        if (challenge.type.toLowerCase() === 'kyc') challenge.type = 'verification';
-        const lastCredential = credentials.filter(c => c.claims[0].type === challenge.type)[0];
-        addAction('messages', {
-          message: newMessages,
-          type: 'request-presentations',
-          credential: lastCredential,
-        });
-
-        if (lastCredential === undefined) {
-          dispatch({
-            type: 'SET_ERROR',
-            payload: { err: new Error('could not find last credential'), section: 'find credential' },
-          });
-        } else {
+      if (requestPresentations.length) {
+        for (const requestPresentation of requestPresentations) {
+          const credentials = await pluto.getAllCredentials();
+          // @FIXME: it's just selecting VC by they types and as default for KYC VC
+          const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
+          const data = requestPresentationMessage.attachments[0].data as any;
+          let challenge: Challenge = { type: 'verification' };
           try {
-            const presentation = await agent.createPresentationForRequestProof(
-              requestPresentationMessage,
-              lastCredential,
-            );
-            await agent.sendMessage(presentation.makeMessage());
-          } catch (err) {
-            console.log(err);
-            dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
+            challenge = JSON.parse(data.data.options.challenge);
+            challenge.type = challenge.type || 'verification';
+          } catch {
+            challenge.type = 'verification';
+          }
+          if (challenge.type.toLowerCase() === 'kyc') challenge.type = 'verification';
+          const lastCredential = credentials.filter(c => c.claims[0].type === challenge.type)[0];
+          addAction('messages', {
+            message: newMessages,
+            type: 'request-presentations',
+            credential: lastCredential,
+          });
+
+          if (lastCredential === undefined) {
+            dispatch({
+              type: 'SET_ERROR',
+              payload: { err: new Error('could not find last credential'), section: 'find credential' },
+            });
+          } else {
+            try {
+              const presentation = await agent.createPresentationForRequestProof(
+                requestPresentationMessage,
+                lastCredential,
+              );
+              await agent.sendMessage(presentation.makeMessage());
+            } catch (err) {
+              console.log(err);
+              dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
+            }
           }
         }
       }
-    }
-    if (credentialOffers && credentialOffers.length) {
-      for (const credentialOfferMessage of credentialOffers) {
-        const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
-        const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
-        addAction('messages', {
-          message: newMessages,
-          type: 'offered-credential',
-          credential: requestCredential,
-        });
-        try {
-          await agent.sendMessage(requestCredential.makeMessage());
-        } catch (err) {
-          dispatch({ type: 'SET_WARN', payload: { err, section: 'Send accept offer' } });
+      if (credentialOffers && credentialOffers.length) {
+        for (const credentialOfferMessage of credentialOffers) {
+          const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
+          const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
+          addAction('messages', {
+            message: newMessages,
+            type: 'offered-credential',
+            credential: requestCredential,
+          });
+          try {
+            await agent.sendMessage(requestCredential.makeMessage());
+          } catch (err) {
+            dispatch({ type: 'SET_WARN', payload: { err, section: 'Send accept offer' } });
+          }
         }
       }
-    }
-    if (issuedCredentials.length) {
-      for (const issuedCredential of issuedCredentials) {
-        const issueCredential = IssueCredential.fromMessage(issuedCredential);
+      if (issuedCredentials.length) {
+        for (const issuedCredential of issuedCredentials) {
+          const issueCredential = IssueCredential.fromMessage(issuedCredential);
 
-        const credentials = await pluto.getAllCredentials();
-        const verfiedVC = credentials.filter(c => c.claims[0]?.type === 'verification')[0];
-        const decoded = decodeJwtPayload((issueCredential.attachments[0].data as SDK.Domain.AttachmentBase64).base64);
-        if (!verfiedVC) {
-          if (decoded.vc.credentialSubject.type !== 'verification') break;
-        } else {
-          if (decoded.vc.credentialSubject.type === 'verification') break;
-        }
+          const credentials = await pluto.getAllCredentials();
+          const verfiedVC = credentials.filter(c => c.claims[0]?.type === 'verification')[0];
+          const decoded = decodeJwtPayload((issueCredential.attachments[0].data as SDK.Domain.AttachmentBase64).base64);
+          if (!verfiedVC) {
+            if (decoded.vc.credentialSubject.type !== 'verification') break;
+          } else {
+            if (decoded.vc.credentialSubject.type === 'verification') break;
+          }
 
-        const credential = await agent.processIssuedCredentialMessage(issueCredential);
-        addAction('messages', {
-          message: newMessages,
-          type: 'issued-credential',
-          credential,
-        });
-        if (!verfiedVC) {
-          dispatch({ type: 'SET_VERIFICATION', payload: credential });
+          const credential = await agent.processIssuedCredentialMessage(issueCredential);
+          addAction('messages', {
+            message: newMessages,
+            type: 'issued-credential',
+            credential,
+          });
+          if (!verfiedVC) {
+            dispatch({ type: 'SET_VERIFICATION', payload: credential });
+          }
+          dispatch({ type: 'SET_CREDENTIALS', payload: [credential] });
         }
-        dispatch({ type: 'SET_CREDENTIALS', payload: [credential] });
       }
-    }
-  };
+    };
 
 export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<ActionType>) {
   const [agent, setAgent] = useState<SDK.Agent>();
@@ -118,8 +118,10 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
 
   useEffect(() => {
     const handleStart = async () => {
+      console.log(`starting agent with mediator : ${config.MEDIATOR_DID}`);
       const a = SDK.Agent.initialize({ mediatorDID: SDK.Domain.DID.fromString(config.MEDIATOR_DID), pluto });
       a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
+      console.log('listener has been add to the agant');
       setState(await a.start());
       const mediator = a.currentMediatorDID;
       if (!mediator) {
@@ -130,6 +132,7 @@ export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<Actio
     };
 
     if (pluto) {
+      console.log('pluto init successfully');
       handleStart().then(a => {
         console.log('agent started');
         dispatch({ type: 'SET_AGENT', payload: a });
