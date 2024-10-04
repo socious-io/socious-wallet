@@ -66,6 +66,7 @@ function appReducer(state: StateType, action: ActionType): StateType {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+  console.log('start app store context');
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
   const { agent } = useAgent(pluto, dispatch);
