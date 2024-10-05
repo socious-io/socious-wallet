@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import { Container, Toast, ToastContainer } from 'react-bootstrap';
 import { useAppContext } from 'src/store/context';
 import Loading from 'src/components/Loading';
 import AppUrlListener from 'src/containers/AppUrlListener';
+import { config } from 'src/config';
 
 const Layout = () => {
   const { state } = useAppContext();
-  const { warn, error, didLoading } = state || {};
+  const { warn, error, didLoading, device } = state || {};
   const [warnShow, setWarnShow] = useState(false);
   const [errorShow, setErrorShow] = useState(false);
 
@@ -25,6 +26,7 @@ const Layout = () => {
 
   return (
     <>
+      {!config.DEBUG && config.PLATFORM === 'web' && <Navigate to="download" />}
       <AppUrlListener />
       <Container>
         {error && errorShow && (
