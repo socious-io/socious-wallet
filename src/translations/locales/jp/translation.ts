@@ -8,6 +8,7 @@ import recover from './recover.json';
 import connection from './connection.json';
 import settings from './settings.json';
 import credentials from './credentials.json';
+import setupPass from './setup-pass.json';
 import general from './general.json';
 
 export function generateTranslationFile() {
@@ -23,6 +24,7 @@ export function generateTranslationFile() {
     connection,
     settings,
     credentials,
+    setupPass,
     general,
   );
 }
