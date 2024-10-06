@@ -1,6 +1,7 @@
 {
   "settings-card-header": "Settings",
   "settings-items": {
+    "backup": "Backup wallet",
     "remove": "Remove wallet",
     "language": "Language",
     "automatic": "Automatic",

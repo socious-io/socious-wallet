@@ -34,12 +34,10 @@ function Settings() {
                   {item.title}
                   {item.subtitle && <span className={styles['item__subtitle']}>{item.subtitle}</span>}
                 </div>
-                {item.value && (
-                  <div className={styles['value']}>
-                    {item.value}
-                    <Icon name="chevron-right" />
-                  </div>
-                )}
+                <div className={styles['value']}>
+                  {item.value}
+                  {item.clickable && <Icon name="chevron-right" />}
+                </div>
               </div>
             ))}
           </div>
