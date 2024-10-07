@@ -35,15 +35,12 @@ const CredentialCard: React.FC<CredentialCardProps> = ({
               {translate('credential-card.issued')} {formatDate(date)}
             </>
           )}
-          <Badge
-            className={cn(
-              'd-flex align-items-center gap-1 fw-bold font-size-sm',
-              verified ? 'badge-primary' : 'badge-error',
-            )}
-          >
-            <Icon name={verified ? 'check-verified' : 'invalid'} />
-            {verified ? translate('credential-card.verified') : translate('credential-card.invalid')}
-          </Badge>
+          {verified && (
+            <Badge className="d-flex align-items-center gap-1 fw-bold font-size-sm badge-primary">
+              <Icon name="check-verified" />
+              {translate('credential-card.verified')}
+            </Badge>
+          )}
         </div>
         {avatar && <img src={avatar} alt="credential-avatar" width={40} height={40} />}
       </div>
