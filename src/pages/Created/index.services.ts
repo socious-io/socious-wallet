@@ -8,7 +8,6 @@ const useCreated = () => {
 
   const cardContent = {
     ['']: {
-      iconName: 'done',
       title: translate('created-started-title'),
       subtitle: translate('created-started-subtitle'),
       buttons: [
@@ -16,9 +15,10 @@ const useCreated = () => {
           children: translate('created-started-button'),
           variant: 'primary',
           onClick: () => navigate('/'),
-          className: 'w-100 border-solid',
+          className: 'fw-bold w-100 py-2',
         },
       ],
+      contentClassName: 'justify-content-start',
     },
     ['#restored']: {
       title: translate('created-restore-title'),
@@ -28,9 +28,10 @@ const useCreated = () => {
           children: translate('created-restore-button'),
           variant: 'primary',
           onClick: () => navigate('/'),
-          className: 'w-100 border-solid',
+          className: 'fw-bold w-100 py-2',
         },
       ],
+      contentClassName: 'justify-content-center',
     },
   };
 

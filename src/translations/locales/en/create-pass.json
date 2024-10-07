@@ -1,0 +1,7 @@
+{
+  "create-pass-title": "Create Your Passcode",
+  "create-pass-subtitle": "Create a passcode to secure access to your wallet.",
+  "create-pass-retype-title": "Re-type your Passcode",
+  "create-pass-retype-subtitle": "Confirm your passcode.",
+  "create-pass-error": "Passcode does not match"
+}

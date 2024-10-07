@@ -5,4 +5,5 @@ export interface CreatedCardProps {
   subtitle: string;
   iconName?: string;
   buttons?: ButtonProps[];
+  contentClassName?: string;
 }
