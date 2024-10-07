@@ -2,12 +2,12 @@
   "connection-card-header": "Connection",
   "connection-loading": {
     "title": "Establishing connection",
-    "subtitle-1": "We're securely connecting your wallet to your credentials. This process can take up to 5 minutes to complete.",
-    "subtitle-2": "Please keep the app open and your phone unlocked during this time. If you close the app or lock your phone, the process will be interrupted and you'll need to start over.",
-    "subtitle-3": "We appreciate your patience as we ensure the security of data."
+    "subtitle1": "We're securely connecting your wallet to your credentials. This process can take up to 5 minutes to complete.",
+    "subtitle2": "Please keep the app open and your phone unlocked during this time. If you close the app or lock your phone, the process will be interrupted and you'll need to start over.",
+    "subtitle3": "We appreciate your patience as we ensure the security of data."
   },
   "connection-confirm": {
-    "header": "invitation",
+    "header": "Invitation",
     "button": "Confirm",
     "cancel-button": "Cancel",
     "title": "Accept credential?",
