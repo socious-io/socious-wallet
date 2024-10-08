@@ -1,4 +1,3 @@
-import { Navigate } from 'react-router-dom';
 import NumPad from 'src/components/NumPad';
 import { useCreatePass } from './index.services';
 import styles from './index.module.scss';
@@ -7,7 +6,6 @@ function CreatePass() {
   const {
     navigate,
     translate,
-    did,
     handlePasscode,
     handleRetypePass,
     isFirstStep,
@@ -16,7 +14,6 @@ function CreatePass() {
     setErrorMessage,
   } = useCreatePass();
 
-  if (did) return <Navigate to="/" />;
   return (
     <div className={styles['container']}>
       <div className={styles['header']}>
