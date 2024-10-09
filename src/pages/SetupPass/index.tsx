@@ -1,12 +1,10 @@
-import { Navigate } from 'react-router-dom';
 import Card from 'src/components/Card';
 import { useSetupPass } from './index.services';
 import styles from './index.module.scss';
 
 function SetupPass() {
-  const { translate, navigate, did } = useSetupPass();
+  const { translate, navigate } = useSetupPass();
 
-  if (did) return <Navigate to="/" />;
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
       <Card

@@ -33,7 +33,7 @@ export const blueprint: RouteObject[] = [
       { path: '/intro', element: <Intro /> },
       { path: '/setup-pass', element: <SetupPass /> },
       { path: '/create-pass', element: <CreatePass /> },
-      { path: '/register', element: <Register /> },
+      // { path: '/register', element: <Register /> },
       // { path: '/confirm', element: <Confirm /> },
       { path: '/created', element: <Created /> },
       { path: '/verify', element: <Verify /> },

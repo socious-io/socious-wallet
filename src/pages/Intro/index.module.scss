@@ -1,21 +1,20 @@
-//FIXME: bootstrap's predefined text color not work
-.card {
-    &__text {
-        color: $gray;
-        text-align: center;
-        line-height: 1.5rem;
-    }
+.logo {
+    border-radius: 12px;
+}
 
-    &__subtitle {
-        text-align: center;
-    }
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    color: $black;
+    text-align: center;
+}
 
-    &__secondary_btn {
-        color: $gray !important;
-    }
-
-    &__secondary_btn:hover {
-        color: $gray !important;
-        background-color: $light-rgb !important;
-    }
+.subtitle {
+    @include flex(center, center, column);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: $gray;
+    text-align: center;
 }
