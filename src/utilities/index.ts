@@ -49,3 +49,6 @@ export const logger = (error: Error, errorInfo: ErrorInfo) => {
     });
   addError(error);
 };
+
+//REGEX
+export const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!])[A-Za-z\d@#$%^&+=!]{8,}$/;

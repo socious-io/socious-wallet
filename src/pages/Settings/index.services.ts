@@ -6,9 +6,11 @@ import { APP_VERSION } from 'src/config';
 import { RootState } from 'src/store/redux';
 import { setLanguage, setSystemLanguage } from 'src/store/redux/language.reducers';
 import { languages } from 'src/constants/languages';
+import { useNavigate } from 'react-router-dom';
 
 const useSettings = () => {
   const { t: translate } = useTranslation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { language, system } = useSelector((state: RootState) => state.language);
   const { state } = useAppContext();
@@ -19,8 +21,14 @@ const useSettings = () => {
   });
   const settingsItems = [
     {
+      title: translate('settings-items.backup'),
+      action: () => navigate('/backup'),
+      clickable: true,
+    },
+    {
       title: translate('settings-items.remove'),
       action: () => setOpenModal({ name: 'remove', open: true }),
+      clickable: true,
     },
     // {
     //   title: 'Contact us',
@@ -34,14 +42,17 @@ const useSettings = () => {
       title: translate('settings-items.language'),
       value: system ? translate('settings-items.automatic') : languages.find(lang => lang.value === language)?.original,
       action: () => setOpenModal({ name: 'language', open: true }),
+      clickable: true,
     },
     {
       title: translate('settings-items.version'),
       subtitle: APP_VERSION,
+      clickable: false,
     },
     {
       title: translate('settings-items.platform'),
       subtitle: device.platform,
+      clickable: false,
     },
   ];
 

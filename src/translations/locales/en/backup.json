@@ -1,0 +1,19 @@
+{
+  "backup-title": "Create a password",
+  "backup-subtitle": "Create a password to keep your backup file safe. You will need it when importing your wallet to a new device.",
+  "backup-back-link": "Back",
+  "backup-form": {
+    "new-pass-label": "Set a password",
+    "new-pass-placeholder": "New Password",
+    "new-pass-hint": "Your password must be at least 8 characters with lowercase, uppercase, and a special character.",
+    "new-pass-error1": "Password is required",
+    "new-pass-error2": "Minimum 8 characters",
+    "new-pass-error3": "Password complexity is week",
+    "confirm-pass-label": "Confirm your password",
+    "confirm-pass-placeholder": "Confirm Password",
+    "confirm-pass-error1": "Confirm password is required",
+    "confirm-pass-error2": "Passwords must match",
+    "button": "Continue"
+  },
+  "backup-error": "File could not be saved. Please try again, and select a new location if necessary."
+}
