@@ -1,22 +1,18 @@
-.card {
-    &__container {
-        width: 32.5rem;
-        max-width: unset;
-        height: auto;
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    color: $black;
+}
 
-        @include media-breakpoint-down(md) {
-            width: 100%;
-        }
-    }
+.subtitle,
+.error {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: $gray;
+}
 
-    &__form {
-        width: 100%;
-        @include flex(space-between, center, column);
-        gap: 0.5rem;
-    }
-
-    &__text {
-        color: $gray;
-        text-align: center;
-    }
+.error {
+    color: $color-red-2;
 }

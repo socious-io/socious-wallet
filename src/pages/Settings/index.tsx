@@ -29,21 +29,15 @@ function Settings() {
           </div>
           <div className={styles['card__content']}>
             {settingsItems.map(item => (
-              <div
-                key={item.title}
-                className={cn('w-100 d-flex justify-content-between', item.action && 'pointer')}
-                onClick={item.action}
-              >
+              <div key={item.title} className={cn(styles['settings'], item.action && 'pointer')} onClick={item.action}>
                 <div className={styles['item']}>
                   {item.title}
                   {item.subtitle && <span className={styles['item__subtitle']}>{item.subtitle}</span>}
                 </div>
-                {item.value && (
-                  <div className={styles['value']}>
-                    {item.value}
-                    <Icon name="chevron-right" />
-                  </div>
-                )}
+                <div className={styles['value']}>
+                  {item.value}
+                  {item.clickable && <Icon name="chevron-right" />}
+                </div>
               </div>
             ))}
           </div>
