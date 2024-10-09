@@ -9,7 +9,7 @@ import CredentialAlert from 'src/containers/CredentialAlert';
 import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
 import { useAppContext } from 'src/store/context';
-import { beautifyText, formatDate } from 'src/utilities';
+import { beautifyText, formatDate, truncateFromMiddle } from 'src/utilities';
 import styles from './index.module.scss';
 import cn from 'classnames';
 import NavigationBar from 'src/containers/NavigationBar';
@@ -30,7 +30,7 @@ function Credentials() {
     return subtitle[subtitleKey];
   };
 
-  const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean) => {
+  const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean, isDetail?: boolean) => {
     const props = isKyc(claim?.type)
       ? {
           title: 'Veriff',
@@ -51,6 +51,7 @@ function Credentials() {
         {...props}
         verified={isKyc(claim?.type)}
         onCardClick={() => isClickable && navigate(`/credentials/${id}`)}
+        className={isDetail && styles['card--detail']}
       />
     );
   };
@@ -149,20 +150,19 @@ function Credentials() {
     };
 
     return (
-      <div className={cn(styles['card__content'], 'd-flex flex-column gap-4')}>
-        <div
-          className="d-flex align-items-center gap-1 pointer text-secondary fw-bold"
-          onClick={() => navigate('/credentials')}
-        >
+      <div className={cn(styles['card__content'], 'm-0 p-0 d-flex flex-column gap-4')}>
+        <div className={styles['card__back']} onClick={() => navigate('/credentials')}>
           <Icon name="arrow-left" />
           {translate('credential-back-button')}
         </div>
-        {filteredCredential.claims.map((claim, index) => renderPartialDataCard(claim, index))}
-        <ListGroup className="font-size-md">
+        {filteredCredential.claims.map((claim, index) => renderPartialDataCard(claim, index, false, true))}
+        <ListGroup className="font-size-md px-3">
           <>
             <div className="d-flex flex-column py-3 fw-bold border-bottom border-solid">
               ID
-              <span className="fw-normal text-secondary">{filteredCredential.id}</span>
+              <span className="fw-normal text-secondary">
+                {truncateFromMiddle(filteredCredential.id.toString(), 10, 5)}
+              </span>
             </div>
             {filteredCredential.claims.map(claim =>
               Object.keys(claim)
@@ -170,9 +170,11 @@ function Credentials() {
                 .map(
                   (field, i) =>
                     claim[field] && (
-                      <div key={`field${i}`} className="d-flex flex-column py-3 fw-bold border-bottom border-solid">
+                      <div key={`field${i}`} className={styles['card__item']}>
                         {beautifyText(field)}
-                        <span className="fw-normal text-secondary text-break">{formatClaimField(claim, field)}</span>
+                        <span className="fw-normal text-secondary text-break text-truncate">
+                          {formatClaimField(claim, field)}
+                        </span>
                       </div>
                     ),
                 ),
