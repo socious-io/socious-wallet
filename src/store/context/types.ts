@@ -21,6 +21,7 @@ export interface StateType {
   warn: Err;
   device: DeviceInfo;
   listenerActive: boolean;
+  encrypted: string;
 }
 
 export type ActionType =
@@ -34,10 +35,10 @@ export type ActionType =
   | { type: 'SET_NEW_MESSAGE'; payload: SDK.Domain.Message[] }
   | { type: 'SET_VERIFICATION'; payload: SDK.Domain.Credential }
   | { type: 'SET_SUBMIT'; payload: VerifyStatus }
-  | { type: 'LOADING_END' }
-  | { type: 'LOADING_START' }
   | { type: 'SET_DEVICE'; payload: DeviceInfo }
   | { type: 'SET_LISTENER_STATE'; payload: boolean }
+  | { type: 'SET_ENCRYPTED_DATA'; payload: string }
+  | { type: 'LOADING_START' }
   | { type: 'LOADING_END' };
 
 export type AppProviderProps = { children: React.ReactNode };
