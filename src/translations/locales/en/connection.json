@@ -10,7 +10,7 @@
     "header": "Invitation",
     "button": "Confirm",
     "cancel-button": "Cancel",
-    "title": "Accept credential?",
-    "subtitle": "You received a credential!"
+    "title": "Accept connection?",
+    "subtitle": "This will allow you to receive or share credentials."
   }
 }
