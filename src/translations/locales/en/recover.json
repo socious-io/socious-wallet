@@ -1,10 +1,7 @@
 {
-  "recover-title": "Secret Recovery Phrase",
-  "recover-subtitle": "Restore your existing wallet with your 24-word secret recovery phrase",
+  "recover-title": "Import Wallet",
+  "recover-subtitle": "Upload your backup file to import your wallet",
+  "recover-error": "Invalid backup file",
   "recover-import-button": "Import wallet",
-  "recover-back-button": "Back",
-  "recover-confirm": {
-    "header": "Opps wrong",
-    "button": "Understood"
-  }
+  "recover-back-button": "Back"
 }

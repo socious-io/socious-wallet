@@ -19,6 +19,7 @@ const initialState: StateType = {
   mnemonics: [],
   device: undefined,
   listenerActive: false,
+  encrypted: '',
 };
 
 const AppContext = createContext<{
@@ -56,6 +57,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return { ...state, message: action.payload };
     case 'SET_LISTENER_STATE':
       return { ...state, listenerActive: action.payload };
+    case 'SET_ENCRYPTED_DATA':
+      return { ...state, encrypted: action.payload };
     case 'LOADING_START':
       return state;
     case 'LOADING_END':
