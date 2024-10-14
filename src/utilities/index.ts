@@ -14,6 +14,11 @@ export const beautifyText = (str: string) => {
   return (str.charAt(0).toUpperCase() + str.slice(1)).replaceAll('_', ' ');
 };
 
+export const truncateFromMiddle = (fullStr: string, frontChars: number, backChars: number, middleStr = '...') => {
+  if (fullStr.length <= frontChars) return fullStr;
+  return fullStr.slice(0, frontChars) + middleStr + fullStr.slice(fullStr.length - backChars);
+};
+
 //Arrays
 export const arraysEqual = (a: Array<any>, b: Array<any>) => {
   if (a == null || b == null) return false;
