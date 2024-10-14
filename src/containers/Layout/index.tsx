@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { Container, Toast, ToastContainer } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
 import Loading from 'src/components/Loading';
 import AppUrlListener from 'src/containers/AppUrlListener';
+import ConfirmModal from 'src/components/ConfirmModal';
 import { config } from 'src/config';
 
 const Layout = () => {
   const { state } = useAppContext();
-  const { warn, error, didLoading, device } = state || {};
+  const { t: translate } = useTranslation();
+  const { warn, error, didLoading, verifiedVC } = state || {};
   const [warnShow, setWarnShow] = useState(false);
   const [errorShow, setErrorShow] = useState(false);
+  const [openModal, setOpentModal] = useState(false);
+
+  const handleCancel = () => setOpentModal(false);
 
   useEffect(() => {
     if (warn) setWarnShow(true);
@@ -21,6 +27,11 @@ const Layout = () => {
     if (error) setErrorShow(true);
     setInterval(() => setErrorShow(false), 8000);
   }, [error]);
+
+  useEffect(() => {
+    if (verifiedVC?.type) setOpentModal(true);
+    setInterval(() => setErrorShow(false), 8000);
+  }, [verifiedVC]);
 
   if (didLoading) return <Loading show={true} animation="grow" />;
 
@@ -49,6 +60,25 @@ const Layout = () => {
             </Toast>
           </ToastContainer>
         )}
+
+        <ConfirmModal
+          open={openModal}
+          header={translate('connection-confirm.header')}
+          onClose={handleCancel}
+          buttons={[
+            {
+              children: translate('connection-confirm.cancel-button'),
+              variant: 'light',
+              onClick: handleCancel,
+              className: 'flex-grow-1 border-solid',
+            },
+          ]}
+        >
+          <div>
+            {translate('connection-confirm.title')}
+            <span>{translate('connection-confirm.subtitle')}</span>
+          </div>
+        </ConfirmModal>
         <Outlet />
       </Container>
     </>

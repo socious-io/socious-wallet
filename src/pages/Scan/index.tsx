@@ -6,6 +6,7 @@ import Icon from 'src/components/Icon';
 import styles from './index.module.scss';
 import cn from 'classnames';
 import axios from 'src/services/http';
+import { logger } from 'src/utilities';
 
 const Scan = () => {
   const { t: translate } = useTranslation();
@@ -57,7 +58,8 @@ const Scan = () => {
               try {
                 const { data } = await axios.get(`${codeData.data}/fetch`);
                 url = data.long_url;
-              } catch {
+              } catch (err) {
+                logger(err, { componentStack: 'scanner', digest: 'on fetching url' });
                 alert(translate('scan-error-qr'));
                 return;
               }
@@ -68,6 +70,10 @@ const Scan = () => {
                   cameraElement.pause();
                 }
               } else {
+                logger(Error(`oob not found on ${JSON.stringify(searchParams)}`), {
+                  componentStack: 'scanner',
+                  digest: 'on fetchin url params',
+                });
                 alert(translate('scan-error-qr'));
               }
             }

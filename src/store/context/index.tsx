@@ -19,6 +19,7 @@ const initialState: StateType = {
   mnemonics: [],
   device: undefined,
   listenerActive: false,
+  verifiedVC: {},
 };
 
 const AppContext = createContext<{
@@ -60,6 +61,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return state;
     case 'LOADING_END':
       return state;
+    case 'VERIFIED_VC':
+      return { ...state, verifiedVC: action.payload };
     default:
       return state;
   }

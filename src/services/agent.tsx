@@ -43,13 +43,12 @@ const handleMessages =
           challenge.type = 'verification';
         }
         if (challenge.type.toLowerCase() === 'kyc') challenge.type = 'verification';
-        const lastCredential = credentials.filter(c => c.claims[0].type === challenge.type)[0];
+        const lastCredential = credentials.filter(c => c.claims[0].type === 'verification')[0];
         addAction('messages', {
           message: newMessages,
           type: 'request-presentations',
           credential: lastCredential,
         });
-
         if (lastCredential === undefined) {
           dispatch({
             type: 'SET_ERROR',
@@ -62,6 +61,7 @@ const handleMessages =
               lastCredential,
             );
             await agent.sendMessage(presentation.makeMessage());
+            dispatch({ type: 'VERIFIED_VC', payload: { type: lastCredential.claims[0].type } });
           } catch (err) {
             console.log(err);
             dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
