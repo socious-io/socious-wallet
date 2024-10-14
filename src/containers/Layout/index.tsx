@@ -7,6 +7,7 @@ import Loading from 'src/components/Loading';
 import AppUrlListener from 'src/containers/AppUrlListener';
 import ConfirmModal from 'src/components/ConfirmModal';
 import { config } from 'src/config';
+import styles from './index.module.scss';
 
 const Layout = () => {
   const { state } = useAppContext();
@@ -63,20 +64,19 @@ const Layout = () => {
 
         <ConfirmModal
           open={openModal}
-          header={translate('connection-confirm.header')}
+          header={translate('credential-shared.title')}
           onClose={handleCancel}
           buttons={[
             {
-              children: translate('connection-confirm.cancel-button'),
-              variant: 'light',
+              children: translate('credential-shared.button'),
+              variant: 'primary',
               onClick: handleCancel,
-              className: 'flex-grow-1 border-solid',
+              className: 'flex-grow-1',
             },
           ]}
         >
-          <div>
-            {translate('connection-confirm.title')}
-            <span>{translate('connection-confirm.subtitle')}</span>
+          <div className={styles['subtitle']}>
+            {translate('credential-shared.subtitle', { type: verifiedVC?.type })}
           </div>
         </ConfirmModal>
         <Outlet />

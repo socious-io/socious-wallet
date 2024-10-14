@@ -1,0 +1,52 @@
+.card {
+    &__container {
+        padding-top: env(safe-area-inset-top) !important;
+        padding: 0;
+        height: 46rem;
+        width: 27.5rem;
+
+        @include media-breakpoint-down(md) {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    &__header {
+        width: 100%;
+        @include flex(space-between, center);
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid $border-color;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    &__content {
+        display: flex;
+        width: 100%;
+        flex: 1;
+        margin: 1.5rem 0;
+        padding: 0 1rem;
+        height: 100%;
+
+        .spinner {
+            border-width: 0.5rem;
+            width: 4rem;
+            height: 4rem;
+            color: $color-white-1;
+            border-right-color: $primary;
+        }
+    }
+}
+
+.title {
+    @include flex(center, flex-start, column);
+    gap: 0.25rem;
+    font-size: 18px;
+    font-weight: 600;
+
+    .subtitle {
+        font-size: 14px;
+        font-weight: 500;
+        color: $primary;
+    }
+}

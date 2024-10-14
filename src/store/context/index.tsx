@@ -90,7 +90,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     if (!pluto || !agent) return;
     // Indicate loading start if necessary
     dispatch({ type: 'LOADING_START' });
-
     dispatch({ type: 'SET_PLUTO', payload: pluto });
 
     Promise.all([pluto.getAllCredentials(), pluto.getAllPrismDIDs()])
@@ -102,7 +101,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
         dispatch({
           type: 'SET_DID',
-          payload: dids?.length > 0 ? dids[0].did : null,
+          payload: dids?.length > 0 ? dids.filter(d => d.alias === 'master')[0].did : null,
         });
         // Indicate loading end if necessary
         dispatch({ type: 'LOADING_END' });

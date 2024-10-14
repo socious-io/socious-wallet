@@ -28,7 +28,7 @@ export const useIntro = () => {
       dispatch({ type: 'SET_MNEMONICS', payload: mnemonics });
       //FIXME: save into local storage for now
       localStorage.setItem('mnemonics', currentMnemonics.toString());
-      await pluto.storePrismDID(currentDID, currentPrivateKey, 'master');
+      await pluto.storeDID(currentDID, currentPrivateKey, 'master');
       dispatch({ type: 'SET_DID', payload: currentDID });
       navigate('/setup-pass');
     } catch (e) {

@@ -16,13 +16,13 @@ const useRegister = () => {
     if (!pluto) return;
     if (mnemonics.length) return;
 
-    const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
-      uri: 'https://example.com/endpoint',
+    const service = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
+      uri: 'https://agent.socious.io',
       accept: ['didcomm/v2'],
       routingKeys: ['did:example:somemediator#somekey'],
     });
 
-    createDID([exampleService]).then(({ mnemonics, privateKey, did }) => {
+    createDID([service]).then(({ mnemonics, privateKey, did }) => {
       dispatch({ type: 'SET_MNEMONICS', payload: mnemonics });
       setCurrentDID(did);
       setPrivateKey(privateKey);
@@ -31,7 +31,7 @@ const useRegister = () => {
 
   const onSave = async () => {
     try {
-      await pluto.storePrismDID(currentDID, privateKey, 'master');
+      await pluto.storeDID(currentDID, privateKey, 'master');
       dispatch({ type: 'SET_DID', payload: currentDID });
       navigate('/created');
     } catch (e) {

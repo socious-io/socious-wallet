@@ -61,7 +61,9 @@ const handleMessages =
               lastCredential,
             );
             await agent.sendMessage(presentation.makeMessage());
-            dispatch({ type: 'VERIFIED_VC', payload: { type: lastCredential.claims[0].type } });
+            const vcType =
+              lastCredential.claims[0].type === 'verification' ? 'verification (KYC)' : lastCredential.claims[0].type;
+            dispatch({ type: 'VERIFIED_VC', payload: { type: vcType } });
           } catch (err) {
             console.log(err);
             dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });

@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import { passwordPattern } from 'src/utilities';
+import { useAppContext } from 'src/store/context';
 import { createDownloadLink } from 'src/utilities/downloadLink';
 import { encrypt } from 'src/services/backup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { createDID, recoverDID } from 'src/services/dids';
 import * as yup from 'yup';
 
 type PasswordForm = {
@@ -16,10 +19,31 @@ type PasswordForm = {
 
 export const useBackup = () => {
   const { t: translate } = useTranslation();
+  const { state } = useAppContext();
+  const { pluto, did } = state;
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [schema, setSchema] = useState(null);
-  const mnemonics = localStorage.getItem('mnemonics')?.split(',') || [];
+  const [disabled, setDisabled] = useState(false);
+  let mnemonics = localStorage.getItem('mnemonics')?.split(',') || [];
+
+  const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
+    uri: 'https://example.com/endpoint',
+    accept: ['didcomm/v2'],
+    routingKeys: ['did:example:somemediator#somekey'],
+  });
+
+  const createNewDID = async () => {
+    // TODO: way to delete current did or change it to new one
+    const { mnemonics: newMnemonics, privateKey: newPrivateKey, did: newDID } = await createDID([exampleService]);
+    await pluto.storeDID(newDID, newPrivateKey, 'master');
+    localStorage.setItem('mnemonics', newMnemonics.toString());
+    mnemonics = newMnemonics;
+  };
+
+  useEffect(() => {
+    if (!mnemonics.length) createNewDID().then(() => console.log('new DID created'));
+  }, []);
 
   useEffect(() => {
     if (i18next.isInitialized) {
@@ -58,7 +82,8 @@ export const useBackup = () => {
         const encoder = new TextEncoder();
         const password = encoder.encode(confirmPass);
         const encryptedData = encrypt(password, mnemonics);
-        createDownloadLink(encryptedData, 'backup.txt');
+        createDownloadLink(encryptedData, `walletBackup-${did.methodId.split('_')[1]}.enc`);
+        setDisabled(true);
       }
     } catch {
       setErrorMessage(translate('backup-error'));
@@ -73,5 +98,6 @@ export const useBackup = () => {
     handleSubmit,
     onSubmit,
     errorMessage,
+    disabled,
   };
 };

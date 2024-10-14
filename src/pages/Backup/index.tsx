@@ -7,7 +7,7 @@ import { useBackup } from './index.services';
 import styles from './index.module.scss';
 
 function Backup() {
-  const { translate, navigate, register, errors, handleSubmit, onSubmit, errorMessage } = useBackup();
+  const { translate, navigate, register, errors, handleSubmit, onSubmit, errorMessage, disabled } = useBackup();
 
   return (
     <form className="h-100 d-flex align-items-center justify-content-center" onSubmit={handleSubmit(onSubmit)}>
@@ -44,7 +44,7 @@ function Backup() {
           />
         </div>
         <span className={styles['error']}>{errorMessage}</span>
-        <Button variant="primary" type="submit" className={styles['button']}>
+        <Button variant="primary" type="submit" className={styles['button']} disabled={disabled}>
           {translate('backup-form.button')}
         </Button>
         <NavigationBar />
