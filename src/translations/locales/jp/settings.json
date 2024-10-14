@@ -1,6 +1,7 @@
 {
   "settings-card-header": "設定",
   "settings-items": {
+    "backup": "バックアップウォレット",
     "remove": "ウォレットを削除",
     "language": "言語",
     "automatic": "自動",

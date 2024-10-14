@@ -1,0 +1,19 @@
+{
+  "backup-title": "パスワードを作成",
+  "backup-subtitle": "バックアップファイルを安全に保つためのパスワードを作成します。新しいデバイスにウォレットをインポートするときに必要です。",
+  "backup-back-link": "戻る",
+  "backup-form": {
+    "new-pass-label": "パスワードを設定",
+    "new-pass-placeholder": "新しいパスワード",
+    "new-pass-hint": "パスワードは8文字以上で、小文字、大文字、特殊文字を含める必要があります。",
+    "new-pass-error1": "パスワードは必須です",
+    "new-pass-error2": "最低8文字が必要です",
+    "new-pass-error3": "パスワードの複雑さが不十分です",
+    "confirm-pass-label": "パスワードを確認",
+    "confirm-pass-placeholder": "パスワードを確認",
+    "confirm-pass-error1": "確認用パスワードは必須です",
+    "confirm-pass-error2": "パスワードは一致する必要があります",
+    "button": "続ける"
+  },
+  "backup-error": "ファイルを保存できませんでした。もう一度お試しください。必要に応じて、新しい場所を選択してください。"
+}

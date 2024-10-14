@@ -37,15 +37,17 @@
             border-radius: 0.5rem;
         }
 
+        .settings {
+            width: 100%;
+            @include flex(space-between, center);
+            border-top: 1px solid $border-color;
+            padding: 1rem 0;
+        }
+
         .item {
             @include flex(flex-start, flex-start, column);
-            padding: 1rem 0;
             font-weight: 500;
             color: $black;
-
-            & + .item {
-                border-top: 1px solid $border-color;
-            }
 
             &__subtitle {
                 color: $gray;

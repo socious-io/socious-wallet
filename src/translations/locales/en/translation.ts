@@ -10,6 +10,7 @@ import settings from './settings.json';
 import credentials from './credentials.json';
 import setupPass from './setup-pass.json';
 import createPass from './create-pass.json';
+import backup from './backup.json';
 import general from './general.json';
 
 export function generateTranslationFile() {
@@ -27,6 +28,7 @@ export function generateTranslationFile() {
     credentials,
     setupPass,
     createPass,
+    backup,
     general,
   );
 }
