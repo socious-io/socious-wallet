@@ -9,8 +9,6 @@ export const useIntro = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, mnemonics, pluto } = state || {};
-  //FIXME: localStorage
-  const passcode = localStorage.getItem('passcode') || '';
 
   const onCreateWallet = async () => {
     try {
@@ -36,5 +34,5 @@ export const useIntro = () => {
     }
   };
 
-  return { translate, navigate, did, onCreateWallet, passcode };
+  return { translate, navigate, did, onCreateWallet };
 };
