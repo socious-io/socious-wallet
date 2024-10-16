@@ -9,7 +9,7 @@ import { useAppContext } from 'src/store/context';
 import { createDownloadLink } from 'src/utilities/downloadLink';
 import { encrypt } from 'src/services/backup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createDID, recoverDID } from 'src/services/dids';
+import { createDID } from 'src/services/dids';
 import * as yup from 'yup';
 
 type PasswordForm = {
@@ -25,25 +25,16 @@ export const useBackup = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [schema, setSchema] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  let mnemonics = localStorage.getItem('mnemonics')?.split(',') || [];
-
+  const [mnemonics, setMnemonics] = useState(localStorage.getItem('mnemonics')?.split(',') || []);
   const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
     uri: 'https://example.com/endpoint',
     accept: ['didcomm/v2'],
     routingKeys: ['did:example:somemediator#somekey'],
   });
 
-  const createNewDID = async () => {
-    // TODO: way to delete current did or change it to new one
-    const { mnemonics: newMnemonics, privateKey: newPrivateKey, did: newDID } = await createDID([exampleService]);
-    await pluto.storeDID(newDID, newPrivateKey, 'master');
-    localStorage.setItem('mnemonics', newMnemonics.toString());
-    mnemonics = newMnemonics;
-  };
-
   useEffect(() => {
-    if (!mnemonics.length) createNewDID().then(() => console.log('new DID created'));
-  }, []);
+    if (!mnemonics.length) createNewDID();
+  }, [mnemonics]);
 
   useEffect(() => {
     if (i18next.isInitialized) {
@@ -74,6 +65,19 @@ export const useBackup = () => {
   } = useForm({
     resolver: yupResolver<PasswordForm>(schema),
   });
+
+  const createNewDID = async () => {
+    // TODO: way to delete current did or change it to new one
+    try {
+      const { mnemonics: newMnemonics, privateKey: newPrivateKey, did: newDID } = await createDID([exampleService]);
+      await pluto.storeDID(newDID, newPrivateKey, 'master');
+      localStorage.setItem('mnemonics', newMnemonics.toString());
+      setMnemonics(newMnemonics);
+      console.log('New DID created');
+    } catch (e) {
+      console.log('Error in creating new DID', e);
+    }
+  };
 
   const onSubmit = (formData: PasswordForm) => {
     const { confirmPass = '' } = formData || {};
