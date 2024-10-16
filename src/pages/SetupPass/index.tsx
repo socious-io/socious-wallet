@@ -3,7 +3,7 @@ import { useSetupPass } from './index.services';
 import styles from './index.module.scss';
 
 function SetupPass() {
-  const { translate, navigate } = useSetupPass();
+  const { translate, navigate, hash } = useSetupPass();
 
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
@@ -14,7 +14,7 @@ function SetupPass() {
             children: translate('setup-pass-title'),
             variant: 'primary',
             className: 'fw-semibold w-100 py-2',
-            onClick: () => navigate('/create-pass'),
+            onClick: () => navigate(`/create-pass${hash}`),
           },
           {
             children: translate('setup-pass-back'),
