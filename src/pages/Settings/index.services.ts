@@ -77,6 +77,8 @@ const useSettings = () => {
     dbs.forEach(db => {
       indexedDB.deleteDatabase(db.name);
     });
+    localStorage.removeItem('passcode');
+    localStorage.removeItem('mnemonics');
     window.location.assign('/intro');
   };
 
