@@ -15,9 +15,9 @@ const Layout = () => {
   const { warn, error, didLoading, verifiedVC } = state || {};
   const [warnShow, setWarnShow] = useState(false);
   const [errorShow, setErrorShow] = useState(false);
-  const [openModal, setOpentModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
-  const handleCancel = () => setOpentModal(false);
+  const handleCancel = () => setOpenModal(false);
 
   useEffect(() => {
     if (warn) setWarnShow(true);
@@ -30,7 +30,7 @@ const Layout = () => {
   }, [error]);
 
   useEffect(() => {
-    if (verifiedVC?.type) setOpentModal(true);
+    if (verifiedVC?.type) setOpenModal(true);
     setInterval(() => setErrorShow(false), 8000);
   }, [verifiedVC]);
 
