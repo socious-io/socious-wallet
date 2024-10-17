@@ -21,10 +21,14 @@ const useRecover = () => {
     const file = files[0];
     if (file && file.name.endsWith('.enc')) {
       const reader = new FileReader();
-      reader.onload = e =>
-        e.target?.result && dispatch({ type: 'SET_ENCRYPTED_DATA', payload: e.target.result as string });
+      reader.onload = e => {
+        const encryptedData = e.target?.result as string;
+        if (encryptedData) {
+          dispatch({ type: 'SET_ENCRYPTED_DATA', payload: encryptedData });
+          navigate('/enter-pass');
+        }
+      };
       reader.readAsText(file);
-      navigate('/enter-pass');
     } else {
       setErrorMessage(translate('recover-error'));
     }
