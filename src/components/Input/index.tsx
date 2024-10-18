@@ -44,7 +44,7 @@ const Input: React.FC<InputProps> = ({
           value={value}
           onChange={onChange}
           className={styles['input']}
-          {...register(name)}
+          {...(register ? register(name) : {})}
         />
         {hasPostfixIcon && (
           <InputGroup.Text onClick={handlePostfixClick} className={styles['postfix']}>
