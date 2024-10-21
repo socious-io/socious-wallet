@@ -1,0 +1,13 @@
+{
+  "enter-pass-title": "Enter password",
+  "enter-pass-subtitle": "You need this to import this wallet",
+  "enter-pass-continue-button": "Continue",
+  "enter-pass-back-button": "Back",
+  "enter-pass-form": {
+    "input-placeholder": "Enter your password...",
+    "input-error1": "Password is required",
+    "input-error2": "Minimum 8 characters",
+    "input-error3": "Password complexity is week",
+    "submit-error": "An error occurred in importing wallet"
+  }
+}

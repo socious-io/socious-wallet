@@ -3,7 +3,7 @@ import { RouteObject, createBrowserRouter, Navigate, useRouteError } from 'react
 import { useAppContext } from 'src/store/context';
 import Layout from 'src/containers/Layout';
 import Intro from 'src/pages/Intro';
-import Register from 'src/pages/Register';
+// import Register from 'src/pages/Register';
 // import Confirm from 'src/pages/Confirm';
 import Created from 'src/pages/Created';
 import Recover from 'src/pages/Recover';
@@ -17,6 +17,7 @@ import AppUrlListener from 'src/containers/AppUrlListener';
 import Settings from 'src/pages/Settings';
 import SetupPass from 'src/pages/SetupPass';
 import CreatePass from 'src/pages/CreatePass';
+import EnterPass from 'src/pages/EnterPass';
 import Backup from 'src/pages/Backup';
 import { config } from 'src/config';
 
@@ -34,8 +35,9 @@ export const blueprint: RouteObject[] = [
       { path: '/intro', element: <Intro /> },
       { path: '/setup-pass', element: <SetupPass /> },
       { path: '/create-pass', element: <CreatePass /> },
-      // { path: '/register', element: <Register /> },
+      { path: '/enter-pass', element: <EnterPass /> },
       { path: '/backup', element: <Backup /> },
+      // { path: '/register', element: <Register /> },
       // { path: '/confirm', element: <Confirm /> },
       { path: '/created', element: <Created /> },
       { path: '/verify', element: <Verify /> },
@@ -51,6 +53,7 @@ export const blueprint: RouteObject[] = [
 function DefaultRoute(): JSX.Element {
   const { state } = useAppContext();
   const shouldRenderCredentials = !state.didLoading && state.did;
+  const hasPasscode = localStorage.getItem('passcode') || '';
   return (
     <>
       {state.didLoading ? (
@@ -60,7 +63,7 @@ function DefaultRoute(): JSX.Element {
           <AppUrlListener />
           {state.device.platform === 'web' && !config.DEBUG && <Navigate to="/download" />}
           {!shouldRenderCredentials && <Navigate to="/intro" />}
-          {shouldRenderCredentials && <Credentials />}
+          {shouldRenderCredentials && (hasPasscode ? <Credentials /> : <Navigate to="/setup-pass" />)}
         </>
       )}
     </>

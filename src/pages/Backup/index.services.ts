@@ -71,6 +71,7 @@ export const useBackup = () => {
     try {
       const { mnemonics: newMnemonics, privateKey: newPrivateKey, did: newDID } = await createDID([exampleService]);
       await pluto.storeDID(newDID, newPrivateKey, 'master');
+      //FIXME: save into local storage for now
       localStorage.setItem('mnemonics', newMnemonics.toString());
       setMnemonics(newMnemonics);
       console.log('New DID created');

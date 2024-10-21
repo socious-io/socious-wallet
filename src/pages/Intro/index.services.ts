@@ -9,8 +9,6 @@ export const useIntro = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, mnemonics, pluto } = state || {};
-  //FIXME: localStorage
-  const passcode = localStorage.getItem('passcode') || '';
 
   const onCreateWallet = async () => {
     try {
@@ -20,21 +18,17 @@ export const useIntro = () => {
         accept: ['didcomm/v2'],
         routingKeys: ['did:example:somemediator#somekey'],
       });
-      const {
-        mnemonics: currentMnemonics,
-        privateKey: currentPrivateKey,
-        did: currentDID,
-      } = await createDID([exampleService]);
-      dispatch({ type: 'SET_MNEMONICS', payload: mnemonics });
+      const { mnemonics: newMnemonics, privateKey: newPrivateKey, did: newDID } = await createDID([exampleService]);
+      dispatch({ type: 'SET_MNEMONICS', payload: newMnemonics });
       //FIXME: save into local storage for now
-      localStorage.setItem('mnemonics', currentMnemonics.toString());
-      await pluto.storeDID(currentDID, currentPrivateKey, 'master');
-      dispatch({ type: 'SET_DID', payload: currentDID });
+      localStorage.setItem('mnemonics', newMnemonics.toString());
+      await pluto.storeDID(newDID, newPrivateKey, 'master');
+      dispatch({ type: 'SET_DID', payload: newDID });
       navigate('/setup-pass');
     } catch (e) {
       console.error('Error in creating wallet or saving seed phrase:', e);
     }
   };
 
-  return { translate, navigate, did, onCreateWallet, passcode };
+  return { translate, navigate, did, onCreateWallet };
 };
