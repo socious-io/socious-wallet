@@ -5,6 +5,7 @@
   "dependencies": {
     "@capacitor/app": "^6.0.0",
     "@capacitor/device": "^6.0.0",
+    "@capacitor/filesystem": "^6.0.1",
     "@datadog/browser-rum": "^5.23.0",
     "@hookform/resolvers": "^3.9.0",
     "@hyperledger/identus-edge-agent-sdk": "^6.1.0",
