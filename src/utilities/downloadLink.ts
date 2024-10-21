@@ -1,5 +1,6 @@
 import { config } from '../config';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 export const createDownloadLink = async (content: string, filename = 'download', type = 'text/plain') => {
   if (config.PLATFORM == 'web') {
@@ -16,11 +17,21 @@ export const createDownloadLink = async (content: string, filename = 'download',
     URL.revokeObjectURL(url);
     return;
   }
+  try {
+    const result = await Filesystem.writeFile({
+      path: filename,
+      data: content, // Content should be a string for Filesystem
+      directory: Directory.Documents,
+      encoding: Encoding.UTF8,
+    });
 
-  await Filesystem.writeFile({
-    path: filename,
-    data: content, // Content should be a string for Filesystem
-    directory: Directory.Documents,
-    encoding: Encoding.UTF8,
-  });
+    await Share.share({
+      title: 'Download file',
+      text: 'Here is your file',
+      url: result.uri,
+      dialogTitle: 'Share file',
+    });
+  } catch (error) {
+    console.error('Error saving or sharing file:', error);
+  }
 };
