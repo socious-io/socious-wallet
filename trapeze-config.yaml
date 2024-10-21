@@ -4,7 +4,7 @@ vars:
   DISPLAY_NAME:
     default: Socious Wallet
   VERSION:
-    default: 1.4
+    default: 1.6.9
   ANDROID_VERSION_CODE:
     default: 3
   ANDROID_PACKAGE_NAME:
@@ -18,7 +18,7 @@ vars:
   ANDROID_KEY_PASSWORD:
     default: Password
   IOS_BUILD_NUMBER:
-    default: 1
+    default: 39
   IOS_BUNDLE_ID:
     default: socious.mobile-wallet.app
   IOS_DEVELOPMENT_TEAM_ID:
@@ -47,6 +47,9 @@ platforms:
           entries:
             - ITSAppUsesNonExemptEncryption: false
             - NSCameraUsageDescription: Socious Wallet requires access to your camera to capture facial images for identity verification. This process helps to ensure that you are the rightful owner of the account and prevents unauthorized access. For example, your face data will be matched with your provided ID documents to confirm your identity.
+            - UIFileSharingEnabled: true
+            - LSSupportsOpeningDocumentsInPlace: true
+            - NSDocumentsFolderUsageDescription: Socious Wallet needs access to your Documents folder to save files for secure storage and sharing.
 
         entitlements:
           replace: true
@@ -63,6 +66,8 @@ platforms:
         target: manifest
         inject: |
           <uses-permission android:name="android.permission.CAMERA" />
+          <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     gradle:
       - file: app/build.gradle # Removing buildTypes
         target:
