@@ -1,9 +1,12 @@
 import axios from './http';
+import pako from 'pako';
 import FormData from 'form-data';
 import crypto from 'crypto-browserify';
 import { config } from 'src/config';
 import React, { useEffect } from 'react';
 import { useAppContext } from 'src/store/context';
+import { PrivateKey } from '@hyperledger/identus-edge-agent-sdk/build/typings/domain';
+import { logger } from 'src/utilities';
 
 export type Backup = { [dbName: string]: { [storeName: string]: any[] } };
 
@@ -87,7 +90,6 @@ export const restoreIndexedDBs = (jsonData: Backup): Promise<void> => {
     const restoreDatabase = (dbName: string) => {
       return new Promise<void>((resolveDb, rejectDb) => {
         const request = indexedDB.open(dbName);
-
         request.onsuccess = (event: any) => {
           const db = event.target.result as IDBDatabase;
           if (db.objectStoreNames.length === 0) {
@@ -126,6 +128,22 @@ export const getIndexedDBDatabases = async (className: string): Promise<string[]
   return dbs.map((db: { name: string }) => db.name).filter(db => db.includes(className));
 };
 
+export const fetchBackup = async (didStr: string, pk: PrivateKey) => {
+  const res = await axios.get(`https://socious-wallet-us.s3.amazonaws.com/${didStr}.bin`, {
+    responseType: 'arraybuffer',
+  });
+  const uint8Array = new Uint8Array(res.data);
+  let dataString;
+  try {
+    const decompressedData = pako.inflate(uint8Array);
+    dataString = new TextDecoder('utf-8').decode(decompressedData);
+  } catch (err) {
+    logger(err, { componentStack: 'decompress backup file' });
+  }
+  const data = decrypt(pk.raw, dataString);
+  return data;
+};
+
 export const Backup: React.FC = () => {
   const { state } = useAppContext();
   const { pluto, did, credentials } = state || {};
@@ -135,8 +153,9 @@ export const Backup: React.FC = () => {
       const dbs = await getIndexedDBDatabases(config.PLUTO_DB_NAME);
       const b = await backupIndexedDBs(dbs);
       const pks = await pluto.getDIDPrivateKeysByDID(did);
-      const body = encrypt(pks[0].raw, b);
-      const blob = new Blob([body]);
+      const body = encrypt(pks[0].raw, JSON.stringify(b));
+      const compressed = pako.deflate(body, { to: 'string' });
+      const blob = new Blob([compressed]);
       const form = new FormData();
       form.append('file', blob, `${did.methodId}.bin`);
       const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };

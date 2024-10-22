@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import SDK from '@hyperledger/identus-edge-agent-sdk';
-import { decrypt } from 'src/services/backup';
+import { decrypt, fetchBackup, restoreIndexedDBs } from 'src/services/backup';
 import { recoverDID } from 'src/services/dids';
 import { useAppContext } from 'src/store/context';
 import { passwordPattern } from 'src/utilities';
@@ -17,6 +17,7 @@ export const useEnterPass = () => {
   const { state, dispatch } = useAppContext();
   const { did, encrypted, pluto } = state || {};
   const [schema, setSchema] = useState(null);
+  const [importing, setImporting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
     uri: 'https://example.com/endpoint',
@@ -53,6 +54,7 @@ export const useEnterPass = () => {
   const password = watch('password');
 
   const onSubmit = async (formData: { password: string }) => {
+    setImporting(true);
     const { password } = formData || {};
     try {
       const encoder = new TextEncoder();
@@ -61,15 +63,18 @@ export const useEnterPass = () => {
       if (mnemonics.length) {
         const { did: newDID, privateKey, mnemonics: newMnemonics } = await recoverDID(mnemonics, [exampleService]);
         dispatch({ type: 'SET_MNEMONICS', payload: newMnemonics });
+        const backup = await fetchBackup(newDID.methodId, privateKey);
+        // FIXME: some how fetch result 2 time endocded to string so need two call to parse
+        await restoreIndexedDBs(JSON.parse(JSON.parse(backup)));
+        console.log('restored successfully');
         //FIXME: save into local storage for now
         localStorage.setItem('mnemonics', newMnemonics.toString());
-        await pluto.storeDID(newDID, privateKey, 'master');
-        dispatch({ type: 'SET_DID', payload: newDID });
-        navigate('/setup-pass#restored');
+        window.location.replace('/setup-pass#restored');
       }
     } catch {
       setErrorMessage(translate('enter-pass-form.submit-error'));
     }
+    setImporting(false);
   };
 
   return {
@@ -83,5 +88,6 @@ export const useEnterPass = () => {
     handleSubmit,
     onSubmit,
     errorMessage,
+    importing,
   };
 };

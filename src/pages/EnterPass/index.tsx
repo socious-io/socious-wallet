@@ -1,13 +1,26 @@
 import { Navigate } from 'react-router-dom';
 import Card from 'src/components/Card';
+import Loading from 'src/components/Loading';
 import { useEnterPass } from './index.services';
 import styles from './index.module.scss';
 import Input from 'src/components/Input';
 
 function EnterPass() {
-  const { translate, navigate, did, encrypted, register, errors, password, handleSubmit, onSubmit, errorMessage } =
-    useEnterPass();
+  const {
+    translate,
+    navigate,
+    did,
+    encrypted,
+    register,
+    errors,
+    password,
+    handleSubmit,
+    onSubmit,
+    errorMessage,
+    importing,
+  } = useEnterPass();
 
+  if (importing) return <Loading show={true} animation="grow" />;
   if (did) return <Navigate to="/" />;
   else if (!encrypted) return <Navigate to="/import" />;
   return (
