@@ -71,8 +71,8 @@ export const useEnterPass = () => {
         localStorage.setItem('mnemonics', newMnemonics.toString());
         window.location.replace('/setup-pass#restored');
       }
-    } catch {
-      setErrorMessage(translate('enter-pass-form.submit-error'));
+    } catch (err) {
+      setErrorMessage(`${translate('enter-pass-form.submit-error')} ${err}`);
     }
     setImporting(false);
   };
