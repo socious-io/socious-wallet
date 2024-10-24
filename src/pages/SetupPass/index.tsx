@@ -16,12 +16,12 @@ function SetupPass() {
             className: 'fw-semibold w-100 py-2',
             onClick: () => navigate(`/create-pass${hash}`),
           },
-          {
-            children: translate('setup-pass-back'),
-            variant: 'light',
-            className: 'fw-semibold w-100 py-2',
-            onClick: () => navigate('/intro'),
-          },
+          // {
+          //   children: translate('setup-pass-back'),
+          //   variant: 'light',
+          //   className: 'fw-semibold w-100 py-2',
+          //   onClick: () => navigate('/intro'),
+          // },
         ]}
       >
         <h4 className={styles['title']}>{translate('setup-pass-title')}</h4>
