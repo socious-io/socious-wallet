@@ -89,9 +89,12 @@ export const useBackup = () => {
         const encoder = new TextEncoder();
         const password = encoder.encode(confirmPass);
         const encryptedData = encrypt(password, mnemonics.join(','));
-        backup(pluto, did);
-        createDownloadLink(encryptedData, `walletBackup-${did.methodId.slice(0, 8)}${did.methodId.slice(-8)}.enc`);
+        await backup(pluto, did);
         setDisabled(true);
+        await createDownloadLink(
+          encryptedData,
+          `walletBackup-${did.methodId.slice(0, 8)}${did.methodId.slice(-8)}.enc`,
+        );
       }
     } catch {
       setErrorMessage(translate('backup-error'));
