@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { passwordPattern } from 'src/utilities';
 import { useAppContext } from 'src/store/context';
 import { createDownloadLink } from 'src/utilities/downloadLink';
-import { encrypt } from 'src/services/backup';
+import { backup, encrypt } from 'src/services/backup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createDID } from 'src/services/dids';
 import * as yup from 'yup';
@@ -19,7 +19,7 @@ type PasswordForm = {
 
 export const useBackup = () => {
   const { t: translate } = useTranslation();
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
   const { pluto, did } = state;
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
@@ -71,6 +71,7 @@ export const useBackup = () => {
     try {
       const { mnemonics: newMnemonics, privateKey: newPrivateKey, did: newDID } = await createDID([exampleService]);
       await pluto.storeDID(newDID, newPrivateKey, 'master');
+      dispatch({ type: 'SET_DID', payload: newDID });
       //FIXME: save into local storage for now
       localStorage.setItem('mnemonics', newMnemonics.toString());
       setMnemonics(newMnemonics);
@@ -80,14 +81,16 @@ export const useBackup = () => {
     }
   };
 
-  const onSubmit = (formData: PasswordForm) => {
+  const onSubmit = async (formData: PasswordForm) => {
     const { confirmPass = '' } = formData || {};
+    if (!mnemonics.length) await createNewDID();
     try {
       if (mnemonics.length && confirmPass) {
         const encoder = new TextEncoder();
         const password = encoder.encode(confirmPass);
         const encryptedData = encrypt(password, mnemonics.join(','));
-        createDownloadLink(encryptedData, `walletBackup-${did.methodId.split('_')[1]}.enc`);
+        backup(pluto, did);
+        createDownloadLink(encryptedData, `walletBackup-${did.methodId.slice(0, 8)}${did.methodId.slice(-8)}.enc`);
         setDisabled(true);
       }
     } catch {

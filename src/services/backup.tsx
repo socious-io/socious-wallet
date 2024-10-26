@@ -5,7 +5,7 @@ import crypto from 'crypto-browserify';
 import { config } from 'src/config';
 import React, { useEffect } from 'react';
 import { useAppContext } from 'src/store/context';
-import { PrivateKey } from '@hyperledger/identus-edge-agent-sdk/build/typings/domain';
+import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { logger } from 'src/utilities';
 
 export type Backup = { [dbName: string]: { [storeName: string]: any[] } };
@@ -128,7 +128,7 @@ export const getIndexedDBDatabases = async (className: string): Promise<string[]
   return dbs.map((db: { name: string }) => db.name).filter(db => db.includes(className));
 };
 
-export const fetchBackup = async (didStr: string, pk: PrivateKey) => {
+export const fetchBackup = async (didStr: string, pk: SDK.Domain.PrivateKey) => {
   const res = await axios.get(`https://socious-wallet-us.s3.amazonaws.com/${didStr}.bin`, {
     responseType: 'arraybuffer',
   });
@@ -144,27 +144,28 @@ export const fetchBackup = async (didStr: string, pk: PrivateKey) => {
   return data;
 };
 
+export const backup = async (pluto: SDK.Domain.Pluto, did: SDK.Domain.DID) => {
+  const dbs = await getIndexedDBDatabases(config.PLUTO_DB_NAME);
+  const b = await backupIndexedDBs(dbs);
+  const pks = await pluto.getDIDPrivateKeysByDID(did);
+  const body = encrypt(pks[0].raw, JSON.stringify(b));
+  const compressed = pako.deflate(body, { to: 'string' });
+  const blob = new Blob([compressed]);
+  const form = new FormData();
+  form.append('file', blob, `${did.methodId}.bin`);
+  const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
+
+  const res = await axios.post(`${config.BACKUP_AGENT}/sync`, form, { headers });
+  return res.data;
+};
+
 export const Backup: React.FC = () => {
   const { state } = useAppContext();
   const { pluto, did, credentials } = state || {};
 
   useEffect(() => {
-    const backup = async () => {
-      const dbs = await getIndexedDBDatabases(config.PLUTO_DB_NAME);
-      const b = await backupIndexedDBs(dbs);
-      const pks = await pluto.getDIDPrivateKeysByDID(did);
-      const body = encrypt(pks[0].raw, JSON.stringify(b));
-      const compressed = pako.deflate(body, { to: 'string' });
-      const blob = new Blob([compressed]);
-      const form = new FormData();
-      form.append('file', blob, `${did.methodId}.bin`);
-      const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
-
-      const res = await axios.post(`${config.BACKUP_AGENT}/sync`, form, { headers });
-      return res.data;
-    };
     if (did && pluto) {
-      backup()
+      backup(pluto, did)
         .then(r => console.log(r))
         .catch(err => console.log(err));
     }

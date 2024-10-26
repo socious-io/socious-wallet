@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.6.16';
+export const APP_VERSION = '1.6.17';
 export const config = {
   ENV: process.env.REACT_APP_ENV || 'development',
   DEBUG: process.env.REACT_APP_DEBUG === 'true' ? true : false,
