@@ -59,7 +59,8 @@ export const useEnterPass = () => {
     try {
       const encoder = new TextEncoder();
       const encodedPassword = encoder.encode(password);
-      const mnemonics = await JSON.parse(decrypt(encodedPassword, encrypted));
+      const p = decrypt(encodedPassword, encrypted);
+      const mnemonics = p.replace(/^"|"$/g, '').split(',');
       if (mnemonics.length) {
         const { did: newDID, privateKey, mnemonics: newMnemonics } = await recoverDID(mnemonics, [exampleService]);
         dispatch({ type: 'SET_MNEMONICS', payload: newMnemonics });

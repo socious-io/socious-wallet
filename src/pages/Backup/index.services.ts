@@ -86,7 +86,7 @@ export const useBackup = () => {
       if (mnemonics.length && confirmPass) {
         const encoder = new TextEncoder();
         const password = encoder.encode(confirmPass);
-        const encryptedData = encrypt(password, mnemonics);
+        const encryptedData = encrypt(password, mnemonics.join(','));
         createDownloadLink(encryptedData, `walletBackup-${did.methodId.split('_')[1]}.enc`);
         setDisabled(true);
       }
