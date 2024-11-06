@@ -6,14 +6,26 @@ import Storage from '@pluto-encrypted/indexdb';
 export const apollo = new SDK.Apollo();
 export const castor = new SDK.Castor(apollo);
 
-export const connect = async (importData?: any) => {
+const preStart = async () => {
+  const dbs = await indexedDB.databases();
+  dbs.forEach(db => {
+    if (db.name.includes('did-link')) {
+      indexedDB.deleteDatabase(db.name);
+    }
+  });
+};
+
+export const connect = async () => {
   console.log('starting pluto ...');
+  await preStart();
   const store = new SDK.Store({
     name: config.PLUTO_DB_NAME,
     storage: Storage,
     password: Buffer.from(config.PLUTO_PASSWD).toString('hex'),
   });
-  return new SDK.Pluto(store, apollo);
+  const p = new SDK.Pluto(store, apollo);
+  await p.start();
+  return p;
 };
 
 export function usePluto() {
