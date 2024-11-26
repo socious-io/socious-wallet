@@ -41,21 +41,6 @@ platforms:
           TARGETED_DEVICE_FAMILY: 1 #1: iPhone ,2:iPhone&iPad, 3:iPad
           CODE_SIGN_STYLE: Manual
           CODE_SIGN_IDENTITY: iPhone Distribution
-
-        plist:
-          replace: false
-          entries:
-            - ITSAppUsesNonExemptEncryption: false
-            - NSCameraUsageDescription: Socious Wallet requires access to your camera to capture facial images for identity verification. This process helps to ensure that you are the rightful owner of the account and prevents unauthorized access. For example, your face data will be matched with your provided ID documents to confirm your identity.
-            - UIFileSharingEnabled: true
-            - LSSupportsOpeningDocumentsInPlace: true
-            - NSDocumentsFolderUsageDescription: Socious Wallet needs access to your Documents folder to save files for secure storage and sharing.
-
-        entitlements:
-          replace: true
-          entries:
-            - com.apple.developer.associated-domains: ['applinks:$BASE_DEEPLINKING_URL']
-
   android:
     packageName: $ANDROID_PACKAGE_NAME
     versionName: $VERSION

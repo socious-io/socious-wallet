@@ -54,7 +54,7 @@ jobs:
       - name: Making iOS Release Code
         run: |
           npm run build
-          npm run make:ios
+          npx cap sync ios
         env:
           REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
           REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
@@ -128,10 +128,9 @@ jobs:
           app-store-connect get-latest-app-store-build-number "$APPLICATION_ID_RESOURCE_ID"
           app-store-connect get-latest-testflight-build-number "$APPLICATION_ID_RESOURCE_ID"
 
-      - name: Creating Export.plist
+      - name: Updating Export.plist
         run: |
           cd ios/App
-          cp ../../.github/workflows/ios-export.plist Export.plist
           sed -ie 's/IOS_DEVELOPMENT_TEAM_ID/${{ env.IOS_DEVELOPMENT_TEAM_ID }}/g' Export.plist
           sed -ie 's/IOS_BUNDLE_ID/${{ env.IOS_BUNDLE_ID }}/g' Export.plist
           sed -ie 's/MOBILE_PROVISIONING_UUID/${{ env.MOBILE_PROVISIONING_UUID }}/g' Export.plist
