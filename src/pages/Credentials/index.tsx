@@ -17,6 +17,7 @@ import NavigationBar from 'src/containers/NavigationBar';
 function Credentials() {
   const { t: translate } = useTranslation();
   const navigate = useNavigate();
+  const listProcessing = Boolean(localStorage.getItem('listProcessing'));
   const { state } = useAppContext();
   const { credentials, verification, submitted } = state || {};
   const { id } = useParams();
@@ -110,7 +111,15 @@ function Credentials() {
     }
     return (
       <>
-        {!verification && <CredentialAlert {...props} />}
+        {!verification && !listProcessing && <CredentialAlert {...props} />}
+        {listProcessing && (
+          <CredentialAlert
+            variant="warning"
+            iconName="alert-warning"
+            title="Processing..."
+            subtitle="Please keep this app open as it may take a few minutes."
+          />
+        )}
         <div className={styles['card__content']}>
           {credentials.length ? (
             <div className="w-100 d-flex flex-column gap-3">

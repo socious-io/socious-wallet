@@ -5,5 +5,5 @@ export interface CredentialAlertProps {
   iconName: string;
   title: string;
   subtitle: string;
-  links: { to: string; label: string }[];
+  links?: { to: string; label: string }[];
 }

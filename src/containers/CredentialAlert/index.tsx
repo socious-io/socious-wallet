@@ -15,7 +15,7 @@ const CredentialAlert: React.FC<CredentialAlertProps> = ({ variant, iconName, ti
         <span className="fw-bold">{title}</span>
         <p className="mt-1 mb-2">{subtitle}</p>
         <div className="d-flex gap-2">
-          {links.length &&
+          {!!links.length &&
             links.map(link => (
               <Link key={link.to} to={link.to} className={cn(styles['alert__link'], styles[`alert__link--${variant}`])}>
                 {link.label}
