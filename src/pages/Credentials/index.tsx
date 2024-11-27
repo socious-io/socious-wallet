@@ -115,8 +115,8 @@ function Credentials() {
           <CredentialAlert
             variant="warning"
             iconName="alert-warning"
-            title="Processing..."
-            subtitle="Please keep this app open as it may take a few minutes."
+            title={translate('credential-alert.processing-title')}
+            subtitle={translate('credential-alert.processing-subtitle')}
           />
         )}
         <div className={styles['card__content']}>
