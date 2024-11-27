@@ -23,6 +23,7 @@ export interface StateType {
   listenerActive: boolean;
   verifiedVC: any;
   encrypted: string;
+  listProcessing: boolean;
 }
 
 export type ActionType =
@@ -40,6 +41,7 @@ export type ActionType =
   | { type: 'SET_LISTENER_STATE'; payload: boolean }
   | { type: 'VERIFIED_VC'; payload: any }
   | { type: 'SET_ENCRYPTED_DATA'; payload: string }
+  | { type: 'SET_LIST_PROCESSING'; payload: boolean }
   | { type: 'LOADING_START' }
   | { type: 'LOADING_END' };
 

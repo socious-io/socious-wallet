@@ -17,9 +17,8 @@ import NavigationBar from 'src/containers/NavigationBar';
 function Credentials() {
   const { t: translate } = useTranslation();
   const navigate = useNavigate();
-  const listProcessing = Boolean(localStorage.getItem('listProcessing'));
   const { state } = useAppContext();
-  const { credentials, verification, submitted } = state || {};
+  const { credentials, verification, submitted, listProcessing } = state || {};
   const { id } = useParams();
   const isKyc = type => type === 'verification';
   const generateNonKycTypeText = claim => {
@@ -116,8 +115,8 @@ function Credentials() {
           <CredentialAlert
             variant="warning"
             iconName="alert-warning"
-            title="Processing..."
-            subtitle="Please keep this app open as it may take a few minutes."
+            title={translate('credential-alert.processing-title')}
+            subtitle={translate('credential-alert.processing-subtitle')}
           />
         )}
         <div className={styles['card__content']}>
