@@ -21,6 +21,7 @@ const initialState: StateType = {
   listenerActive: false,
   verifiedVC: {},
   encrypted: '',
+  listProcessing: false,
 };
 
 const AppContext = createContext<{
@@ -62,6 +63,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return { ...state, verifiedVC: action.payload };
     case 'SET_ENCRYPTED_DATA':
       return { ...state, encrypted: action.payload };
+    case 'SET_LIST_PROCESSING':
+      return { ...state, listProcessing: action.payload };
     case 'LOADING_START':
       return state;
     case 'LOADING_END':

@@ -106,7 +106,7 @@ const handleMessages =
           type: 'issued-credential',
           credential,
         });
-        localStorage.removeItem('listProcessing');
+        dispatch({ type: 'SET_LIST_PROCESSING', payload: false });
         if (!verfiedVC) {
           dispatch({ type: 'SET_VERIFICATION', payload: credential });
         }

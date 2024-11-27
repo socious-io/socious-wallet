@@ -49,7 +49,7 @@ const useConnection = () => {
           .then(r => console.log(`callback successfully with status ${r.status}`))
           .catch(err => console.log(err));
       navigate('/');
-      localStorage.setItem('listProcessing', 'true');
+      dispatch({ type: 'SET_LIST_PROCESSING', payload: true });
       addAction('connections', {
         oob,
         callback,
