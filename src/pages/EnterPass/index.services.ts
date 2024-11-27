@@ -66,7 +66,8 @@ export const useEnterPass = () => {
         dispatch({ type: 'SET_MNEMONICS', payload: newMnemonics });
         const backup = await fetchBackup(newDID.methodId, privateKey);
         // FIXME: some how fetch result 2 time endocded to string so need two call to parse
-        await restoreIndexedDBs(JSON.parse(JSON.parse(backup)));
+        await pluto.restore(JSON.parse(JSON.parse(backup)));
+        await pluto.start();
         console.log('restored successfully');
         //FIXME: save into local storage for now
         localStorage.setItem('mnemonics', newMnemonics.toString());

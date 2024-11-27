@@ -114,7 +114,7 @@ const handleMessages =
     }
   };
 
-export function useAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<ActionType>) {
+export function startAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<ActionType>) {
   const [agent, setAgent] = useState<SDK.Agent>();
   const [state, setState] = useState<string>('offline');
 

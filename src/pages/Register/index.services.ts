@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { useAppContext } from 'src/store/context';
 import { createDID } from 'src/services/dids';
-import { PrivateKey } from '@hyperledger/identus-edge-agent-sdk/build/typings/domain';
 
 const useRegister = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, mnemonics, pluto } = state || {};
   const [currentDID, setCurrentDID] = useState<SDK.Domain.DID | undefined>();
-  const [privateKey, setPrivateKey] = useState<PrivateKey | undefined>();
+  const [privateKey, setPrivateKey] = useState<SDK.Domain.PrivateKey | undefined>();
 
   useEffect(() => {
     if (!pluto) return;

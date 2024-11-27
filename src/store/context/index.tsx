@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { StateType, ActionType, AppProviderProps, VerifyStatus } from './types';
 import { usePluto } from 'src/services/pluto';
-import { useAgent } from 'src/services/agent';
+import { startAgent } from 'src/services/agent';
 import { Device, DeviceInfo } from '@capacitor/device';
 import { config } from 'src/config';
 
@@ -75,7 +75,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   console.log('start app store context');
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
-  const { agent } = useAgent(pluto, dispatch);
+
   useEffect(() => {
     if (!config.PLATFORM) {
       Device.getInfo().then(info => {
@@ -90,7 +90,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!pluto || !agent) return;
+    if (!pluto) return;
     // Indicate loading start if necessary
     dispatch({ type: 'LOADING_START' });
     dispatch({ type: 'SET_PLUTO', payload: pluto });
@@ -102,19 +102,21 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           payload: credentials.filter(c => c.claims[0]?.type === 'verification')[0] || null,
         });
         dispatch({ type: 'SET_CREDENTIALS', payload: credentials });
+        const master = dids.filter(d => d.alias === 'master')[0]?.did;
         dispatch({
           type: 'SET_DID',
-          payload: dids?.length > 0 ? dids.filter(d => d.alias === 'master')[0].did : null,
+          payload: dids?.length > 0 ? master || dids[0].did : null,
         });
         // Indicate loading end if necessary
         dispatch({ type: 'LOADING_END' });
+        if (dids.length > 0) startAgent(pluto, dispatch);
       })
       .catch(error => {
         console.error('Failed to load data from Pluto', error);
         // Handle error state if necessary
         dispatch({ type: 'LOADING_END' });
       });
-  }, [pluto, agent]);
+  }, [pluto]);
 
   return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
 };

@@ -145,8 +145,7 @@ export const fetchBackup = async (didStr: string, pk: SDK.Domain.PrivateKey) => 
 };
 
 export const backup = async (pluto: SDK.Domain.Pluto, did: SDK.Domain.DID) => {
-  const dbs = await getIndexedDBDatabases(config.PLUTO_DB_NAME);
-  const b = await backupIndexedDBs(dbs);
+  const b = await pluto.backup();
   const pks = await pluto.getDIDPrivateKeysByDID(did);
   const body = encrypt(pks[0].raw, JSON.stringify(b));
   const compressed = pako.deflate(body, { to: 'string' });
