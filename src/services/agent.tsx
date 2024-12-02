@@ -49,6 +49,7 @@ const handleMessages =
           type: 'request-presentations',
           credential: lastCredential,
         });
+        localStorage.removeItem('listProcessing');
         if (lastCredential === undefined) {
           dispatch({
             type: 'SET_ERROR',
@@ -115,33 +116,21 @@ const handleMessages =
     }
   };
 
-export function startAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<ActionType>) {
-  const [agent, setAgent] = useState<SDK.Agent>();
-  const [state, setState] = useState<string>('offline');
-
-  useEffect(() => {
-    const handleStart = async () => {
-      console.log(`starting agent with mediator : ${config.MEDIATOR_DID}`);
-      const a = SDK.Agent.initialize({ mediatorDID: SDK.Domain.DID.fromString(config.MEDIATOR_DID), pluto });
-      a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
-      console.log('listener has been add to the agant');
-      setState(await a.start());
-      const mediator = a.currentMediatorDID;
-      if (!mediator) {
-        throw new Error('Mediator not available');
-      }
-      setAgent(a);
-      return a;
-    };
-
-    if (pluto) {
-      console.log('pluto init successfully');
-      handleStart().then(a => {
-        console.log('agent started');
-        dispatch({ type: 'SET_AGENT', payload: a });
-      });
+export async function startAgent(pluto: SDK.Domain.Pluto, dispatch: React.Dispatch<ActionType>) {
+  const handleStart = async () => {
+    console.log(`starting agent with mediator : ${config.MEDIATOR_DID}`);
+    const a = SDK.Agent.initialize({ mediatorDID: SDK.Domain.DID.fromString(config.MEDIATOR_DID), pluto });
+    a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch));
+    console.log('listener has been add to the agant');
+    await a.start();
+    const mediator = a.currentMediatorDID;
+    if (!mediator) {
+      throw new Error('Mediator not available');
     }
-  }, [pluto, dispatch]);
+    return a;
+  };
 
-  return { agent, state };
+  const agent = await handleStart();
+  dispatch({ type: 'SET_AGENT', payload: agent });
+  return { agent };
 }
