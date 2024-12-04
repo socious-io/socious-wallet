@@ -1,16 +1,11 @@
 import { CapacitorConfig } from '@capacitor/cli';
-import { Capacitor } from '@capacitor/core';
-
-function defineHostname() {
-  return Capacitor.getPlatform() === 'ios' ? 'wallet.socious.io' : 'capacitor.native';
-}
 
 const config: CapacitorConfig = {
   appId: 'socious.wallet.app',
   appName: 'Socious Wallet',
   webDir: 'build',
   server: {
-    hostname: defineHostname(),
+    hostname: 'wallet.socious.io',
     androidScheme: 'https',
   },
   plugins: {
