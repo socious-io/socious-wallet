@@ -30,6 +30,7 @@ const useVerify = () => {
   const [submitted, setSubmitted] = useState(localStorage.getItem(FLAG_KEY) === 'APPROVED');
 
   const onStartVerification = async () => {
+    if (submitted) return;
     setSubmitted(true);
     const { url } = await startKYC(did.methodId, localStorage.getItem('session'));
     window.location.replace(url);
