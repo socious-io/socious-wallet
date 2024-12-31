@@ -27,7 +27,7 @@ function Verify() {
             <Button
               variant="primary"
               type="submit"
-              className={styles['button']}
+              className="fw-semibold w-100 py-2"
               disabled={submitted}
               onClick={onStartVerification}
             >
