@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import SDK from '@hyperledger/identus-edge-agent-sdk';
 import { config } from 'src/config';
 import { decodeJwtPayload } from 'src/utilities';

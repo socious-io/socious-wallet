@@ -33,7 +33,7 @@ function Credentials() {
   const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean, isDetail?: boolean) => {
     const props = isKyc(claim?.type)
       ? {
-          title: 'Veriff',
+          title: 'Didit',
           subtitle: 'KYC',
           date: claim['issued_date'] || claim['verified_at'],
           avatar: kycAvatar,

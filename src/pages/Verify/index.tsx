@@ -1,5 +1,6 @@
 import { Alert } from 'react-bootstrap';
 import Card from 'src/components/Card';
+import { Button } from 'react-bootstrap';
 // import Icon from 'src/components/Icon';
 import verifyImage from 'src/assets/images/verify-image.svg';
 import useVerify from './index.services';
@@ -7,7 +8,7 @@ import styles from './index.module.scss';
 import NavigationBar from 'src/containers/NavigationBar';
 
 function Verify() {
-  const { translate, submitted, verification } = useVerify();
+  const { translate, submitted, verification, onStartVerification } = useVerify();
 
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
@@ -22,7 +23,17 @@ function Verify() {
             <span className="text-secondary text-center">{translate('verify-subtitle')}</span>
             <img src={verifyImage} width={354} height={186} alt="Verify Id Card" />
           </div>
-          {!submitted && <div id="veriff-root"></div>}
+          {!submitted && (
+            <Button
+              variant="primary"
+              type="submit"
+              className={styles['button']}
+              disabled={submitted}
+              onClick={onStartVerification}
+            >
+              {translate('verify-veriff-button')}
+            </Button>
+          )}
           {submitted && !verification && (
             <Alert variant="primary" className="w-100">
               {translate('verify-submitted')}
