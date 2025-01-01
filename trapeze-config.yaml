@@ -61,13 +61,6 @@ platforms:
     versionName: $VERSION
     versionCode: $ANDROID_VERSION_CODE
 
-    manifest:
-      - file: AndroidManifest.xml
-        target: manifest
-        inject: |
-          <uses-permission android:name="android.permission.CAMERA" />
-          <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     gradle:
       - file: app/build.gradle # Removing buildTypes
         target:

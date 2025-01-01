@@ -57,7 +57,7 @@ jobs:
       - name: Making Android Release Code
         run: |
           npm run build
-          npm run make:android
+          npx cap sync android
         env:
           REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
           REACT_APP_PLUTO_PASSWD: ${{ secrets.REACT_APP_PLUTO_PASSWD }}
@@ -86,7 +86,6 @@ jobs:
       - name: Configuring apps (using Trapeze)
         run: |
           npm run config:apps
-          cat android/app/build.gradle
         env:
           ANDROID_KEY_STORE_LOCATION: ${{ github.workspace }}/android/build-release.keystore
           ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
