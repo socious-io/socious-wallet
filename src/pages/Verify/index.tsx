@@ -8,7 +8,7 @@ import styles from './index.module.scss';
 import NavigationBar from 'src/containers/NavigationBar';
 
 function Verify() {
-  const { translate, submitted, verification, onStartVerification } = useVerify();
+  const { translate, onStartVerification, submitStatus } = useVerify();
 
   return (
     <div className="h-100 d-flex align-items-center justify-content-center">
@@ -23,23 +23,18 @@ function Verify() {
             <span className="text-secondary text-center">{translate('verify-subtitle')}</span>
             <img src={verifyImage} width={354} height={186} alt="Verify Id Card" />
           </div>
-          {!submitted && (
-            <Button
-              variant="primary"
-              type="submit"
-              className="fw-semibold w-100 py-2"
-              disabled={submitted}
-              onClick={onStartVerification}
-            >
+          {submitStatus !== 'INREVIEW' && submitStatus !== 'APPROVED' && (
+            <Button variant="primary" type="submit" className="fw-semibold w-100 py-2" onClick={onStartVerification}>
               {translate('verify-veriff-button')}
             </Button>
           )}
-          {submitted && !verification && (
+
+          {submitStatus === 'INREVIEW' && (
             <Alert variant="primary" className="w-100">
               {translate('verify-submitted')}
             </Alert>
           )}
-          {verification && (
+          {submitStatus === 'APPROVED' && (
             <Alert variant="warning" className="w-100">
               {translate('verify-verified')}
             </Alert>

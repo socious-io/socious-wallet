@@ -9,7 +9,7 @@ import { Backup } from 'src/services/backup';
 import { init } from './services/datadog';
 import { Activation } from 'src/services/activation';
 import 'src/translations/i18n';
-
+import { App as CapApp } from '@capacitor/app';
 init();
 
 function App() {

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@capacitor/app": "^6.0.0",
+    "@capacitor/browser": "^6.0.4",
     "@capacitor/device": "^6.0.0",
     "@capacitor/filesystem": "^6.0.1",
     "@capacitor/share": "^6.0.2",
@@ -56,8 +57,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "build:android": "npx cap sync android && npx cap open android",
-    "build:ios": "npx cap sync ios && npx cap open ios",
+    "build:android": "npm run build && npx cap sync android && npx cap open android",
+    "build:ios": "npm run build && npx cap sync ios && npx cap open ios",
     "make:android": "rm -rf android && npx cap add android",
     "make:ios": "rm -rf ios && npx cap add ios",
     "generate:assets": "npx @capacitor/assets generate --iconBackgroundColor '#eeeeee' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#eeeeee' --splashBackgroundColorDark '#111111' --assetPath ./public/capacitor-assets",
