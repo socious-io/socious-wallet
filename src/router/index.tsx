@@ -20,6 +20,9 @@ import CreatePass from 'src/pages/CreatePass';
 import EnterPass from 'src/pages/EnterPass';
 import Backup from 'src/pages/Backup';
 import { config } from 'src/config';
+import { App as CapApp } from '@capacitor/app';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const blueprint: RouteObject[] = [
   {
@@ -54,6 +57,19 @@ function DefaultRoute(): JSX.Element {
   const { state } = useAppContext();
   const shouldRenderCredentials = !state.didLoading && state.did;
   const hasPasscode = localStorage.getItem('passcode') || '';
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    CapApp.addListener('backButton', ({ canGoBack }) => {
+      if (!canGoBack) {
+        CapApp.exitApp();
+      } else {
+        // Navigate back
+        navigate(-1);
+      }
+    });
+  }, [location.pathname, navigate]);
   return (
     <>
       {state.didLoading ? (

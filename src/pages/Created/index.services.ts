@@ -14,7 +14,7 @@ const useCreated = () => {
         {
           children: translate('created-started-button'),
           variant: 'primary',
-          onClick: () => navigate('/'),
+          onClick: () => navigate('/', { replace: true }),
           className: 'fw-bold w-100 py-2',
         },
       ],
@@ -27,7 +27,7 @@ const useCreated = () => {
         {
           children: translate('created-restore-button'),
           variant: 'primary',
-          onClick: () => navigate('/'),
+          onClick: () => navigate('/', { replace: true }),
           className: 'fw-bold w-100 py-2',
         },
       ],

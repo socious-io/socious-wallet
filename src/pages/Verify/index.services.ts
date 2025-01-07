@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
+import { Browser } from '@capacitor/browser';
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore this package types has issue so we ignore error
 import axios from 'src/services/http';
@@ -27,13 +29,14 @@ const useVerify = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, credentials, verification } = state || {};
-  const [submitted, setSubmitted] = useState(localStorage.getItem(FLAG_KEY) === 'APPROVED');
 
   const onStartVerification = async () => {
-    if (submitted) return;
-    setSubmitted(true);
+    // if in review or approved return
+    if (state.submitted === 'INREVIEW' || state.submitted === 'APPROVED') return;
+
     const { url } = await startKYC(did.methodId, localStorage.getItem('session'));
-    window.location.replace(url);
+    if (state.device.platform === 'web') window.location.replace(url);
+    else Browser.open({ url });
   };
 
   useEffect(() => {
@@ -42,58 +45,71 @@ const useVerify = () => {
     }
   }, [credentials, verification]);
 
-  useEffect(() => {
-    if (did && submitted && verification === null) {
-      const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
+  const getVerificationStatus = async () => {
+    const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
+    const response = await axios.get(`${config.BACKUP_AGENT}/verify/${did.methodId}/status`, { headers });
+    return response.data;
+  };
 
-      const checkStatus = () => {
-        axios
-          .get(`${config.BACKUP_AGENT}/verify/${did.methodId}/status`, { headers })
-          .then(r => {
-            switch (r.data.verification?.status.toLowerCase()) {
-              case 'not started':
-                onStartVerification();
-                break;
-              case 'declined':
-                localStorage.setItem(FLAG_KEY, 'DECLINED');
-                setSubmitted(false);
-                localStorage.removeItem('session');
-                dispatch({ type: 'SET_SUBMIT', payload: 'DECLINED' });
-                break;
-              case 'expired':
-                localStorage.setItem(FLAG_KEY, 'EXPIRED');
-                setSubmitted(false);
-                dispatch({ type: 'SET_SUBMIT', payload: 'EXPIRED' });
-                break;
-              case 'abandoned':
-                localStorage.setItem(FLAG_KEY, 'ABANDONED');
-                setSubmitted(false);
-                dispatch({ type: 'SET_SUBMIT', payload: 'ABANDONED' });
-                break;
-              case 'approved': {
-                const url = new URL(r.data.connection.url);
-                // need to clear messages before redirect
-                dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
-                navigate(`${url.pathname}${url.search}`);
-                break;
-              }
+  useEffect(() => {
+    if ((did && verification === null) || state.submitted === 'INREVIEW' || state.submitted === 'INPROGRESS') {
+      const checkStatus = async () => {
+        try {
+          const response = await getVerificationStatus();
+          switch (response.verification?.status.toLowerCase()) {
+            case 'not started':
+              break;
+            case 'declined':
+              localStorage.setItem(FLAG_KEY, 'DECLINED');
+              localStorage.removeItem('session');
+              dispatch({ type: 'SET_SUBMIT', payload: 'DECLINED' });
+              Browser?.close();
+              break;
+            case 'in progress':
+              dispatch({ type: 'SET_SUBMIT', payload: 'INPROGRESS' });
+              break;
+            case 'expired':
+              localStorage.setItem(FLAG_KEY, 'EXPIRED');
+              dispatch({ type: 'SET_SUBMIT', payload: 'EXPIRED' });
+              break;
+            case 'abandoned':
+              localStorage.setItem(FLAG_KEY, 'ABANDONED');
+              dispatch({ type: 'SET_SUBMIT', payload: 'ABANDONED' });
+              break;
+            case 'in review':
+              dispatch({ type: 'SET_SUBMIT', payload: 'INREVIEW' });
+              Browser.close();
+              break;
+            case 'approved': {
+              // Need to clear messages before redirect
+              dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
+              // For Web navigate to the new url
+              const url = new URL(response.connection.url);
+              navigate(`${url.pathname}${url.search}`);
+
+              //For Mobile if state changes to approved and init status is not approved close the browser
+              if (state.device.platform !== 'web') Browser?.close();
+
+              break;
             }
-          })
-          .catch(err => {
-            const sessionID = localStorage.getItem('session');
-            console.log(err);
-            if (err?.response?.status === 400 && sessionID) {
-              startKYC(did.methodId, sessionID);
-            }
-          });
+            default:
+              console.log('Unknown status:');
+          }
+        } catch (err) {
+          const sessionID = localStorage.getItem('session');
+          console.error(err);
+          if (err?.response?.status === 400 && sessionID) {
+            startKYC(did.methodId, sessionID);
+          }
+        }
       };
 
       const intervalId = setInterval(checkStatus, 5000);
       return () => clearInterval(intervalId);
     }
-  }, [did, submitted, navigate, dispatch, verification]);
+  }, [did, verification, dispatch, navigate, getVerificationStatus]);
 
-  return { translate, submitted, verification, onStartVerification };
+  return { translate, verification, onStartVerification, submitStatus: state.submitted };
 };
 
 export default useVerify;
