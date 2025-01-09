@@ -60,6 +60,7 @@ function Credentials() {
     let props = null;
     switch (submitted) {
       case 'APPROVED':
+      case 'INREVIEW':
         props = {
           variant: 'warning',
           iconName: 'alert-submit',
@@ -76,6 +77,7 @@ function Credentials() {
       case 'ABANDONED':
       case 'EXPIRED':
       case 'DECLINED':
+      case 'INPROGRESS':
         props = {
           variant: 'danger',
           iconName: 'alert-danger',
