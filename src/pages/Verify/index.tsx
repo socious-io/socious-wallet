@@ -34,11 +34,7 @@ function Verify() {
               {translate('verify-submitted')}
             </Alert>
           )}
-          {submitStatus === 'APPROVED' && (
-            <Alert variant="warning" className="w-100">
-              {translate('verify-verified')}
-            </Alert>
-          )}
+          {submitStatus === 'APPROVED' && <Alert className="w-100">{translate('verify-verified')}</Alert>}
         </div>
         <NavigationBar />
       </Card>
