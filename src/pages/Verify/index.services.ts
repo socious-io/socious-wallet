@@ -20,7 +20,7 @@ const startKYC = async (did: string, session?: string) => {
     localStorage.setItem(FLAG_KEY, 'APPROVED');
     return response.data;
   } catch (err) {
-    alert(err);
+    console.error(err);
   }
 };
 

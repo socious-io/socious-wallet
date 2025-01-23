@@ -2,6 +2,8 @@ import axios from 'src/services/http';
 import { config } from 'src/config';
 import { ErrorInfo } from 'react';
 import { addError } from 'src/services/datadog';
+import { Device } from '@capacitor/device';
+
 // Utility function to decode JWT and return payload as a JSON object
 export function decodeJwtPayload(jwt: string): any {
   const token = atob(jwt);
@@ -57,3 +59,13 @@ export const logger = (error: Error, errorInfo: ErrorInfo) => {
 
 //REGEX
 export const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!])[A-Za-z\d@#$%^&+=!]{8,}$/;
+
+export const getSystemLanguage = async (): Promise<'en' | 'jp'> => {
+  const info = await Device.getLanguageCode();
+  const supportedLanguages = ['en', 'ja'];
+  //Note: capacitor device returns ja for japanese but i18bext expects jp
+  if (supportedLanguages.includes(info.value)) {
+    return info.value === 'ja' ? 'jp' : 'en';
+  }
+  return 'en';
+};
