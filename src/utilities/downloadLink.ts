@@ -34,7 +34,6 @@ export const createDownloadLink = async (content: string, filename = 'download',
     });
   } catch (error) {
     console.error('Error saving or sharing file:', error);
-    alert(error);
     logger(error, { componentStack: 'saving backup file' });
   }
 };

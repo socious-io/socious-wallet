@@ -9,14 +9,18 @@ import { Backup } from 'src/services/backup';
 import { init } from './services/datadog';
 import { Activation } from 'src/services/activation';
 import 'src/translations/i18n';
-import { App as CapApp } from '@capacitor/app';
+import { getSystemLanguage } from './utilities';
 init();
 
 function App() {
   const { language } = useSelector((state: RootState) => state.language);
 
+  const setLanguage = async () => {
+    const systemLanguage = await getSystemLanguage();
+    i18next.changeLanguage(language || systemLanguage);
+  };
   useEffect(() => {
-    i18next.changeLanguage(language);
+    setLanguage();
   }, [language]);
 
   return (
