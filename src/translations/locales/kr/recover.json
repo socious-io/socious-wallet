@@ -1,0 +1,7 @@
+{
+  "recover-title": "지갑 가져오기",
+  "recover-subtitle": "백업 파일을 업로드하여 지갑을 가져옵니다",
+  "recover-error": "유효하지 않은 백업 파일",
+  "recover-import-button": "지갑 가져오기",
+  "recover-back-button": "뒤로"
+}

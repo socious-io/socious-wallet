@@ -1,0 +1,7 @@
+{
+  "create-pass-title": "Crea tu código de acceso",
+  "create-pass-subtitle": "Crea un código de acceso para proteger el acceso a tu billetera.",
+  "create-pass-retype-title": "Vuelve a escribir tu código de acceso",
+  "create-pass-retype-subtitle": "Confirma tu código de acceso.",
+  "create-pass-error": "El código de acceso no coincide"
+}

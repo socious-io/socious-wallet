@@ -1,0 +1,17 @@
+{
+  "settings-card-header": "Ajustes",
+  "settings-items": {
+    "backup": "Respaldar billetera",
+    "remove": "Eliminar billetera",
+    "language": "Idioma",
+    "automatic": "Automático",
+    "version": "Versión de la aplicación",
+    "platform": "Plataforma"
+  },
+  "settings-confirm": {
+    "header": "Eliminar billetera",
+    "remove-button": "Eliminar",
+    "cancel-button": "Cancelar",
+    "title": "La eliminación de tu billetera no se puede deshacer. Perderás todas las credenciales de esta billetera si no has hecho un respaldo."
+  }
+}

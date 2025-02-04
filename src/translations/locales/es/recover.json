@@ -1,0 +1,7 @@
+{
+  "recover-title": "Importar Billetera",
+  "recover-subtitle": "Sube tu archivo de respaldo para importar tu billetera",
+  "recover-error": "Archivo de respaldo inválido",
+  "recover-import-button": "Importar billetera",
+  "recover-back-button": "Atrás"
+}

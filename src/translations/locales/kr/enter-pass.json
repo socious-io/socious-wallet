@@ -1,0 +1,13 @@
+{
+  "enter-pass-title": "비밀번호 입력",
+  "enter-pass-subtitle": "이 비밀번호는 지갑을 가져오는 데 필요합니다",
+  "enter-pass-continue-button": "계속",
+  "enter-pass-back-button": "뒤로",
+  "enter-pass-form": {
+    "input-placeholder": "비밀번호를 입력하세요...",
+    "input-error1": "비밀번호는 필수입니다",
+    "input-error2": "8자 이상 입력해 주세요",
+    "input-error3": "비밀번호 복잡도가 부족합니다",
+    "submit-error": "지갑 가져오기 중 오류가 발생했습니다"
+  }
+}

@@ -11,4 +11,16 @@ export const languages = [
     original: '日本語',
     system: 'ja',
   },
+  {
+    value: 'kr',
+    label: 'Korean',
+    original: '한국어',
+    system: 'kr',
+  },
+  {
+    value: 'es',
+    label: 'Spanish',
+    original: 'Español',
+    system: 'es',
+  },
 ];

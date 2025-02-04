@@ -1,0 +1,7 @@
+{
+  "create-pass-title": "암호 생성",
+  "create-pass-subtitle": "지갑 접근을 보호하기 위한 암호를 생성합니다.",
+  "create-pass-retype-title": "암호 재입력",
+  "create-pass-retype-subtitle": "암호를 확인해 주세요.",
+  "create-pass-error": "암호가 일치하지 않습니다"
+}

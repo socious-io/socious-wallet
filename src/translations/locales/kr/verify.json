@@ -1,0 +1,8 @@
+{
+  "verify-card-header": "인증",
+  "verify-title": "본인 인증",
+  "verify-subtitle": "Socious 지갑은 KYC, AML 및 GDPR 규정을 준수하여 개인정보 보호와 보안을 보장합니다. 개인 데이터는 일절 저장하지 않습니다.",
+  "verify-submitted": "인증 요청이 제출되었습니다.",
+  "verify-verified": "본인 인증이 완료되었습니다.",
+  "verify-veriff-button": "인증 받기"
+}

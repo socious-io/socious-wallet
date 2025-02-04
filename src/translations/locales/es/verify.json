@@ -1,0 +1,8 @@
+{
+  "verify-card-header": "Verificación",
+  "verify-title": "Verifica tu identidad",
+  "verify-subtitle": "Socious Wallet se dedica a cumplir con las regulaciones KYC, AML y GDPR para garantizar la privacidad y la seguridad. No almacenamos ningún dato personal.",
+  "verify-submitted": "Tu solicitud de verificación ha sido enviada.",
+  "verify-verified": "Tu identidad ha sido verificada.",
+  "verify-veriff-button": "Obtener verificación"
+}
