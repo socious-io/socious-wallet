@@ -1,0 +1,13 @@
+{
+  "enter-pass-title": "Ingresa la contraseña",
+  "enter-pass-subtitle": "Necesitas esto para importar esta billetera",
+  "enter-pass-continue-button": "Continuar",
+  "enter-pass-back-button": "Atrás",
+  "enter-pass-form": {
+    "input-placeholder": "Ingresa tu contraseña...",
+    "input-error1": "La contraseña es requerida",
+    "input-error2": "Mínimo 8 caracteres",
+    "input-error3": "La complejidad de la contraseña es débil",
+    "submit-error": "Ocurrió un error al importar la billetera"
+  }
+}

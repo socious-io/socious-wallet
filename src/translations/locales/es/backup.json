@@ -1,0 +1,19 @@
+{
+  "backup-title": "Crear una contraseña",
+  "backup-subtitle": "Crea una contraseña para mantener tu archivo de copia de seguridad seguro. La necesitarás al importar tu billetera a un nuevo dispositivo.",
+  "backup-back-link": "Volver",
+  "backup-form": {
+    "new-pass-label": "Establecer una contraseña",
+    "new-pass-placeholder": "Nueva contraseña",
+    "new-pass-hint": "Tu contraseña debe tener al menos 8 caracteres, incluyendo minúsculas, mayúsculas y un carácter especial.",
+    "new-pass-error1": "Se requiere una contraseña",
+    "new-pass-error2": "Mínimo 8 caracteres",
+    "new-pass-error3": "La complejidad de la contraseña es débil",
+    "confirm-pass-label": "Confirma tu contraseña",
+    "confirm-pass-placeholder": "Confirmar contraseña",
+    "confirm-pass-error1": "Se requiere confirmar la contraseña",
+    "confirm-pass-error2": "Las contraseñas deben coincidir",
+    "button": "Continuar"
+  },
+  "backup-error": "El archivo no se pudo guardar. Inténtalo de nuevo y selecciona una nueva ubicación si es necesario."
+}

@@ -1,0 +1,17 @@
+{
+  "settings-card-header": "설정",
+  "settings-items": {
+    "backup": "지갑 백업",
+    "remove": "지갑 삭제",
+    "language": "언어",
+    "automatic": "자동",
+    "version": "앱 버전",
+    "platform": "플랫폼"
+  },
+  "settings-confirm": {
+    "header": "지갑 삭제",
+    "remove-button": "삭제",
+    "cancel-button": "취소",
+    "title": "지갑 삭제는 되돌릴 수 없습니다. 백업하지 않은 경우 이 지갑의 모든 자격 증명을 잃게 됩니다."
+  }
+}

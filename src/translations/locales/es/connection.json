@@ -1,0 +1,16 @@
+{
+  "connection-card-header": "Conexión",
+  "connection-loading": {
+    "title": "Estableciendo conexión",
+    "subtitle1": "Estamos conectando tu billetera de forma segura con tus credenciales. Este proceso puede tardar hasta 5 minutos en completarse.",
+    "subtitle2": "Por favor, mantén la aplicación abierta y tu teléfono desbloqueado durante este tiempo. Si cierras la aplicación o bloqueas tu teléfono, el proceso se interrumpirá y deberás comenzar de nuevo.",
+    "subtitle3": "Apreciamos tu paciencia mientras garantizamos la seguridad de los datos."
+  },
+  "connection-confirm": {
+    "header": "Invitación",
+    "button": "Confirmar",
+    "cancel-button": "Cancelar",
+    "title": "¿Aceptar conexión?",
+    "subtitle": "Esto te permitirá recibir o compartir credenciales."
+  }
+}
