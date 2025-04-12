@@ -47,7 +47,7 @@ const useVerify = () => {
 
   const getVerificationStatus = async () => {
     const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
-    const response = await axios.get(`${config.BACKUP_AGENT}/verify/${did.methodId}/status?t=${new Date().getTime}`, {
+    const response = await axios.get(`${config.BACKUP_AGENT}/verify/${did.methodId}/status?t=${new Date().getTime()}`, {
       headers,
     });
     return response.data;
