@@ -119,7 +119,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         // Handle error state if necessary
         dispatch({ type: 'LOADING_END' });
       });
-  }, [pluto]);
+  }, [pluto, state.submitted]);
 
   return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
 };
