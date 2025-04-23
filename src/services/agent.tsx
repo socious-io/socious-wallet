@@ -49,6 +49,7 @@ const handleMessages =
           credential: lastCredential,
         });
         localStorage.removeItem('listProcessing');
+        dispatch({ type: 'SET_LIST_PROCESSING', payload: false });
         if (lastCredential === undefined) {
           dispatch({
             type: 'SET_ERROR',

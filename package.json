@@ -1,6 +1,6 @@
 {
   "name": "socious-wallet",
-  "version": "1.6.28",
+  "version": "1.6.41",
   "private": true,
   "engines": {
     "node": "20.x"
