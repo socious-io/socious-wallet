@@ -1,3 +1,4 @@
+import { App } from '@capacitor/app';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +20,21 @@ const useSettings = () => {
     name: '',
     open: false,
   });
+  const [appVersion, setAppVersion] = useState(APP_VERSION);
+
+  useEffect(() => {
+    const fetchAppVersion = async () => {
+      try {
+        const info = await App.getInfo();
+        setAppVersion(info.version);
+      } catch (error) {
+        console.error('Failed to fetch app version:', error);
+      }
+    };
+
+    fetchAppVersion();
+  }, []);
+
   const settingsItems = [
     {
       title: translate('settings-items.backup'),
@@ -30,14 +46,6 @@ const useSettings = () => {
       action: () => setOpenModal({ name: 'remove', open: true }),
       clickable: true,
     },
-    // {
-    //   title: 'Contact us',
-    //   action: () => console.log('contact'),
-    // },
-    // {
-    //   title: 'Terms and Privacy Policy',
-    //   action: () => console.log('terms'),
-    // },
     {
       title: translate('settings-items.language'),
       value: system ? translate('settings-items.automatic') : languages.find(lang => lang.value === language)?.original,
@@ -46,7 +54,7 @@ const useSettings = () => {
     },
     {
       title: translate('settings-items.version'),
-      subtitle: APP_VERSION,
+      subtitle: appVersion,
       clickable: false,
     },
     {
