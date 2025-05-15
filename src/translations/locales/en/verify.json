@@ -1,8 +1,8 @@
 {
   "verify-card-header": "Verification",
-  "verify-title": "Verify your identity",
-  "verify-subtitle": "Socious Wallet is dedicated to complying with KYC, AML, and GDPR regulations to ensure privacy and security. We do not store any personal data.",
+  "verify-title": "Reusable Identity Verification",
+  "verify-subtitle": "Socious Wallet partners with Didit for secure identity verification that complies with KYC, AML, and GDPR. No personal data is stored, and a single verification works for multiple services. You decide what information to share, and it is all done in just 1 minute.",
   "verify-submitted": "Your verification request has been submitted.",
-  "verify-verified": "Your identity has been verified. Please remain on this page while your credentials are being generated.",
+  "verify-verified": "Your identity has been verified. Please remain on this page while your credentials are being generated. If nothing happens after 30 seconds, completely exit and restart the app.",
   "verify-veriff-button": "Get verified"
 }

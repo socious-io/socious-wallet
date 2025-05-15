@@ -2,9 +2,9 @@
   "connection-card-header": "Connection",
   "connection-loading": {
     "title": "Establishing connection",
-    "subtitle1": "We're securely connecting your wallet to your credentials. This process can take up to 5 minutes to complete.",
-    "subtitle2": "Please keep the app open and your phone unlocked during this time. If you close the app or lock your phone, the process will be interrupted and you'll need to start over.",
-    "subtitle3": "We appreciate your patience as we ensure the security of data."
+    "subtitle1": "Establishing a secure connection to protect your credentials. This may take up to 30 seconds.",
+    "subtitle2": "Keep the app open and your phone unlocked. If nothing happens after 30 seconds, completely exit and restart the app.",
+    "subtitle3": "Thank you for your patience."
   },
   "connection-confirm": {
     "header": "Invitation",
