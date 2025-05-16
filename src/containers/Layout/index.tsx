@@ -38,7 +38,6 @@ const Layout = () => {
 
   return (
     <>
-      {!config.DEBUG && config.PLATFORM === 'web' && <Navigate to="download" />}
       <AppUrlListener />
       <Container>
         {error && errorShow && (

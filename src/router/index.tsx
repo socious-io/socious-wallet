@@ -77,7 +77,6 @@ function DefaultRoute(): JSX.Element {
       ) : (
         <>
           <AppUrlListener />
-          {state.device.platform === 'web' && !config.DEBUG && <Navigate to="/download" />}
           {!shouldRenderCredentials && <Navigate to="/intro" />}
           {shouldRenderCredentials && (hasPasscode ? <Credentials /> : <Navigate to="/setup-pass" />)}
         </>
