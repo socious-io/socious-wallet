@@ -4,7 +4,7 @@ import useRecover from './index.services';
 import styles from './index.module.scss';
 
 function Recover() {
-  const { translate, navigate, did, inputRef, onClickUpload, onUploadWallet, errorMessage } = useRecover();
+  const { translate, navigate, did, onClickUpload, errorMessage } = useRecover();
 
   if (did) return <Navigate to="/" />;
   return (
@@ -30,7 +30,6 @@ function Recover() {
           <h4 className={styles['title']}>{translate('recover-title')}</h4>
           <span className={styles['subtitle']}>{translate('recover-subtitle')}</span>
         </div>
-        <input type="file" accept=".enc" ref={inputRef} className="d-none" onChange={onUploadWallet} />
         {errorMessage && <span className={styles['error']}>{errorMessage}</span>}
       </Card>
     </div>

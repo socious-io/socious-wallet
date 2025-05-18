@@ -8,9 +8,11 @@ PODS:
   - CapacitorCordova (6.1.2)
   - CapacitorDevice (6.0.1):
     - Capacitor
-  - CapacitorFilesystem (6.0.1):
+  - CapacitorFilesystem (6.0.3):
     - Capacitor
   - CapacitorShare (6.0.2):
+    - Capacitor
+  - CapawesomeCapacitorFilePicker (6.0.0):
     - Capacitor
 
 DEPENDENCIES:
@@ -21,6 +23,7 @@ DEPENDENCIES:
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
+  - "CapawesomeCapacitorFilePicker (from `../../node_modules/@capawesome/capacitor-file-picker`)"
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -37,6 +40,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/filesystem"
   CapacitorShare:
     :path: "../../node_modules/@capacitor/share"
+  CapawesomeCapacitorFilePicker:
+    :path: "../../node_modules/@capawesome/capacitor-file-picker"
 
 SPEC CHECKSUMS:
   Capacitor: 69c7f687aabb8d85e543497411e40638b5cc08c0
@@ -44,9 +49,10 @@ SPEC CHECKSUMS:
   CapacitorBrowser: 3413e46a583b6edc3f20448732a531078d6924c6
   CapacitorCordova: f48c89f96c319101cd2f0ce8a2b7449b5fb8b3dd
   CapacitorDevice: da1884f895e17992648b27f6c8ee2be72cd0ce2e
-  CapacitorFilesystem: 30941c0fea0773fcaedab18e262b339f5b9c06bc
+  CapacitorFilesystem: 59270a63c60836248812671aa3b15df673fbaf74
   CapacitorShare: 5d49f1b220e991372b4d5d34be9a6080a042bae4
+  CapawesomeCapacitorFilePicker: 9f81333cae7945e4f54c51489145d60fbef7d724
 
-PODFILE CHECKSUM: 915db396015dd32034b57262edbac8da2ec3217b
+PODFILE CHECKSUM: baff7090ccdd56839ca3ad6c279ff20833fa2536
 
 COCOAPODS: 1.16.2
