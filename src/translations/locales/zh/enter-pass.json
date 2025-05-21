@@ -1,0 +1,13 @@
+{
+  "enter-pass-title": "输入密码",
+  "enter-pass-subtitle": "导入此钱包时需要使用该密码",
+  "enter-pass-continue-button": "继续",
+  "enter-pass-back-button": "返回",
+  "enter-pass-form": {
+    "input-placeholder": "请输入您的密码...",
+    "input-error1": "密码为必填项",
+    "input-error2": "至少8个字符",
+    "input-error3": "密码复杂度较低",
+    "submit-error": "导入钱包时发生错误"
+  }
+}

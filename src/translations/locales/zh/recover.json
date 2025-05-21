@@ -1,0 +1,7 @@
+{
+  "recover-title": "导入钱包",
+  "recover-subtitle": "上传备份文件以导入您的钱包",
+  "recover-error": "无效的备份文件",
+  "recover-import-button": "导入钱包",
+  "recover-back-button": "返回"
+}

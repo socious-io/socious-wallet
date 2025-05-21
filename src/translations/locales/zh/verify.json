@@ -1,0 +1,8 @@
+{
+  "verify-card-header": "验证",
+  "verify-title": "可重复使用的身份验证",
+  "verify-subtitle": "Socious 钱包与 Didit 合作，提供符合 KYC、AML 和 GDPR 要求的安全身份验证。不存储任何个人数据，一次验证即可用于多个服务。您可以决定共享哪些信息，整个过程仅需1分钟完成。",
+  "verify-submitted": "您的验证请求已提交。",
+  "verify-verified": "您的身份已通过验证。请留在此页面，等待凭证生成。如果30秒后无反应，请完全退出并重新启动应用。",
+  "verify-veriff-button": "开始验证"
+}

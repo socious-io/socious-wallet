@@ -1,0 +1,16 @@
+{
+  "connection-card-header": "Connexion",
+  "connection-loading": {
+    "title": "Établissement de la connexion",
+    "subtitle1": "Établissement d'une connexion sécurisée pour protéger vos identifiants. Cela peut prendre jusqu'à 30 secondes.",
+    "subtitle2": "Gardez l'application ouverte et votre téléphone déverrouillé. Si rien ne se passe après 30 secondes, fermez complètement l'application et redémarrez-la.",
+    "subtitle3": "Merci pour votre patience."
+  },
+  "connection-confirm": {
+    "header": "Invitation",
+    "button": "Confirmer",
+    "cancel-button": "Annuler",
+    "title": "Accepter la connexion ?",
+    "subtitle": "Cela vous permettra de recevoir ou de partager des identifiants."
+  }
+}

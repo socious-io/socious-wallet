@@ -1,0 +1,19 @@
+{
+  "backup-title": "Créer un mot de passe",
+  "backup-subtitle": "Créez un mot de passe pour sécuriser votre fichier de sauvegarde. Vous en aurez besoin pour importer votre portefeuille sur un nouvel appareil.",
+  "backup-back-link": "Retour",
+  "backup-form": {
+    "new-pass-label": "Définir un mot de passe",
+    "new-pass-placeholder": "Nouveau mot de passe",
+    "new-pass-hint": "Votre mot de passe doit contenir au moins 8 caractères, dont une minuscule, une majuscule et un caractère spécial.",
+    "new-pass-error1": "Le mot de passe est requis",
+    "new-pass-error2": "8 caractères minimum",
+    "new-pass-error3": "La complexité du mot de passe est faible",
+    "confirm-pass-label": "Confirmez votre mot de passe",
+    "confirm-pass-placeholder": "Confirmer le mot de passe",
+    "confirm-pass-error1": "La confirmation du mot de passe est requise",
+    "confirm-pass-error2": "Les mots de passe doivent correspondre",
+    "button": "Continuer"
+  },
+  "backup-error": "Le fichier n'a pas pu être enregistré. Veuillez réessayer et sélectionner un nouvel emplacement si nécessaire."
+}

@@ -1,0 +1,7 @@
+{
+  "create-pass-title": "Créez votre code d’accès",
+  "create-pass-subtitle": "Créez un code d’accès pour sécuriser l’accès à votre portefeuille.",
+  "create-pass-retype-title": "Retapez votre code d’accès",
+  "create-pass-retype-subtitle": "Confirmez votre code d’accès.",
+  "create-pass-error": "Le code d’accès ne correspond pas"
+}

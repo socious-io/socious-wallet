@@ -1,0 +1,13 @@
+{
+  "enter-pass-title": "Entrez le mot de passe",
+  "enter-pass-subtitle": "Vous en avez besoin pour importer ce portefeuille",
+  "enter-pass-continue-button": "Continuer",
+  "enter-pass-back-button": "Retour",
+  "enter-pass-form": {
+    "input-placeholder": "Entrez votre mot de passe...",
+    "input-error1": "Le mot de passe est requis",
+    "input-error2": "8 caractères minimum",
+    "input-error3": "La complexité du mot de passe est faible",
+    "submit-error": "Une erreur est survenue lors de l'importation du portefeuille"
+  }
+}

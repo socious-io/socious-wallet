@@ -1,0 +1,17 @@
+{
+  "settings-card-header": "Paramètres",
+  "settings-items": {
+    "backup": "Sauvegarder le portefeuille",
+    "remove": "Supprimer le portefeuille",
+    "language": "Langue",
+    "automatic": "Automatique",
+    "version": "Version de l'application",
+    "platform": "Plateforme"
+  },
+  "settings-confirm": {
+    "header": "Supprimer le portefeuille",
+    "remove-button": "Supprimer",
+    "cancel-button": "Annuler",
+    "title": "La suppression de votre portefeuille est irréversible. Vous perdrez tous les identifiants associés si vous ne l'avez pas sauvegardé."
+  }
+}

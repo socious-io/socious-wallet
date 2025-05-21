@@ -1,0 +1,19 @@
+{
+  "backup-title": "创建密码",
+  "backup-subtitle": "创建一个密码以保护您的备份文件安全。在将钱包导入到新设备时需要使用该密码。",
+  "backup-back-link": "返回",
+  "backup-form": {
+    "new-pass-label": "设置密码",
+    "new-pass-placeholder": "新密码",
+    "new-pass-hint": "您的密码必须至少包含8个字符，包括小写字母、大写字母和特殊字符。",
+    "new-pass-error1": "密码是必填项",
+    "new-pass-error2": "至少8个字符",
+    "new-pass-error3": "密码复杂度太低",
+    "confirm-pass-label": "确认密码",
+    "confirm-pass-placeholder": "确认密码",
+    "confirm-pass-error1": "确认密码是必填项",
+    "confirm-pass-error2": "两次输入的密码必须一致",
+    "button": "继续"
+  },
+  "backup-error": "文件无法保存。请重试，如有需要请选择一个新的保存位置。"
+}
