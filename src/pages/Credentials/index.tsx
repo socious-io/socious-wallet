@@ -29,7 +29,6 @@ function Credentials() {
     const subtitleKey = claim?.type || ('job_category' in claim ? 'experience' : 'education');
     return subtitle[subtitleKey];
   };
-
   const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean, isDetail?: boolean) => {
     const props = isKyc(claim?.type)
       ? {

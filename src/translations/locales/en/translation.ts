@@ -13,7 +13,7 @@ import createPass from './create-pass.json';
 import enterPass from './enter-pass.json';
 import backup from './backup.json';
 import general from './general.json';
-
+import entry from './wallet-entry.json';
 export function generateTranslationFile() {
   return Object.assign(
     {},
@@ -32,5 +32,6 @@ export function generateTranslationFile() {
     enterPass,
     backup,
     general,
+    entry,
   );
 }
