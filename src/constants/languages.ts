@@ -43,3 +43,5 @@ export const languages = [
   },
 ];
 export const RTL_LANGUAGES = ['ar', 'he', 'fa', 'ur'];
+
+export type SupportedLanguages = 'en' | 'jp' | 'es' | 'kr' | 'zh' | 'ar' | 'fr' | '';

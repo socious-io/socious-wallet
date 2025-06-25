@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { SupportedLanguages } from 'src/constants/languages';
 
-export type SupportedLanguages = 'en' | 'jp' | 'es' | 'kr' | '';
 interface LangState {
   language: SupportedLanguages;
   system: SupportedLanguages;

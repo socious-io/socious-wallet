@@ -87,6 +87,7 @@ const useSettings = () => {
     });
     localStorage.removeItem('passcode');
     localStorage.removeItem('mnemonics');
+    localStorage.removeItem('session');
     window.location.assign('/intro');
   };
 
