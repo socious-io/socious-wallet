@@ -5,7 +5,15 @@ export interface Err {
   section: string;
 }
 
-export type VerifyStatus = 'APPROVED' | 'DECLINED' | 'EXPIRED' | 'ABANDONED' | 'INREVIEW' | 'INPROGRESS' | '';
+export type VerifyStatus =
+  | 'NOT_STARTED'
+  | 'APPROVED'
+  | 'DECLINED'
+  | 'EXPIRED'
+  | 'ABANDONED'
+  | 'INREVIEW'
+  | 'INPROGRESS'
+  | '';
 
 export interface StateType {
   did?: SDK.Domain.DID;

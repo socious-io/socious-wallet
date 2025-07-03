@@ -21,6 +21,7 @@ function Credentials() {
   const { state } = useAppContext();
   const { credentials, verification, submitted, listProcessing } = state || {};
   const { id } = useParams();
+  console.log('Credentials page rendered with id:', state.submitted);
   const isKyc = type => type === 'verification';
   const generateNonKycTypeText = claim => {
     const subtitle = {

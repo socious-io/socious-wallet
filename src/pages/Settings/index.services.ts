@@ -88,6 +88,7 @@ const useSettings = () => {
     localStorage.removeItem('passcode');
     localStorage.removeItem('mnemonics');
     localStorage.removeItem('session');
+    localStorage.removeItem('submitted_kyc');
     window.location.assign('/intro');
   };
 
