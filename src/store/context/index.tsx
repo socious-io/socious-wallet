@@ -16,6 +16,8 @@ const initialState: StateType = {
   message: [],
   verification: undefined,
   submitted: (localStorage.getItem('submitted_kyc') || '') as VerifyStatus,
+  firstname: localStorage.getItem('firstname') || '',
+  lastname: localStorage.getItem('lastname') || '',
   mnemonics: [],
   device: undefined,
   listenerActive: false,
@@ -40,6 +42,7 @@ function appReducer(state: StateType, action: ActionType): StateType {
     case 'SET_VERIFICATION':
       return { ...state, verification: action.payload };
     case 'SET_SUBMIT':
+      localStorage.setItem('submitted_kyc', action.payload);
       return { ...state, submitted: action.payload };
     case 'SET_DEVICE':
       return { ...state, device: action.payload };
@@ -69,6 +72,10 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return state;
     case 'LOADING_END':
       return state;
+    case 'SET_NAME':
+      localStorage.setItem('firstname', action.payload.firstname);
+      localStorage.setItem('lastname', action.payload.lastname);
+      return { ...state, firstname: action.payload.firstname, lastname: action.payload.lastname };
     default:
       return state;
   }
@@ -110,13 +117,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           type: 'SET_DID',
           payload: dids?.length > 0 ? master || dids[0].did : null,
         });
-        // Indicate loading end if necessary
         dispatch({ type: 'LOADING_END' });
         if (dids.length > 0) startAgent(pluto, dispatch);
       })
       .catch(error => {
         console.error('Failed to load data from Pluto', error);
-        // Handle error state if necessary
         dispatch({ type: 'LOADING_END' });
       });
   }, [pluto, state.submitted]);

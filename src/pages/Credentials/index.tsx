@@ -21,7 +21,6 @@ function Credentials() {
   const { state } = useAppContext();
   const { credentials, verification, submitted, listProcessing } = state || {};
   const { id } = useParams();
-  console.log('Credentials page rendered with id:', state.submitted);
   const isKyc = type => type === 'verification';
   const generateNonKycTypeText = claim => {
     const subtitle = {
@@ -207,7 +206,11 @@ function Credentials() {
                       <div key={`field${i}`} className={styles['card__item']}>
                         {beautifyText(field)}
                         <span className="fw-normal text-secondary text-break text-truncate">
-                          {formatClaimField(claim, field)}
+                          {beautifyText(field) === 'First name'
+                            ? state.firstname
+                            : beautifyText(field) === 'Last name'
+                              ? state.lastname
+                              : formatClaimField(claim, field)}
                         </span>
                       </div>
                     ),

@@ -20,6 +20,7 @@ import WalletEntry from 'src/pages/WalletEntry';
 import { App as CapApp } from '@capacitor/app';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import EnterName from 'src/pages/EnterName';
 
 export const blueprint: RouteObject[] = [
   {
@@ -44,6 +45,7 @@ export const blueprint: RouteObject[] = [
       { path: '/settings', element: <Settings /> },
       { path: '/scan', element: <Scan /> },
       { path: '/entry', element: <WalletEntry /> },
+      { path: '/enter-name', element: <EnterName /> },
     ],
     errorElement: <ErrorBoundary />,
   },

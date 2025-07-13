@@ -1,0 +1,8 @@
+{
+  "enter-name-title": "请输入你的全名",
+  "enter-name-subtitle": "请使用拉丁字母输入你的名字。",
+  "enter-name-form.firstname-placeholder": "名字",
+  "enter-name-form.lastname-placeholder": "姓氏",
+  "enter-name-form.button": "输入姓名",
+  "enter-name-form.button-back": "返回"
+}

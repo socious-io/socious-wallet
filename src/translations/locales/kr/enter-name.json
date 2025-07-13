@@ -1,0 +1,8 @@
+{
+  "enter-name-title": "전체 이름을 입력하세요",
+  "enter-name-subtitle": "이름을 로마자로 입력해 주세요.",
+  "enter-name-form.firstname-placeholder": "이름",
+  "enter-name-form.lastname-placeholder": "성",
+  "enter-name-form.button": "이름 입력",
+  "enter-name-form.button-back": "뒤로"
+}

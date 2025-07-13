@@ -21,6 +21,8 @@ export interface StateType {
   credentials: SDK.Domain.Credential[];
   verification: SDK.Domain.Credential | null | undefined;
   submitted: VerifyStatus;
+  firstname: string;
+  lastname: string;
   didLoading: boolean;
   pluto: SDK.Domain.Pluto;
   agent: SDK.Agent;
@@ -51,6 +53,6 @@ export type ActionType =
   | { type: 'SET_ENCRYPTED_DATA'; payload: string }
   | { type: 'SET_LIST_PROCESSING'; payload: boolean }
   | { type: 'LOADING_START' }
-  | { type: 'LOADING_END' };
-
+  | { type: 'LOADING_END' }
+  | { type: 'SET_NAME'; payload: { firstname: string; lastname: string } };
 export type AppProviderProps = { children: React.ReactNode };
