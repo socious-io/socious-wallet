@@ -21,7 +21,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.32",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
     "@veriff/incontext-sdk": "^1.3.1",
@@ -50,7 +49,6 @@
     "react-i18next": "^15.0.2",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.22.0",
-    "react-scripts": "^5.0.1",
     "text-encoding": "^0.7.0",
     "typescript": "^4.9.5",
     "wasm-loader": "^1.3.0",
@@ -58,16 +56,20 @@
     "yup": "^1.4.0"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "build:android": "npm run build && npx cap sync android && npx cap open android",
-    "build:ios": "npm run build && npx cap sync ios && npx cap open ios",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "build:android": "vite build && npx cap sync android && npx cap open android",
+    "build:ios": "vite build && npx cap sync ios && npx cap open ios",
     "make:android": "rm -rf android && npx cap add android",
     "make:ios": "rm -rf ios && npx cap add ios",
     "generate:assets": "npx @capacitor/assets generate --iconBackgroundColor '#eeeeee' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#eeeeee' --splashBackgroundColorDark '#111111' --assetPath ./public/capacitor-assets",
     "config:apps": "npx trapeze run trapeze-config.yaml --android-project android --ios-project ios/App -y",
-    "prettier": "prettier -w ."
+    "prettier": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "eslintConfig": {
     "extends": [
@@ -97,7 +99,9 @@
     "@capacitor/ios": "^6.0.0",
     "@craco/craco": "^7.1.0",
     "@trapezedev/configure": "^7.0.10",
+    "@types/node": "^20.19.7",
     "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-react": "^4.6.0",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "copy-webpack-plugin": "^11.0.0",
@@ -108,6 +112,7 @@
     "prettier": "^3.2.5",
     "sass": "^1.71.1",
     "stream-browserify": "^3.0.0",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "vite": "^7.0.4"
   }
 }
