@@ -11,30 +11,48 @@ import { logger } from 'src/utilities';
 export type Backup = { [dbName: string]: { [storeName: string]: any[] } };
 
 export const encrypt = (raw: Uint8Array, data: any) => {
-  const ecdh = crypto.createECDH('secp256k1');
-  ecdh.setPrivateKey(Buffer.from(raw));
-  const publicKey = ecdh.getPublicKey();
-  const sharedSecret = ecdh.computeSecret(publicKey);
-  const aesKey = sharedSecret.slice(0, 32);
-  const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, config.SECRET_KEY.slice(0, 16));
-  let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  return encrypted;
+  try {
+    const iv = crypto.randomBytes(16);
+    const ecdh = crypto.createECDH('secp256k1');
+    ecdh.setPrivateKey(Buffer.from(raw));
+    const publicKey = ecdh.getPublicKey();
+    const sharedSecret = ecdh.computeSecret(publicKey);
+    const aesKey = sharedSecret.slice(0, 32);
+
+    const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, iv);
+    let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+
+    return `${iv.toString('hex')}:${encrypted}`;
+  } catch (error) {
+    console.error('Encryption failed:', error);
+    throw new Error('Unable to encrypt data');
+  }
 };
 
-export const decrypt = (raw: Uint8Array, encryptedDataHex: string) => {
-  // Convert the hex-encoded string back to a Buffer
-  const encryptedData = Buffer.from(encryptedDataHex, 'hex');
-  const ecdh = crypto.createECDH('secp256k1');
-  ecdh.setPrivateKey(Buffer.from(raw));
-  const publicKey = ecdh.getPublicKey();
-  const sharedSecret = ecdh.computeSecret(publicKey);
-  const aesKey = sharedSecret.slice(0, 32);
-  const decipher = crypto.createDecipheriv('aes-256-cbc', aesKey, config.SECRET_KEY.slice(0, 16));
+export const decrypt = (raw: Uint8Array, encryptedDataInput: string) => {
+  try {
+    const [ivHex, encryptedDataHex] = encryptedDataInput.split(':');
+    if (!/^[0-9a-fA-F]+$/.test(ivHex) || !/^[0-9a-fA-F]+$/.test(encryptedDataHex)) {
+      throw new Error('Invalid hex string for IV or encrypted data');
+    }
+    const iv = Buffer.from(ivHex, 'hex');
+    const encryptedData = Buffer.from(encryptedDataHex, 'hex');
 
-  let decrypted = decipher.update(encryptedData); // Use Buffer directly
-  decrypted += decipher.final('utf8');
-  return decrypted;
+    const ecdh = crypto.createECDH('secp256k1');
+    ecdh.setPrivateKey(Buffer.from(raw));
+    const publicKey = ecdh.getPublicKey();
+    const sharedSecret = ecdh.computeSecret(publicKey);
+    const aesKey = sharedSecret.slice(0, 32);
+
+    const decipher = crypto.createDecipheriv('aes-256-cbc', aesKey, iv);
+    let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted; // Parse JSON to return original object
+  } catch (error) {
+    console.error('Decryption failed:', error);
+    throw new Error('Unable to decrypt data');
+  }
 };
 
 export const backupIndexedDBs = (dbNames: string[]): Promise<Backup> => {
