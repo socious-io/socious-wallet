@@ -8,7 +8,7 @@ const config: CapacitorConfig = {
     hostname: 'wallet.socious.io',
     androidScheme: 'https',
     iosScheme: 'https',
-    url: 'https://wallet.socious.io',
+    // url: 'https://wallet.socious.io',
   },
   plugins: {
     CapacitorCookies: {

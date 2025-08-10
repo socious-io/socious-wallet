@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react';
 import { StateType, ActionType, AppProviderProps, VerifyStatus } from './types';
 import { usePluto } from 'src/services/pluto';
 import { startAgent } from 'src/services/agent';
@@ -24,6 +24,7 @@ const initialState: StateType = {
   verifiedVC: {},
   encrypted: '',
   listProcessing: false,
+  selectedCredential: null,
 };
 
 const AppContext = createContext<{
@@ -34,11 +35,19 @@ const AppContext = createContext<{
   dispatch: () => null,
 });
 
-// Reducer function
+// Reducer function (unchanged)
 function appReducer(state: StateType, action: ActionType): StateType {
+  console.log('Context', state, action);
   switch (action.type) {
     case 'SET_CREDENTIALS':
-      return { ...state, credentials: [...state.credentials, ...action.payload].reverse() };
+      console.log('set creds', action.payload);
+      return {
+        ...state,
+        credentials: [
+          ...action.payload.filter(cred => !state.credentials.some(c => c.id === cred.id)),
+          ...state.credentials,
+        ].reverse(),
+      };
     case 'SET_VERIFICATION':
       return { ...state, verification: action.payload };
     case 'SET_SUBMIT':
@@ -76,6 +85,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       localStorage.setItem('firstname', action.payload.firstname);
       localStorage.setItem('lastname', action.payload.lastname);
       return { ...state, firstname: action.payload.firstname, lastname: action.payload.lastname };
+    case 'SET_SELECTED_CREDENTIAL':
+      return { ...state, selectedCredential: action.payload };
     default:
       return state;
   }
@@ -85,6 +96,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   console.log('start app store context');
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
+  const stateRef = useRef<StateType>(state); // Create a ref to store the latest state
+
+  // Update the ref whenever the state changes
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   useEffect(() => {
     if (!config.PLATFORM) {
@@ -101,7 +118,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (!pluto) return;
-    // Indicate loading start if necessary
     dispatch({ type: 'LOADING_START' });
     dispatch({ type: 'SET_PLUTO', payload: pluto });
 
@@ -118,13 +134,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           payload: dids?.length > 0 ? master || dids[0].did : null,
         });
         dispatch({ type: 'LOADING_END' });
-        if (dids.length > 0) startAgent(pluto, dispatch);
+        if (dids.length > 0) startAgent(pluto, dispatch, stateRef); // Pass stateRef instead of state
       })
       .catch(error => {
         console.error('Failed to load data from Pluto', error);
         dispatch({ type: 'LOADING_END' });
       });
-  }, [pluto, state.submitted]);
+  }, [pluto, state.submitted, state.selectedCredential]);
 
   return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
 };

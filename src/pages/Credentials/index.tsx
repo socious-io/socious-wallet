@@ -1,11 +1,10 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Button } from 'react-bootstrap'; // Added Button import
 import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
 import CredentialCard from 'src/containers/CredentialCard';
 import CredentialAlert from 'src/containers/CredentialAlert';
-//import sampleAvatar from 'src/assets/images/sample-avatar.png';
 import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
 import sociousLogo from 'src/assets/images/socious-logo.png';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
@@ -21,7 +20,9 @@ function Credentials() {
   const { state } = useAppContext();
   const { credentials, verification, submitted, listProcessing } = state || {};
   const { id } = useParams();
+
   const isKyc = type => type === 'verification';
+
   const generateNonKycTypeText = claim => {
     const subtitle = {
       ['experience']: translate('credential-experience'),
@@ -30,6 +31,7 @@ function Credentials() {
     const subtitleKey = claim?.type || ('job_category' in claim ? 'experience' : 'education');
     return subtitle[subtitleKey];
   };
+
   const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean, isDetail?: boolean) => {
     const cardsData = (() => {
       switch (claim?.type) {
@@ -49,16 +51,15 @@ function Credentials() {
                 avatar: sociousLogo,
               }))
             : [];
-
         default:
           return {
             title: claim['company_name'] || claim['institute_name'],
             subtitle: claim.type || 'UNKNOWN',
             date: claim['issued_date'] || claim['start_date'],
-            // avatar: sampleAvatar,
           };
       }
     })();
+
     if (claim?.type === 'impact_point_badges') {
       return cardsData.map((prop, index) => (
         <CredentialCard
@@ -225,10 +226,7 @@ function Credentials() {
   return (
     <div className={styles['home']}>
       <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
-        <div className={styles['card__header']}>
-          {translate('credential-card-header')}
-          {/* <Icon name="bell" /> */}
-        </div>
+        <div className={styles['card__header']}>{translate('credential-card-header')}</div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}
           <NavigationBar />

@@ -36,7 +36,6 @@ const useConfirm = () => {
         setErrorMessage('The Verify Recovery Phrase does not match.');
       }
     } catch (e) {
-      console.log(e, '@@@@###');
       setErrorMessage(e.message);
     }
   };

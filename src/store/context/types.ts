@@ -34,6 +34,7 @@ export interface StateType {
   verifiedVC: any;
   encrypted: string;
   listProcessing: boolean;
+  selectedCredential: SDK.Domain.Credential | null;
 }
 
 export type ActionType =
@@ -54,5 +55,7 @@ export type ActionType =
   | { type: 'SET_LIST_PROCESSING'; payload: boolean }
   | { type: 'LOADING_START' }
   | { type: 'LOADING_END' }
-  | { type: 'SET_NAME'; payload: { firstname: string; lastname: string } };
+  | { type: 'SET_NAME'; payload: { firstname: string; lastname: string } }
+  | { type: 'SET_SELECTED_CREDENTIAL'; payload: SDK.Domain.Credential | null };
+
 export type AppProviderProps = { children: React.ReactNode };
