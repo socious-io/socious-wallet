@@ -197,8 +197,8 @@ export const Backup: React.FC = () => {
   useEffect(() => {
     if (did && pluto) {
       backup(pluto, did)
-        .then(r => console.log(r))
-        .catch(err => console.log(err));
+        .then(r => console.warn(r))
+        .catch(err => console.error(err));
     }
   }, [credentials, pluto, did]);
 

@@ -17,12 +17,7 @@ function WalletEntry() {
           {errorMessage && <span className={styles['header--error']}>{errorMessage}</span>}
         </div>
 
-        <NumPad
-          key="re-type"
-          onFilled={checkPassword}
-          onRemove={() => setErrorMessage('')}
-          onBack={() => console.log(true)}
-        />
+        <NumPad key="re-type" onFilled={checkPassword} onRemove={() => setErrorMessage('')} />
       </div>
     </div>
   );

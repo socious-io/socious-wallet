@@ -37,10 +37,8 @@ const AppContext = createContext<{
 
 // Reducer function (unchanged)
 function appReducer(state: StateType, action: ActionType): StateType {
-  console.log('Context', state, action);
   switch (action.type) {
     case 'SET_CREDENTIALS':
-      console.log('set creds', action.payload);
       return {
         ...state,
         credentials: [
@@ -93,7 +91,6 @@ function appReducer(state: StateType, action: ActionType): StateType {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  console.log('start app store context');
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
   const stateRef = useRef<StateType>(state); // Create a ref to store the latest state

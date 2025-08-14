@@ -9,7 +9,6 @@ export const useWalletEntry = () => {
 
   const checkPassword = (enteredPass: string) => {
     const passcode = localStorage.getItem('passcode');
-    console.log('Entered Pass:', enteredPass);
     if (enteredPass === passcode) {
       sessionStorage.setItem('isAuthenticated', 'true');
       navigate('/credentials', { replace: true });

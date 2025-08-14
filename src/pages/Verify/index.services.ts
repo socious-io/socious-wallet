@@ -97,7 +97,7 @@ const useVerify = () => {
               break;
             }
             default:
-              console.log('Unknown status:');
+              console.error('Unknown status:');
           }
         } catch (err) {
           const sessionID = localStorage.getItem('session');

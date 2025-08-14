@@ -67,7 +67,7 @@ const handleMessages =
             await agent.sendMessage(presentation.makeMessage());
             dispatch({ type: 'VERIFIED_VC', payload: { type: state.selectedCredential.claims[0].type } });
           } catch (err) {
-            console.log(err);
+            console.error(err);
             dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
           }
         }
@@ -123,7 +123,6 @@ export async function startAgent(
   stateRef: React.MutableRefObject<StateType>,
 ) {
   const handleStart = async () => {
-    console.log(`starting agent with mediator : ${config.MEDIATOR_DID}`);
     const a = SDK.Agent.initialize({ mediatorDID: SDK.Domain.DID.fromString(config.MEDIATOR_DID), pluto });
     a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch, stateRef));
     await a.start();

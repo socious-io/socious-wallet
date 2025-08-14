@@ -75,9 +75,8 @@ export const useBackup = () => {
       //FIXME: save into local storage for now
       localStorage.setItem('mnemonics', newMnemonics.toString());
       setMnemonics(newMnemonics);
-      console.log('New DID created');
     } catch (e) {
-      console.log('Error in creating new DID', e);
+      console.error('Error in creating new DID', e);
     }
   };
 

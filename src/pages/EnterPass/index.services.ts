@@ -61,7 +61,6 @@ export const useEnterPass = () => {
     try {
       const encoder = new TextEncoder();
       const encodedPassword = encoder.encode(password);
-      console.log('ASDF', config.PLATFORM);
       const decoded = Capacitor.getPlatform() === 'web' ? encrypted : atob(encrypted);
       const decryptedData = decrypt(encodedPassword, decoded);
       const mnemonics = decryptedData.split(',');
@@ -74,7 +73,6 @@ export const useEnterPass = () => {
         await pluto.restore(JSON.parse(backup));
         await pluto.start();
 
-        console.log('restored successfully');
         localStorage.setItem('mnemonics', newMnemonics.join(','));
         window.location.replace('/setup-pass#restored');
       }

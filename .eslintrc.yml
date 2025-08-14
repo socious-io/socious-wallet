@@ -14,8 +14,9 @@ plugins:
   - '@typescript-eslint'
   - react
 rules:
-  'eol-last':
+  eol-last:
     - error
     - always
-  'no-empty': ['error', { 'allowEmptyCatch': true }]
-  'react/react-in-jsx-scope': 'off'
+  no-empty: ['error', { allowEmptyCatch: true }]
+  react/react-in-jsx-scope: 'off'
+  no-console: ['error', { allow: ['warn', 'error'] }]
