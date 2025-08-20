@@ -46,14 +46,15 @@ const handleMessages =
           challenge.type = 'verification';
         }
         if (challenge.type.toLowerCase() === 'kyc') challenge.type = 'verification';
+        const lastCredential = credentials.filter(c => c.claims[0].type === 'verification')[0];
         addAction('messages', {
           message: newMessages,
           type: 'request-presentations',
-          credential: state.selectedCredential,
+          credential: lastCredential,
         });
         localStorage.removeItem('listProcessing');
         dispatch({ type: 'SET_LIST_PROCESSING', payload: false });
-        if (state.selectedCredential === undefined) {
+        if (lastCredential === undefined) {
           dispatch({
             type: 'SET_ERROR',
             payload: { err: new Error('could not find last credential'), section: 'find credential' },
@@ -62,10 +63,10 @@ const handleMessages =
           try {
             const presentation = await agent.createPresentationForRequestProof(
               requestPresentationMessage,
-              state.selectedCredential,
+              lastCredential,
             );
             await agent.sendMessage(presentation.makeMessage());
-            dispatch({ type: 'VERIFIED_VC', payload: { type: state.selectedCredential.claims[0].type } });
+            dispatch({ type: 'VERIFIED_VC', payload: { type: lastCredential.claims[0].type } });
           } catch (err) {
             console.error(err);
             dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
