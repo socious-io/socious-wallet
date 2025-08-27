@@ -13,6 +13,22 @@ type Challenge = {
   [key: string]: any;
 };
 
+const waitFor = async (condition: () => boolean, interval = 100, timeout = 100000): Promise<void> => {
+  const start = Date.now();
+  return new Promise((resolve, reject) => {
+    const check = () => {
+      if (condition()) {
+        resolve();
+      } else if (Date.now() - start > timeout) {
+        reject(new Error('Timeout waiting for condition'));
+      } else {
+        setTimeout(check, interval);
+      }
+    };
+    check();
+  });
+};
+
 const handleMessages =
   (
     pluto: SDK.Domain.Pluto,
@@ -21,7 +37,7 @@ const handleMessages =
     stateRef: React.MutableRefObject<StateType>,
   ) =>
   async (newMessages: SDK.Domain.Message[]) => {
-    const state = stateRef.current; // Access the latest state from the ref
+    const state = stateRef.current;
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
     dispatch({ type: 'SET_LISTENER_STATE', payload: true });
     const credentialOffers = newMessages.filter(
@@ -35,7 +51,6 @@ const handleMessages =
     );
     if (requestPresentations.length) {
       for (const requestPresentation of requestPresentations) {
-        const credentials = await pluto.getAllCredentials();
         const requestPresentationMessage = RequestPresentation.fromMessage(requestPresentation);
         const data = requestPresentationMessage.attachments[0].data as any;
         let challenge: Challenge = { type: 'verification' };
@@ -46,31 +61,51 @@ const handleMessages =
           challenge.type = 'verification';
         }
         if (challenge.type.toLowerCase() === 'kyc') challenge.type = 'verification';
-        const lastCredential = credentials.filter(c => c.claims[0].type === 'verification')[0];
-        addAction('messages', {
-          message: newMessages,
-          type: 'request-presentations',
-          credential: lastCredential,
-        });
-        localStorage.removeItem('listProcessing');
-        dispatch({ type: 'SET_LIST_PROCESSING', payload: false });
-        if (lastCredential === undefined) {
+        if (challenge.type !== 'verification') dispatch({ type: 'SET_OPEN_CREDENTIAL_MODAL', payload: true });
+
+        try {
+          let selectedCredential = null;
+          if (challenge.type !== 'verification') {
+            await waitFor(() => stateRef.current.selectedCredential !== null);
+            selectedCredential = stateRef.current.selectedCredential;
+          } else {
+            selectedCredential = state.credentials.filter(c => c.claims[0]?.type === 'verification')[0];
+          }
+          addAction('messages', {
+            message: newMessages,
+            type: 'request-presentations',
+            credential: selectedCredential,
+          });
+          localStorage.removeItem('listProcessing');
+          dispatch({ type: 'SET_LIST_PROCESSING', payload: false });
+
+          if (selectedCredential === null) {
+            dispatch({
+              type: 'SET_ERROR',
+              payload: { err: new Error('No credential selected'), section: 'select credential' },
+            });
+          } else {
+            try {
+              const presentation = await agent.createPresentationForRequestProof(
+                requestPresentationMessage,
+                selectedCredential,
+              );
+              await agent.sendMessage(presentation.makeMessage());
+              dispatch({ type: 'VERIFIED_VC', payload: { type: selectedCredential.claims[0].type } });
+            } catch (err) {
+              console.error(err);
+              dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
+            }
+          }
+        } catch (err) {
           dispatch({
             type: 'SET_ERROR',
-            payload: { err: new Error('could not find last credential'), section: 'find credential' },
+            payload: { err, section: 'Waiting for credential selection' },
           });
-        } else {
-          try {
-            const presentation = await agent.createPresentationForRequestProof(
-              requestPresentationMessage,
-              lastCredential,
-            );
-            await agent.sendMessage(presentation.makeMessage());
-            dispatch({ type: 'VERIFIED_VC', payload: { type: lastCredential.claims[0].type } });
-          } catch (err) {
-            console.error(err);
-            dispatch({ type: 'SET_WARN', payload: { err, section: 'Send presentation Message' } });
-          }
+        } finally {
+          // Reset the modal and selected credential
+          dispatch({ type: 'SET_OPEN_CREDENTIAL_MODAL', payload: false });
+          dispatch({ type: 'SET_SELECTED_CREDENTIAL', payload: null });
         }
       }
     }

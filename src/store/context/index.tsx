@@ -4,6 +4,7 @@ import { usePluto } from 'src/services/pluto';
 import { startAgent } from 'src/services/agent';
 import { Device, DeviceInfo } from '@capacitor/device';
 import { config } from 'src/config';
+import SelectCredentialModal from 'src/components/SelectCredentialModal';
 
 const initialState: StateType = {
   did: null,
@@ -25,6 +26,7 @@ const initialState: StateType = {
   encrypted: '',
   listProcessing: false,
   selectedCredential: null,
+  openIdentityModal: false,
 };
 
 const AppContext = createContext<{
@@ -35,7 +37,6 @@ const AppContext = createContext<{
   dispatch: () => null,
 });
 
-// Reducer function (unchanged)
 function appReducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
     case 'SET_CREDENTIALS':
@@ -85,6 +86,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return { ...state, firstname: action.payload.firstname, lastname: action.payload.lastname };
     case 'SET_SELECTED_CREDENTIAL':
       return { ...state, selectedCredential: action.payload };
+    case 'SET_OPEN_CREDENTIAL_MODAL':
+      return { ...state, openIdentityModal: action.payload };
     default:
       return state;
   }
@@ -93,9 +96,8 @@ function appReducer(state: StateType, action: ActionType): StateType {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
-  const stateRef = useRef<StateType>(state); // Create a ref to store the latest state
+  const stateRef = useRef<StateType>(state);
 
-  // Update the ref whenever the state changes
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
@@ -131,7 +133,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           payload: dids?.length > 0 ? master || dids[0].did : null,
         });
         dispatch({ type: 'LOADING_END' });
-        if (dids.length > 0) startAgent(pluto, dispatch, stateRef); // Pass stateRef instead of state
+        if (dids.length > 0) startAgent(pluto, dispatch, stateRef);
       })
       .catch(error => {
         console.error('Failed to load data from Pluto', error);
@@ -139,7 +141,20 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       });
   }, [pluto, state.submitted, state.selectedCredential]);
 
-  return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+      <SelectCredentialModal
+        open={state.openIdentityModal}
+        onSuccess={() => {
+          dispatch({ type: 'SET_OPEN_CREDENTIAL_MODAL', payload: false });
+        }}
+        onClose={() => {
+          dispatch({ type: 'SET_OPEN_CREDENTIAL_MODAL', payload: false });
+        }}
+      />
+    </AppContext.Provider>
+  );
 };
 
 export const useAppContext = () => useContext(AppContext);

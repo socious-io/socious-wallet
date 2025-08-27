@@ -35,6 +35,7 @@ export interface StateType {
   encrypted: string;
   listProcessing: boolean;
   selectedCredential: SDK.Domain.Credential | null;
+  openIdentityModal: boolean;
 }
 
 export type ActionType =
@@ -56,6 +57,6 @@ export type ActionType =
   | { type: 'LOADING_START' }
   | { type: 'LOADING_END' }
   | { type: 'SET_NAME'; payload: { firstname: string; lastname: string } }
-  | { type: 'SET_SELECTED_CREDENTIAL'; payload: SDK.Domain.Credential | null };
-
+  | { type: 'SET_SELECTED_CREDENTIAL'; payload: SDK.Domain.Credential | null }
+  | { type: 'SET_OPEN_CREDENTIAL_MODAL'; payload: boolean };
 export type AppProviderProps = { children: React.ReactNode };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { SelectIdentityModalProps } from './index.types';
 import cn from 'classnames';
@@ -6,6 +6,7 @@ import { useAppContext } from 'src/store/context';
 import { useTranslation } from 'react-i18next';
 import { FeaturedIcon } from '../FeaturedIcon';
 import styles from './index.module.scss';
+import { beautifyText, formatDate } from 'src/utilities';
 
 const SelectCredentialModal: React.FC<SelectIdentityModalProps> = ({ open, onClose, onSuccess }) => {
   const { t: translate } = useTranslation();
@@ -23,9 +24,7 @@ const SelectCredentialModal: React.FC<SelectIdentityModalProps> = ({ open, onClo
         key={credential.id}
         type="radio"
         id={`credential-${credential.id}`}
-        label={
-          credential.claims[0]?.document_type || translate('selectCredentialModal.defaultCredentialLabel', 'Credential')
-        }
+        label={credential.claims[0]?.document_type || beautifyText(credential.claims[0]?.type)}
         name="credentialSelection"
         checked={selectedCredentialId === credential.id}
         onChange={() => handleCredentialChange(credential.id)}
