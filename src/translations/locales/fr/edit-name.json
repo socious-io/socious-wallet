@@ -1,0 +1,12 @@
+{
+  "edit-name-back-link": "Retour",
+  "edit-name-title": "Modifier votre nom",
+  "edit-name-subtitle": "Mettez à jour votre prénom et nom",
+  "edit-name-form": {
+    "firstname-placeholder": "Prénom",
+    "lastname-placeholder": "Nom",
+    "firstname-required": "Le prénom est requis",
+    "lastname-required": "Le nom est requis",
+    "button": "Enregistrer"
+  }
+}

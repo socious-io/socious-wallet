@@ -37,6 +37,12 @@ const useSettings = () => {
 
   const settingsItems = [
     {
+      title: translate('settings-items.edit-name'),
+      value: state?.firstname && state?.lastname ? `${state.firstname} ${state.lastname}` : '',
+      action: () => navigate('/edit-name'),
+      clickable: true,
+    },
+    {
       title: translate('settings-items.backup'),
       action: () => navigate('/backup'),
       clickable: true,

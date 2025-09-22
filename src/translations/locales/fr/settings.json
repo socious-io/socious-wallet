@@ -1,6 +1,7 @@
 {
   "settings-card-header": "Paramètres",
   "settings-items": {
+    "edit-name": "Modifier le nom",
     "backup": "Sauvegarder le portefeuille",
     "remove": "Supprimer le portefeuille",
     "language": "Langue",

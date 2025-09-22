@@ -1,6 +1,7 @@
 {
   "settings-card-header": "الإعدادات",
   "settings-items": {
+    "edit-name": "تعديل الاسم",
     "backup": "نسخ المحفظة احتياطيًا",
     "remove": "إزالة المحفظة",
     "language": "اللغة",

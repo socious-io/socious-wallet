@@ -15,6 +15,7 @@ import backup from './backup.json';
 import general from './general.json';
 import entry from './wallet-entry.json';
 import enterName from './enter-name.json';
+import editName from './edit-name.json';
 export function generateTranslationFile() {
   return Object.assign(
     {},
@@ -35,5 +36,6 @@ export function generateTranslationFile() {
     general,
     entry,
     enterName,
+    editName,
   );
 }

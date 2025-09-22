@@ -1,6 +1,7 @@
 {
   "settings-card-header": "设置",
   "settings-items": {
+    "edit-name": "编辑姓名",
     "backup": "备份钱包",
     "remove": "删除钱包",
     "language": "语言",
