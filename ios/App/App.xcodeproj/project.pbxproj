@@ -202,6 +202,7 @@
 				"${BUILT_PRODUCTS_DIR}/CapacitorFilesystem/CapacitorFilesystem.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorShare/CapacitorShare.framework",
 				"${BUILT_PRODUCTS_DIR}/CapawesomeCapacitorFilePicker/CapawesomeCapacitorFilePicker.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/IONFilesystemLib/IONFilesystemLib.framework/IONFilesystemLib",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -213,6 +214,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapacitorFilesystem.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapacitorShare.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapawesomeCapacitorFilePicker.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IONFilesystemLib.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -371,7 +373,7 @@
 				DEVELOPMENT_TEAM = 596H9K48FY;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Socious Wallet";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.6.57;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
@@ -398,7 +400,7 @@
 				DEVELOPMENT_TEAM = 596H9K48FY;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Socious Wallet";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.6.57;
 				PRODUCT_BUNDLE_IDENTIFIER = "socious.mobile-wallet.app";

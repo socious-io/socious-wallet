@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "socious.wallet.app"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk 35
     defaultConfig {
         applicationId "socious.wallet.app"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 24 
+        targetSdkVersion 34
         versionCode 12
         versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
