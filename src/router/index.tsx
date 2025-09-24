@@ -19,9 +19,13 @@ import Backup from 'src/pages/Backup';
 import WalletEntry from 'src/pages/WalletEntry';
 import { App as CapApp } from '@capacitor/app';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { isBiometricAvailable } from 'src/pages/BiometricUnlock/index.services';
 import EnterName from 'src/pages/EnterName';
 import EditName from 'src/pages/EditName';
+import BiometricUnlock from 'src/pages/BiometricUnlock';
+import BiometricSetup from 'src/pages/BiometricSetup';
+import UnlockPage from 'src/pages/UnlockPage';
 
 export const blueprint: RouteObject[] = [
   {
@@ -46,8 +50,11 @@ export const blueprint: RouteObject[] = [
       { path: '/settings', element: <Settings /> },
       { path: '/scan', element: <Scan /> },
       { path: '/entry', element: <WalletEntry /> },
+      { path: '/unlock', element: <UnlockPage /> },
       { path: '/enter-name', element: <EnterName /> },
       { path: '/edit-name', element: <EditName /> },
+      { path: '/biometric-unlock', element: <BiometricUnlock /> },
+      { path: '/biometric-setup', element: <BiometricSetup /> },
     ],
     errorElement: <ErrorBoundary />,
   },
@@ -61,6 +68,8 @@ function DefaultRoute(): JSX.Element {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [biometricCheck, setBiometricCheck] = useState<{ available: boolean; enabled: boolean } | null>(null);
+
   useEffect(() => {
     CapApp.addListener('backButton', ({ canGoBack }) => {
       if (!canGoBack) {
@@ -70,6 +79,22 @@ function DefaultRoute(): JSX.Element {
       }
     });
   }, [location.pathname, navigate]);
+
+  useEffect(() => {
+    const checkBiometricStatus = async () => {
+      try {
+        const available = await isBiometricAvailable();
+        const enabled = localStorage.getItem('biometricUnlock') === 'enabled';
+        setBiometricCheck({ available, enabled });
+      } catch (error) {
+        setBiometricCheck({ available: false, enabled: false });
+      }
+    };
+
+    if (hasPasscode && !isAuthenticated) {
+      checkBiometricStatus();
+    }
+  }, [hasPasscode, isAuthenticated]);
 
   return (
     <>
@@ -81,7 +106,13 @@ function DefaultRoute(): JSX.Element {
           {!shouldRenderCredentials && <Navigate to="/intro" replace />}
           {shouldRenderCredentials &&
             (hasPasscode && !isAuthenticated ? (
-              <Navigate to="/entry" replace />
+              biometricCheck === null ? (
+                <Loading show={true} animation="grow" />
+              ) : biometricCheck.available && biometricCheck.enabled ? (
+                <Navigate to="/unlock" replace />
+              ) : (
+                <Navigate to="/entry" replace />
+              )
             ) : hasPasscode && isAuthenticated ? (
               <Credentials />
             ) : (

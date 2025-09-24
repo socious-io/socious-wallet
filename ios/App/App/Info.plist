@@ -44,7 +44,8 @@
     <string>LaunchScreen</string>
     <key>UIMainStoryboardFile</key>
     <string>Main</string>
-
+    <key>NSFaceIDUsageDescription</key>
+    <string>Authenticate to unlock your app securely.</string>
     <!-- Device capabilities -->
     <key>UIRequiredDeviceCapabilities</key>
     <array>

@@ -33,7 +33,7 @@ export const useBackup = () => {
 
   const onSubmit = async (formData: PasswordForm) => {
     dispatch({ type: 'SET_NAME', payload: { firstname: formData.firstname, lastname: formData.lastname } });
-    navigate(`/created${hash}`);
+    navigate(`/biometric-setup${hash}`);
   };
   const disabled = !isValid;
   return {

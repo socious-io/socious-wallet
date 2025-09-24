@@ -6,6 +6,8 @@
     "node": "20.x"
   },
   "dependencies": {
+    "@aparajita/capacitor-biometric-auth": "^9.0.0",
+    "@aparajita/capacitor-secure-storage": "^7.1.3",
     "@capacitor/browser": "^7.0.2",
     "@capacitor/device": "^7.0.2",
     "@capacitor/filesystem": "^7.1.4",

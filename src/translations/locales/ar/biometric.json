@@ -1,0 +1,43 @@
+{
+  "biometric-setup": {
+    "title": "أمّن محفظتك",
+    "checking-availability": "فحص توفر البيومترية...",
+    "not-available-title": "إعداد البيومترية",
+    "not-available-message": "المصادقة البيومترية غير متوفرة على هذا الجهاز.",
+    "not-available-subtitle": "يمكنك الاستمرار في استخدام رمز المرور لإلغاء قفل محفظتك.",
+    "continue-button": "متابعة",
+    "features": {
+      "quick-access": "وصول سريع ومريح",
+      "enhanced-security": "أمان معزز بالبيومترية",
+      "fingerprint-faceid": "استخدم بصمة الإصبع أو Face ID"
+    },
+    "instruction": "فعّل إلغاء القفل البيومتري للوصول إلى محفظتك بسرعة وأمان باستخدام بصمة إصبعك أو Face ID.",
+    "enable-button": "تفعيل إلغاء القفل البيومتري",
+    "enabling": "جارٍ التفعيل...",
+    "skip-button": "تخطي الآن",
+    "error-enable": "فشل تفعيل إلغاء القفل البيومتري"
+  },
+  "biometric-unlock": {
+    "title": "المصادقة البيومترية",
+    "not-available": "المصادقة البيومترية غير متوفرة على هذا الجهاز",
+    "status-label": "الحالة:",
+    "description-enabled": "يمكنك استخدام بصمة إصبعك أو Face ID لإلغاء قفل محفظتك",
+    "description-disabled": "فعّل إلغاء القفل البيومتري لتأمين محفظتك ببصمة الإصبع أو Face ID",
+    "enable-button": "تفعيل إلغاء القفل البيومتري",
+    "disable-button": "إلغاء تفعيل القفل البيومتري",
+    "enabling": "جارٍ التفعيل...",
+    "disabling": "جارٍ الإلغاء...",
+    "error-enable": "فشل تفعيل إلغاء القفل البيومتري",
+    "error-disable": "فشل إلغاء تفعيل القفل البيومتري"
+  },
+  "biometric-unlock-page": {
+    "title": "إلغاء قفل محفظتك",
+    "instruction": "استخدم بصمة إصبعك أو Face ID لإلغاء قفل محفظتك بسرعة",
+    "unlock-button": "إلغاء القفل بالبيومترية",
+    "authenticating": "جارٍ المصادقة...",
+    "use-passcode": "استخدم رمز المرور بدلاً من ذلك",
+    "use-biometric": "استخدم إلغاء القفل البيومتري",
+    "error-failed": "فشل إلغاء القفل البيومتري. يرجى المحاولة مرة أخرى أو استخدام رمز المرور.",
+    "error-unavailable": "المصادقة البيومترية غير متوفرة على هذا الجهاز"
+  }
+}

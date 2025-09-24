@@ -1,0 +1,43 @@
+{
+  "biometric-setup": {
+    "title": "Asegura Tu Billetera",
+    "checking-availability": "Verificando disponibilidad biométrica...",
+    "not-available-title": "Configuración Biométrica",
+    "not-available-message": "La autenticación biométrica no está disponible en este dispositivo.",
+    "not-available-subtitle": "Puedes continuar usando tu código de acceso para desbloquear tu billetera.",
+    "continue-button": "Continuar",
+    "features": {
+      "quick-access": "Acceso rápido y conveniente",
+      "enhanced-security": "Seguridad mejorada con biometría",
+      "fingerprint-faceid": "Usa huella dactilar o Face ID"
+    },
+    "instruction": "Habilita el desbloqueo biométrico para acceder a tu billetera de forma rápida y segura con tu huella dactilar o Face ID.",
+    "enable-button": "Habilitar Desbloqueo Biométrico",
+    "enabling": "Habilitando...",
+    "skip-button": "Omitir por Ahora",
+    "error-enable": "Error al habilitar el desbloqueo biométrico"
+  },
+  "biometric-unlock": {
+    "title": "Autenticación Biométrica",
+    "not-available": "La autenticación biométrica no está disponible en este dispositivo",
+    "status-label": "Estado:",
+    "description-enabled": "Puedes usar tu huella dactilar o Face ID para desbloquear tu billetera",
+    "description-disabled": "Habilita el desbloqueo biométrico para asegurar tu billetera con huella dactilar o Face ID",
+    "enable-button": "Habilitar Desbloqueo Biométrico",
+    "disable-button": "Deshabilitar Desbloqueo Biométrico",
+    "enabling": "Habilitando...",
+    "disabling": "Deshabilitando...",
+    "error-enable": "Error al habilitar el desbloqueo biométrico",
+    "error-disable": "Error al deshabilitar el desbloqueo biométrico"
+  },
+  "biometric-unlock-page": {
+    "title": "Desbloquear Tu Billetera",
+    "instruction": "Usa tu huella dactilar o Face ID para desbloquear rápidamente tu billetera",
+    "unlock-button": "Desbloquear con Biometría",
+    "authenticating": "Autenticando...",
+    "use-passcode": "Usar Código de Acceso",
+    "use-biometric": "Usar Desbloqueo Biométrico",
+    "error-failed": "El desbloqueo biométrico falló. Inténtalo de nuevo o usa tu código de acceso.",
+    "error-unavailable": "La autenticación biométrica no está disponible en este dispositivo"
+  }
+}

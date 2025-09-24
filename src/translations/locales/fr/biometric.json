@@ -1,0 +1,43 @@
+{
+  "biometric-setup": {
+    "title": "Sécurisez Votre Portefeuille",
+    "checking-availability": "Vérification de la disponibilité biométrique...",
+    "not-available-title": "Configuration Biométrique",
+    "not-available-message": "L'authentification biométrique n'est pas disponible sur cet appareil.",
+    "not-available-subtitle": "Vous pouvez continuer à utiliser votre code d'accès pour déverrouiller votre portefeuille.",
+    "continue-button": "Continuer",
+    "features": {
+      "quick-access": "Accès rapide et pratique",
+      "enhanced-security": "Sécurité renforcée avec la biométrie",
+      "fingerprint-faceid": "Utilisez l'empreinte digitale ou Face ID"
+    },
+    "instruction": "Activez le déverrouillage biométrique pour accéder à votre portefeuille rapidement et en toute sécurité avec votre empreinte digitale ou Face ID.",
+    "enable-button": "Activer le Déverrouillage Biométrique",
+    "enabling": "Activation...",
+    "skip-button": "Ignorer pour Maintenant",
+    "error-enable": "Échec de l'activation du déverrouillage biométrique"
+  },
+  "biometric-unlock": {
+    "title": "Authentification Biométrique",
+    "not-available": "L'authentification biométrique n'est pas disponible sur cet appareil",
+    "status-label": "Statut:",
+    "description-enabled": "Vous pouvez utiliser votre empreinte digitale ou Face ID pour déverrouiller votre portefeuille",
+    "description-disabled": "Activez le déverrouillage biométrique pour sécuriser votre portefeuille avec l'empreinte digitale ou Face ID",
+    "enable-button": "Activer le Déverrouillage Biométrique",
+    "disable-button": "Désactiver le Déverrouillage Biométrique",
+    "enabling": "Activation...",
+    "disabling": "Désactivation...",
+    "error-enable": "Échec de l'activation du déverrouillage biométrique",
+    "error-disable": "Échec de la désactivation du déverrouillage biométrique"
+  },
+  "biometric-unlock-page": {
+    "title": "Déverrouiller Votre Portefeuille",
+    "instruction": "Utilisez votre empreinte digitale ou Face ID pour déverrouiller rapidement votre portefeuille",
+    "unlock-button": "Déverrouiller avec la Biométrie",
+    "authenticating": "Authentification...",
+    "use-passcode": "Utiliser le Code d'Accès",
+    "use-biometric": "Utiliser le Déverrouillage Biométrique",
+    "error-failed": "Le déverrouillage biométrique a échoué. Veuillez réessayer ou utiliser votre code d'accès.",
+    "error-unavailable": "L'authentification biométrique n'est pas disponible sur cet appareil"
+  }
+}

@@ -3,6 +3,9 @@
   "settings-items": {
     "edit-name": "Edit name",
     "backup": "Backup wallet",
+    "biometric-unlock": "Biometric unlock",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
     "remove": "Remove wallet",
     "language": "Language",
     "automatic": "Automatic",

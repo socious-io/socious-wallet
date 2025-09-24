@@ -8,6 +8,7 @@ import { RootState } from 'src/store/redux';
 import { setLanguage, setSystemLanguage } from 'src/store/redux/language.reducers';
 import { languages } from 'src/constants/languages';
 import { useNavigate } from 'react-router-dom';
+import { isBiometricAvailable } from 'src/pages/BiometricUnlock/index.services';
 
 const useSettings = () => {
   const { t: translate } = useTranslation();
@@ -21,6 +22,7 @@ const useSettings = () => {
     open: false,
   });
   const [appVersion, setAppVersion] = useState(APP_VERSION);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
 
   useEffect(() => {
     const fetchAppVersion = async () => {
@@ -32,7 +34,17 @@ const useSettings = () => {
       }
     };
 
+    const checkBiometricAvailability = async () => {
+      try {
+        const available = await isBiometricAvailable();
+        setBiometricAvailable(available);
+      } catch (error) {
+        console.error('Failed to check biometric availability:', error);
+      }
+    };
+
     fetchAppVersion();
+    checkBiometricAvailability();
   }, []);
 
   const settingsItems = [
@@ -47,6 +59,19 @@ const useSettings = () => {
       action: () => navigate('/backup'),
       clickable: true,
     },
+    ...(biometricAvailable
+      ? [
+          {
+            title: translate('settings-items.biometric-unlock'),
+            value:
+              localStorage.getItem('biometricUnlock') === 'enabled'
+                ? translate('settings-items.enabled')
+                : translate('settings-items.disabled'),
+            action: () => navigate('/biometric-unlock'),
+            clickable: true,
+          },
+        ]
+      : []),
     {
       title: translate('settings-items.remove'),
       action: () => setOpenModal({ name: 'remove', open: true }),
