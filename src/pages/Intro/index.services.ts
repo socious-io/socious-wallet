@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 import { createDID } from 'src/services/dids';
 
 export const useIntro = () => {
@@ -13,11 +13,15 @@ export const useIntro = () => {
   const onCreateWallet = async () => {
     try {
       if (!pluto || mnemonics.length) return;
-      const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
-        uri: 'https://example.com/endpoint',
-        accept: ['didcomm/v2'],
-        routingKeys: ['did:example:somemediator#somekey'],
-      });
+      const exampleService = new SDK.Domain.DIDDocument.Service(
+        'didcomm',
+        ['DIDCommMessaging'],
+        new SDK.Domain.DIDDocument.ServiceEndpoint(
+          'https://example.com/endpoint',
+          ['didcomm/v2'],
+          ['did:example:somemediator#somekey'],
+        ),
+      );
       const { mnemonics: newMnemonics, privateKey: newPrivateKey, did: newDID } = await createDID([exampleService]);
       dispatch({ type: 'SET_MNEMONICS', payload: newMnemonics });
       //FIXME: save into local storage for now

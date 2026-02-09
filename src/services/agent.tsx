@@ -1,4 +1,4 @@
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 import { config } from 'src/config';
 import { decodeJwtPayload } from 'src/utilities';
 import { ActionType } from 'src/store/context/types';

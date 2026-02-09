@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 import { decrypt, fetchBackup, restoreIndexedDBs } from 'src/services/backup';
 import { recoverDID } from 'src/services/dids';
 import { useAppContext } from 'src/store/context';
@@ -19,11 +19,15 @@ export const useEnterPass = () => {
   const [schema, setSchema] = useState(null);
   const [importing, setImporting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
-    uri: 'https://example.com/endpoint',
-    accept: ['didcomm/v2'],
-    routingKeys: ['did:example:somemediator#somekey'],
-  });
+  const exampleService = new SDK.Domain.DIDDocument.Service(
+    'didcomm',
+    ['DIDCommMessaging'],
+    new SDK.Domain.DIDDocument.ServiceEndpoint(
+      'https://example.com/endpoint',
+      ['didcomm/v2'],
+      ['did:example:somemediator#somekey'],
+    ),
+  );
 
   useEffect(() => {
     if (i18next.isInitialized) {
