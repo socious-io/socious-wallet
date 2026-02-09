@@ -10,6 +10,8 @@ import { decrypt, fetchBackup, restoreIndexedDBs } from 'src/services/backup';
 import { recoverDID } from 'src/services/dids';
 import { useAppContext } from 'src/store/context';
 import { passwordPattern } from 'src/utilities';
+import { config } from 'src/config';
+import { Capacitor } from '@capacitor/core';
 
 export const useEnterPass = () => {
   const { t: translate } = useTranslation();
@@ -63,21 +65,23 @@ export const useEnterPass = () => {
     try {
       const encoder = new TextEncoder();
       const encodedPassword = encoder.encode(password);
-      const p = decrypt(encodedPassword, encrypted);
-      const mnemonics = p.replace(/^"|"$/g, '').split(',');
+      const decoded = Capacitor.getPlatform() === 'web' ? encrypted : atob(encrypted);
+      const decryptedData = decrypt(encodedPassword, decoded);
+      const mnemonics = decryptedData.split(',');
       if (mnemonics.length) {
         const { did: newDID, privateKey, mnemonics: newMnemonics } = await recoverDID(mnemonics, [exampleService]);
+
         dispatch({ type: 'SET_MNEMONICS', payload: newMnemonics });
+
         const backup = await fetchBackup(newDID.methodId, privateKey);
-        // FIXME: some how fetch result 2 time endocded to string so need two call to parse
-        await pluto.restore(JSON.parse(JSON.parse(backup)));
+        await pluto.restore(JSON.parse(backup));
         await pluto.start();
-        console.log('restored successfully');
-        //FIXME: save into local storage for now
-        localStorage.setItem('mnemonics', newMnemonics.toString());
+
+        localStorage.setItem('mnemonics', newMnemonics.join(','));
         window.location.replace('/setup-pass#restored');
       }
     } catch (err) {
+      console.error('[ERROR] Restore process failed:', err);
       setErrorMessage(`${translate('enter-pass-form.submit-error')} ${err}`);
     }
     setImporting(false);

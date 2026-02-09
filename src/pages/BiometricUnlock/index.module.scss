@@ -1,0 +1,239 @@
+.card {
+    &__container {
+        padding-top: env(safe-area-inset-top) !important;
+        padding: 0;
+        height: 46rem;
+        width: 27.5rem;
+
+        @include media-breakpoint-down(md) {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    &__header {
+        width: 100%;
+        @include flex(space-between, center);
+        padding: 1.5rem 1rem;
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            color: $black;
+            flex: 1;
+            text-align: center;
+        }
+    }
+
+    &__content {
+        @include flex(center, center, column);
+        width: 100%;
+        flex: 1;
+        padding: 2rem 1rem;
+        gap: 2rem;
+    }
+}
+
+.biometric-icon {
+    font-size: 4rem;
+    color: $primary;
+}
+
+.error-message {
+    @include flex(center, center, column);
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.75rem;
+    text-align: center;
+
+    p {
+        margin: 0;
+        color: #dc2626;
+        font-weight: 500;
+    }
+}
+
+.error-icon {
+    font-size: 2rem;
+    color: #dc2626;
+}
+
+.unlock-section {
+    @include flex(center, center, column);
+    gap: 2rem;
+    width: 100%;
+    max-width: 20rem;
+}
+
+.instruction {
+    text-align: center;
+    color: $gray;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.unlock-button {
+    @include flex(center, center);
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background-color: $primary;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background-color: darken($primary, 10%);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.success-message {
+    @include flex(center, center, column);
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.75rem;
+    text-align: center;
+
+    p {
+        margin: 0;
+        color: #166534;
+        font-weight: 500;
+    }
+}
+
+.success-icon {
+    font-size: 2rem;
+    color: #16a34a;
+}
+
+.success-subtitle {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #15803d !important;
+}
+
+.status-section {
+    @include flex(flex-start, center);
+    gap: 1.5rem;
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+}
+
+.status-info {
+    @include flex(flex-start, flex-start, column);
+    gap: 0.5rem;
+    flex: 1;
+
+    h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        color: $black;
+    }
+}
+
+.status-text {
+    font-size: 14px;
+    color: $gray;
+    margin: 0;
+}
+
+.status-enabled {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.status-disabled {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.description {
+    font-size: 14px;
+    color: $gray;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.button-section {
+    @include flex(center, stretch, column);
+    gap: 1rem;
+    width: 100%;
+}
+
+.disable-button {
+    @include flex(center, center);
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background-color: #b91c1c;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.back-button {
+    @include flex(center, center);
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: $black;
+    font-size: 1.25rem;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.header-spacer {
+    width: 2.5rem;
+    height: 2.5rem;
+}

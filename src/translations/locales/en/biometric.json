@@ -1,0 +1,43 @@
+{
+  "biometric-setup": {
+    "title": "Secure Your Wallet",
+    "checking-availability": "Checking biometric availability...",
+    "not-available-title": "Biometric Setup",
+    "not-available-message": "Biometric authentication is not available on this device.",
+    "not-available-subtitle": "You can continue using your passcode to unlock your wallet.",
+    "continue-button": "Continue",
+    "features": {
+      "quick-access": "Quick and convenient access",
+      "enhanced-security": "Enhanced security with biometrics",
+      "fingerprint-faceid": "Use fingerprint or Face ID"
+    },
+    "instruction": "Enable biometric unlock to access your wallet quickly and securely with your fingerprint or Face ID.",
+    "enable-button": "Enable Biometric Unlock",
+    "enabling": "Enabling...",
+    "skip-button": "Skip for Now",
+    "error-enable": "Failed to enable biometric unlock"
+  },
+  "biometric-unlock": {
+    "title": "Biometric Authentication",
+    "not-available": "Biometric authentication is not available on this device",
+    "status-label": "Status:",
+    "description-enabled": "You can use your fingerprint or Face ID to unlock your wallet",
+    "description-disabled": "Enable biometric unlock to secure your wallet with fingerprint or Face ID",
+    "enable-button": "Enable Biometric Unlock",
+    "disable-button": "Disable Biometric Unlock",
+    "enabling": "Enabling...",
+    "disabling": "Disabling...",
+    "error-enable": "Failed to enable biometric unlock",
+    "error-disable": "Failed to disable biometric unlock"
+  },
+  "biometric-unlock-page": {
+    "title": "Unlock Your Wallet",
+    "instruction": "Use your fingerprint or Face ID to quickly unlock your wallet",
+    "unlock-button": "Unlock with Biometrics",
+    "authenticating": "Authenticating...",
+    "use-passcode": "Use Passcode Instead",
+    "use-biometric": "Use Biometric Unlock",
+    "error-failed": "Biometric unlock failed. Please try again or use your passcode.",
+    "error-unavailable": "Biometric authentication is not available on this device"
+  }
+}

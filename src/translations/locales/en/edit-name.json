@@ -1,0 +1,12 @@
+{
+  "edit-name-back-link": "Back",
+  "edit-name-title": "Edit your name",
+  "edit-name-subtitle": "Update your first and last name",
+  "edit-name-form": {
+    "firstname-placeholder": "First Name",
+    "lastname-placeholder": "Last Name",
+    "firstname-required": "First name is required",
+    "lastname-required": "Last name is required",
+    "button": "Save"
+  }
+}

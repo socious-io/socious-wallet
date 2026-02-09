@@ -1,6 +1,7 @@
 {
   "settings-card-header": "설정",
   "settings-items": {
+    "edit-name": "이름 편집",
     "backup": "지갑 백업",
     "remove": "지갑 삭제",
     "language": "언어",

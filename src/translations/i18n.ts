@@ -6,6 +6,9 @@ import { generateTranslationFile } from './locales/en/translation';
 import { generateTranslationFile as generateJPTranslationFile } from './locales/jp/translation';
 import { generateTranslationFile as generateESTranslationFile } from './locales/es/translation';
 import { generateTranslationFile as generateKRTranslationFile } from './locales/kr/translation';
+import { generateTranslationFile as generateARTranslationFile } from './locales/ar/translation';
+import { generateTranslationFile as generateFRTranslationFile } from './locales/fr/translation';
+import { generateTranslationFile as generateZHTranslationFile } from './locales/zh/translation';
 
 const { language } = store.getState().language;
 
@@ -21,6 +24,15 @@ const resources = {
   },
   es: {
     translation: generateESTranslationFile(),
+  },
+  ar: {
+    translation: generateARTranslationFile(),
+  },
+  fr: {
+    translation: generateFRTranslationFile(),
+  },
+  zh: {
+    translation: generateZHTranslationFile(),
   },
 };
 

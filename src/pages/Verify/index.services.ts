@@ -60,6 +60,8 @@ const useVerify = () => {
           const response = await getVerificationStatus();
           switch (response.verification?.status.toLowerCase()) {
             case 'not started':
+              localStorage.setItem(FLAG_KEY, 'NOT_STARTED');
+              dispatch({ type: 'SET_SUBMIT', payload: 'NOT_STARTED' });
               break;
             case 'declined':
               localStorage.setItem(FLAG_KEY, 'DECLINED');
@@ -95,7 +97,7 @@ const useVerify = () => {
               break;
             }
             default:
-              console.log('Unknown status:');
+              console.error('Unknown status:');
           }
         } catch (err) {
           const sessionID = localStorage.getItem('session');

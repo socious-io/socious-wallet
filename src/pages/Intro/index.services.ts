@@ -12,6 +12,7 @@ export const useIntro = () => {
 
   const onCreateWallet = async () => {
     try {
+      localStorage.removeItem('session');
       if (!pluto || mnemonics.length) return;
       const exampleService = new SDK.Domain.DIDDocument.Service(
         'didcomm',

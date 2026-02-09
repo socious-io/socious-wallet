@@ -17,7 +17,6 @@ const preStart = async () => {
 };
 
 export const connect = async () => {
-  console.log('starting pluto ...');
   await preStart();
   const store = createStore({
     dbName: config.PLUTO_DB_NAME,

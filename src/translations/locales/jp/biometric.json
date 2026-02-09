@@ -1,0 +1,43 @@
+{
+  "biometric-setup": {
+    "title": "ウォレットを保護",
+    "checking-availability": "生体認証の可用性を確認中...",
+    "not-available-title": "生体認証セットアップ",
+    "not-available-message": "このデバイスでは生体認証は利用できません。",
+    "not-available-subtitle": "パスコードを使用してウォレットのロックを解除し続けることができます。",
+    "continue-button": "続行",
+    "features": {
+      "quick-access": "迅速で便利なアクセス",
+      "enhanced-security": "生体認証によるセキュリティ強化",
+      "fingerprint-faceid": "指紋またはFace IDを使用"
+    },
+    "instruction": "指紋またはFace IDを使用してウォレットに迅速かつ安全にアクセスするために、生体認証ロック解除を有効にしてください。",
+    "enable-button": "生体認証ロック解除を有効化",
+    "enabling": "有効化中...",
+    "skip-button": "今はスキップ",
+    "error-enable": "生体認証ロック解除の有効化に失敗しました"
+  },
+  "biometric-unlock": {
+    "title": "生体認証",
+    "not-available": "このデバイスでは生体認証は利用できません",
+    "status-label": "状態：",
+    "description-enabled": "指紋またはFace IDを使用してウォレットのロックを解除できます",
+    "description-disabled": "指紋またはFace IDでウォレットを保護するために生体認証ロック解除を有効にしてください",
+    "enable-button": "生体認証ロック解除を有効化",
+    "disable-button": "生体認証ロック解除を無効化",
+    "enabling": "有効化中...",
+    "disabling": "無効化中...",
+    "error-enable": "生体認証ロック解除の有効化に失敗しました",
+    "error-disable": "生体認証ロック解除の無効化に失敗しました"
+  },
+  "biometric-unlock-page": {
+    "title": "ウォレットのロック解除",
+    "instruction": "指紋またはFace IDを使用してウォレットを迅速にロック解除してください",
+    "unlock-button": "生体認証でロック解除",
+    "authenticating": "認証中...",
+    "use-passcode": "代わりにパスコードを使用",
+    "use-biometric": "生体認証ロック解除を使用",
+    "error-failed": "生体認証ロック解除に失敗しました。もう一度試すかパスコードを使用してください。",
+    "error-unavailable": "このデバイスでは生体認証は利用できません"
+  }
+}

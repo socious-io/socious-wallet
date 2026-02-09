@@ -46,8 +46,8 @@ const useConnection = () => {
       if (callback)
         axios
           .get(callback, { params: { accept: true } })
-          .then(r => console.log(`callback successfully with status ${r.status}`))
-          .catch(err => console.log(err));
+          .then(r => console.warn(`callback successfully with status ${r.status}`))
+          .catch(err => console.error(err));
       navigate('/');
       dispatch({ type: 'SET_LIST_PROCESSING', payload: true });
       addAction('connections', {
@@ -114,8 +114,8 @@ const useConnection = () => {
     if (callback) {
       axios
         .get(callback, { params: { reject: true } })
-        .then(r => console.log(`callback successfully with status ${r.status}`))
-        .catch(err => console.log(err));
+        .then(r => console.warn(`callback successfully with status ${r.status}`))
+        .catch(err => console.error(err));
     }
     navigate('/');
     addAction('connections', {

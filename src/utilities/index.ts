@@ -3,7 +3,7 @@ import { config } from 'src/config';
 import { ErrorInfo } from 'react';
 import { addError } from 'src/services/datadog';
 import { Device } from '@capacitor/device';
-import { SupportedLanguages } from 'src/store/redux/language.reducers';
+import { SupportedLanguages } from 'src/constants/languages';
 
 // Utility function to decode JWT and return payload as a JSON object
 export function decodeJwtPayload(jwt: string): any {
@@ -61,12 +61,11 @@ export const logger = (error: Error, errorInfo: ErrorInfo) => {
 //REGEX
 export const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!])[A-Za-z\d@#$%^&+=!]{8,}$/;
 
-// If we support the default language of user's device return that otherwise return english
 export const getSystemLanguage = async (): Promise<SupportedLanguages> => {
   const info = await Device.getLanguageCode();
-  const supportedLanguages = ['en', 'ja', 'es', 'kr'];
+  const supportedLanguages = ['en', 'ja', 'es', 'kr', 'zh', 'ar', 'fr'];
 
-  //Note: capacitor device returns ja for japanese but i18bext expects jp
+  // Note: capacitor device returns ja for Japanese but i18next expects jp
   if (supportedLanguages.includes(info.value)) {
     return info.value === 'ja' ? 'jp' : (info.value as SupportedLanguages);
   }

@@ -1,0 +1,12 @@
+{
+  "edit-name-back-link": "返回",
+  "edit-name-title": "编辑姓名",
+  "edit-name-subtitle": "更新您的姓名",
+  "edit-name-form": {
+    "firstname-placeholder": "名",
+    "lastname-placeholder": "姓",
+    "firstname-required": "名字是必填项",
+    "lastname-required": "姓氏是必填项",
+    "button": "保存"
+  }
+}

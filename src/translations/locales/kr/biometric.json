@@ -1,0 +1,43 @@
+{
+  "biometric-setup": {
+    "title": "지갑 보안 설정",
+    "checking-availability": "생체 인증 가용성 확인 중...",
+    "not-available-title": "생체 인증 설정",
+    "not-available-message": "이 기기에서는 생체 인증을 사용할 수 없습니다.",
+    "not-available-subtitle": "패스코드를 사용하여 지갑을 계속 잠금 해제할 수 있습니다.",
+    "continue-button": "계속",
+    "features": {
+      "quick-access": "빠르고 편리한 액세스",
+      "enhanced-security": "생체 인증으로 강화된 보안",
+      "fingerprint-faceid": "지문 또는 Face ID 사용"
+    },
+    "instruction": "지문 또는 Face ID를 사용하여 빠르고 안전하게 지갑에 액세스하려면 생체 인증 잠금 해제를 활성화하세요.",
+    "enable-button": "생체 인증 잠금 해제 활성화",
+    "enabling": "활성화 중...",
+    "skip-button": "지금 건너뛰기",
+    "error-enable": "생체 인증 잠금 해제 활성화 실패"
+  },
+  "biometric-unlock": {
+    "title": "생체 인증",
+    "not-available": "이 기기에서는 생체 인증을 사용할 수 없습니다",
+    "status-label": "상태:",
+    "description-enabled": "지문 또는 Face ID를 사용하여 지갑을 잠금 해제할 수 있습니다",
+    "description-disabled": "지문 또는 Face ID로 지갑을 보호하려면 생체 인증 잠금 해제를 활성화하세요",
+    "enable-button": "생체 인증 잠금 해제 활성화",
+    "disable-button": "생체 인증 잠금 해제 비활성화",
+    "enabling": "활성화 중...",
+    "disabling": "비활성화 중...",
+    "error-enable": "생체 인증 잠금 해제 활성화 실패",
+    "error-disable": "생체 인증 잠금 해제 비활성화 실패"
+  },
+  "biometric-unlock-page": {
+    "title": "지갑 잠금 해제",
+    "instruction": "지문 또는 Face ID를 사용하여 지갑을 빠르게 잠금 해제하세요",
+    "unlock-button": "생체 인증으로 잠금 해제",
+    "authenticating": "인증 중...",
+    "use-passcode": "대신 패스코드 사용",
+    "use-biometric": "생체 인증 잠금 해제 사용",
+    "error-failed": "생체 인증 잠금 해제에 실패했습니다. 다시 시도하거나 패스코드를 사용하세요.",
+    "error-unavailable": "이 기기에서는 생체 인증을 사용할 수 없습니다"
+  }
+}

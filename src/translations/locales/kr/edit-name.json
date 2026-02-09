@@ -1,0 +1,12 @@
+{
+  "edit-name-back-link": "뒤로",
+  "edit-name-title": "이름 수정",
+  "edit-name-subtitle": "성과 이름을 업데이트하세요",
+  "edit-name-form": {
+    "firstname-placeholder": "이름",
+    "lastname-placeholder": "성",
+    "firstname-required": "이름은 필수입니다",
+    "lastname-required": "성은 필수입니다",
+    "button": "저장"
+  }
+}

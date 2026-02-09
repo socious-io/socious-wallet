@@ -1,0 +1,13 @@
+{
+  "enter-pass-title": "أدخل كلمة المرور",
+  "enter-pass-subtitle": "تحتاج إلى هذا لاستيراد هذه المحفظة",
+  "enter-pass-continue-button": "متابعة",
+  "enter-pass-back-button": "رجوع",
+  "enter-pass-form": {
+    "input-placeholder": "أدخل كلمة المرور الخاصة بك...",
+    "input-error1": "كلمة المرور مطلوبة",
+    "input-error2": "الحد الأدنى 8 أحرف",
+    "input-error3": "تعقيد كلمة المرور ضعيف",
+    "submit-error": "حدث خطأ أثناء استيراد المحفظة"
+  }
+}

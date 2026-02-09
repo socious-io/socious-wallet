@@ -1,0 +1,8 @@
+{
+  "enter-name-title": "Enter your full name",
+  "enter-name-subtitle": "Please enter your name in Roman characters.",
+  "enter-name-form.firstname-placeholder": "First name",
+  "enter-name-form.lastname-placeholder": "Last name",
+  "enter-name-form.button": "Enter Name",
+  "enter-name-form.button-back": "Back"
+}

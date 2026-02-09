@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Button } from 'react-bootstrap'; // Added Button import
 import Card from 'src/components/Card';
 import Icon from 'src/components/Icon';
 import CredentialCard from 'src/containers/CredentialCard';
 import CredentialAlert from 'src/containers/CredentialAlert';
-//import sampleAvatar from 'src/assets/images/sample-avatar.png';
 import credentialsPlaceholder from 'src/assets/images/empty-credentials.svg';
+import sociousLogo from 'src/assets/images/socious-logo.png';
 import kycAvatar from 'src/assets/images/kyc-avatar.png';
 import { useAppContext } from 'src/store/context';
 import { beautifyText, formatDate, truncateFromMiddle } from 'src/utilities';
@@ -20,7 +20,9 @@ function Credentials() {
   const { state } = useAppContext();
   const { credentials, verification, submitted, listProcessing } = state || {};
   const { id } = useParams();
+
   const isKyc = type => type === 'verification';
+
   const generateNonKycTypeText = claim => {
     const subtitle = {
       ['experience']: translate('credential-experience'),
@@ -31,24 +33,47 @@ function Credentials() {
   };
 
   const renderPartialDataCard = (claim, id: string | number, isClickable?: boolean, isDetail?: boolean) => {
-    const props = isKyc(claim?.type)
-      ? {
-          title: 'Didit',
-          subtitle: 'KYC',
-          date: claim['issued_date'] || claim['verified_at'],
-          avatar: kycAvatar,
-        }
-      : {
-          title: claim['company_name'] || claim['institute_name'],
-          subtitle: claim.type || 'UNKOWN',
-          date: claim['issued_date'] || claim['start_date'],
-          // avatar: sampleAvatar,
-        };
+    const cardsData = (() => {
+      switch (claim?.type) {
+        case 'verification':
+          return {
+            title: 'Didit',
+            subtitle: 'KYC',
+            date: claim['issued_date'] || claim['verified_at'],
+            avatar: kycAvatar,
+          };
+        case 'impact_point_badges':
+          return Array.isArray(claim.badges)
+            ? claim.badges.map(c => ({
+                title: 'Socious',
+                subtitle: beautifyText(c.social_cause_category),
+                date: claim['issued_date'],
+                avatar: sociousLogo,
+              }))
+            : [];
+        default:
+          return {
+            title: claim['company_name'] || claim['institute_name'],
+            subtitle: claim.type || 'UNKNOWN',
+            date: claim['issued_date'] || claim['start_date'],
+          };
+      }
+    })();
 
+    if (claim?.type === 'impact_point_badges') {
+      return cardsData.map((prop, index) => (
+        <CredentialCard
+          key={`${id}-${index}`}
+          {...prop}
+          verified={true}
+          className={isDetail && styles['card--detail']}
+        />
+      ));
+    }
     return (
       <CredentialCard
         key={id}
-        {...props}
+        {...cardsData}
         verified={isKyc(claim?.type)}
         onCardClick={() => isClickable && navigate(`/credentials/${id}`)}
         className={isDetail && styles['card--detail']}
@@ -60,7 +85,6 @@ function Credentials() {
     let props = null;
     switch (submitted) {
       case 'APPROVED':
-      case 'INREVIEW':
         props = {
           variant: 'warning',
           iconName: 'alert-submit',
@@ -183,7 +207,11 @@ function Credentials() {
                       <div key={`field${i}`} className={styles['card__item']}>
                         {beautifyText(field)}
                         <span className="fw-normal text-secondary text-break text-truncate">
-                          {formatClaimField(claim, field)}
+                          {beautifyText(field) === 'First name'
+                            ? state.firstname
+                            : beautifyText(field) === 'Last name'
+                              ? state.lastname
+                              : formatClaimField(claim, field)}
                         </span>
                       </div>
                     ),
@@ -198,10 +226,7 @@ function Credentials() {
   return (
     <div className={styles['home']}>
       <Card containerClassName={styles['card__container']} contentClassName="gap-0 h-100">
-        <div className={styles['card__header']}>
-          {translate('credential-card-header')}
-          {/* <Icon name="bell" /> */}
-        </div>
+        <div className={styles['card__header']}>{translate('credential-card-header')}</div>
         <>
           {id ? renderCredentialDetails() : renderCredentialsList()}
           <NavigationBar />

@@ -1,6 +1,7 @@
 {
   "settings-card-header": "Ajustes",
   "settings-items": {
+    "edit-name": "Editar nombre",
     "backup": "Respaldar billetera",
     "remove": "Eliminar billetera",
     "language": "Idioma",

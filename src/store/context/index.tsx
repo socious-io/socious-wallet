@@ -1,9 +1,10 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react';
 import { StateType, ActionType, AppProviderProps, VerifyStatus } from './types';
 import { usePluto } from 'src/services/pluto';
 import { startAgent } from 'src/services/agent';
 import { Device, DeviceInfo } from '@capacitor/device';
 import { config } from 'src/config';
+import SelectCredentialModal from 'src/components/SelectCredentialModal';
 
 const initialState: StateType = {
   did: null,
@@ -16,12 +17,16 @@ const initialState: StateType = {
   message: [],
   verification: undefined,
   submitted: (localStorage.getItem('submitted_kyc') || '') as VerifyStatus,
+  firstname: localStorage.getItem('firstname') || '',
+  lastname: localStorage.getItem('lastname') || '',
   mnemonics: [],
   device: undefined,
   listenerActive: false,
   verifiedVC: {},
   encrypted: '',
   listProcessing: false,
+  selectedCredential: null,
+  openIdentityModal: false,
 };
 
 const AppContext = createContext<{
@@ -32,14 +37,20 @@ const AppContext = createContext<{
   dispatch: () => null,
 });
 
-// Reducer function
 function appReducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
     case 'SET_CREDENTIALS':
-      return { ...state, credentials: [...state.credentials, ...action.payload].reverse() };
+      return {
+        ...state,
+        credentials: [
+          ...action.payload.filter(cred => !state.credentials.some(c => c.id === cred.id)),
+          ...state.credentials,
+        ].reverse(),
+      };
     case 'SET_VERIFICATION':
       return { ...state, verification: action.payload };
     case 'SET_SUBMIT':
+      localStorage.setItem('submitted_kyc', action.payload);
       return { ...state, submitted: action.payload };
     case 'SET_DEVICE':
       return { ...state, device: action.payload };
@@ -69,15 +80,27 @@ function appReducer(state: StateType, action: ActionType): StateType {
       return state;
     case 'LOADING_END':
       return state;
+    case 'SET_NAME':
+      localStorage.setItem('firstname', action.payload.firstname);
+      localStorage.setItem('lastname', action.payload.lastname);
+      return { ...state, firstname: action.payload.firstname, lastname: action.payload.lastname };
+    case 'SET_SELECTED_CREDENTIAL':
+      return { ...state, selectedCredential: action.payload };
+    case 'SET_OPEN_CREDENTIAL_MODAL':
+      return { ...state, openIdentityModal: action.payload };
     default:
       return state;
   }
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  console.log('start app store context');
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
+  const stateRef = useRef<StateType>(state);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   useEffect(() => {
     if (!config.PLATFORM) {
@@ -94,7 +117,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (!pluto) return;
-    // Indicate loading start if necessary
     dispatch({ type: 'LOADING_START' });
     dispatch({ type: 'SET_PLUTO', payload: pluto });
 
@@ -110,18 +132,29 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           type: 'SET_DID',
           payload: dids?.length > 0 ? master || dids[0].did : null,
         });
-        // Indicate loading end if necessary
         dispatch({ type: 'LOADING_END' });
-        if (dids.length > 0) startAgent(pluto, dispatch);
+        if (dids.length > 0) startAgent(pluto, dispatch, stateRef);
       })
       .catch(error => {
         console.error('Failed to load data from Pluto', error);
-        // Handle error state if necessary
         dispatch({ type: 'LOADING_END' });
       });
-  }, [pluto, state.submitted]);
+  }, [pluto, state.submitted, state.selectedCredential]);
 
-  return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+      <SelectCredentialModal
+        open={state.openIdentityModal}
+        onSuccess={() => {
+          dispatch({ type: 'SET_OPEN_CREDENTIAL_MODAL', payload: false });
+        }}
+        onClose={() => {
+          dispatch({ type: 'SET_OPEN_CREDENTIAL_MODAL', payload: false });
+        }}
+      />
+    </AppContext.Provider>
+  );
 };
 
 export const useAppContext = () => useContext(AppContext);

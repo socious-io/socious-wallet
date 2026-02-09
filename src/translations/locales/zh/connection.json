@@ -1,0 +1,16 @@
+{
+  "connection-card-header": "连接",
+  "connection-loading": {
+    "title": "正在建立连接",
+    "subtitle1": "正在建立安全连接以保护您的凭证。此过程可能需要长达30秒。",
+    "subtitle2": "请保持应用打开并确保手机未锁定。如果30秒后仍无反应，请完全退出并重新启动应用。",
+    "subtitle3": "感谢您的耐心等待。"
+  },
+  "connection-confirm": {
+    "header": "邀请",
+    "button": "确认",
+    "cancel-button": "取消",
+    "title": "接受连接请求？",
+    "subtitle": "这将允许您接收或分享凭证。"
+  }
+}

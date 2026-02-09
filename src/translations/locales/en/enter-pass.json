@@ -7,7 +7,7 @@
     "input-placeholder": "Enter your password...",
     "input-error1": "Password is required",
     "input-error2": "Minimum 8 characters",
-    "input-error3": "Password complexity is week",
+    "input-error3": "Password complexity is weak",
     "submit-error": "An error occurred in importing wallet"
   }
 }

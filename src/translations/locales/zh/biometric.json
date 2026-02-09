@@ -1,0 +1,43 @@
+{
+  "biometric-setup": {
+    "title": "保护您的钱包",
+    "checking-availability": "正在检查生物识别可用性...",
+    "not-available-title": "生物识别设置",
+    "not-available-message": "此设备不支持生物识别身份验证。",
+    "not-available-subtitle": "您可以继续使用密码解锁钱包。",
+    "continue-button": "继续",
+    "features": {
+      "quick-access": "快速便捷的访问",
+      "enhanced-security": "生物识别增强安全性",
+      "fingerprint-faceid": "使用指纹或面容ID"
+    },
+    "instruction": "启用生物识别解锁，使用指纹或面容ID快速安全地访问您的钱包。",
+    "enable-button": "启用生物识别解锁",
+    "enabling": "正在启用...",
+    "skip-button": "暂时跳过",
+    "error-enable": "启用生物识别解锁失败"
+  },
+  "biometric-unlock": {
+    "title": "生物识别身份验证",
+    "not-available": "此设备不支持生物识别身份验证",
+    "status-label": "状态：",
+    "description-enabled": "您可以使用指纹或面容ID解锁钱包",
+    "description-disabled": "启用生物识别解锁以使用指纹或面容ID保护您的钱包",
+    "enable-button": "启用生物识别解锁",
+    "disable-button": "禁用生物识别解锁",
+    "enabling": "正在启用...",
+    "disabling": "正在禁用...",
+    "error-enable": "启用生物识别解锁失败",
+    "error-disable": "禁用生物识别解锁失败"
+  },
+  "biometric-unlock-page": {
+    "title": "解锁您的钱包",
+    "instruction": "使用指纹或面容ID快速解锁您的钱包",
+    "unlock-button": "使用生物识别解锁",
+    "authenticating": "正在验证...",
+    "use-passcode": "改用密码",
+    "use-biometric": "使用生物识别解锁",
+    "error-failed": "生物识别解锁失败。请重试或使用密码。",
+    "error-unavailable": "此设备不支持生物识别身份验证"
+  }
+}

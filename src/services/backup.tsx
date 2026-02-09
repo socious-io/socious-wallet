@@ -10,31 +10,63 @@ import { logger } from 'src/utilities';
 
 export type Backup = { [dbName: string]: { [storeName: string]: any[] } };
 
-export const encrypt = (raw: Uint8Array, data: any) => {
-  const ecdh = crypto.createECDH('secp256k1');
-  ecdh.setPrivateKey(Buffer.from(raw));
-  const publicKey = ecdh.getPublicKey();
-  const sharedSecret = ecdh.computeSecret(publicKey);
-  const aesKey = sharedSecret.slice(0, 32);
-  const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, config.SECRET_KEY.slice(0, 16));
-  let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  return encrypted;
+const deriveAesKeyFromPrivate = (raw: Uint8Array): Buffer => {
+  return crypto.createHash('sha256').update(Buffer.from(raw)).digest(); // 32 bytes
 };
 
-export const decrypt = (raw: Uint8Array, encryptedDataHex: string) => {
-  // Convert the hex-encoded string back to a Buffer
-  const encryptedData = Buffer.from(encryptedDataHex, 'hex');
-  const ecdh = crypto.createECDH('secp256k1');
-  ecdh.setPrivateKey(Buffer.from(raw));
-  const publicKey = ecdh.getPublicKey();
-  const sharedSecret = ecdh.computeSecret(publicKey);
-  const aesKey = sharedSecret.slice(0, 32);
-  const decipher = crypto.createDecipheriv('aes-256-cbc', aesKey, config.SECRET_KEY.slice(0, 16));
+export const encrypt = (raw: Uint8Array, data: any, options: { compress?: boolean } = { compress: true }): string => {
+  try {
+    const aesKey = deriveAesKeyFromPrivate(raw);
+    const iv = crypto.randomBytes(16);
 
-  let decrypted = decipher.update(encryptedData); // Use Buffer directly
-  decrypted += decipher.final('utf8');
-  return decrypted;
+    const json = JSON.stringify(data);
+    const plainBuf = Buffer.from(json, 'utf8');
+    const toEncrypt = options.compress ? Buffer.from(pako.deflate(plainBuf)) : plainBuf;
+    const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, iv);
+    const encrypted = Buffer.concat([cipher.update(toEncrypt), cipher.final()]);
+    return `${iv.toString('hex')}:${encrypted.toString('hex')}`;
+  } catch (error) {
+    console.error('Encryption failed:', error);
+    throw new Error('Unable to encrypt data');
+  }
+};
+
+export const decrypt = (
+  raw: Uint8Array,
+  encryptedDataInput: string,
+  options: { compressed?: boolean } = { compressed: true },
+): any => {
+  try {
+    const idx = encryptedDataInput.indexOf(':');
+    if (idx === -1) {
+      throw new Error('Encrypted input missing IV separator (expected ivHex:cipherHex)');
+    }
+
+    const ivHex = encryptedDataInput.slice(0, idx);
+    const encryptedHex = encryptedDataInput.slice(idx + 1);
+
+    if (!/^[0-9a-fA-F]+$/.test(ivHex) || !/^[0-9a-fA-F]+$/.test(encryptedHex)) {
+      throw new Error('Invalid hex string for IV or encrypted data');
+    }
+
+    const iv = Buffer.from(ivHex, 'hex');
+    const encryptedBuf = Buffer.from(encryptedHex, 'hex');
+
+    if (iv.length !== 16) {
+      throw new Error('Invalid IV length (must be 16 bytes)');
+    }
+
+    const aesKey = deriveAesKeyFromPrivate(raw);
+
+    const decipher = crypto.createDecipheriv('aes-256-cbc', aesKey, iv);
+    const decryptedBuf = Buffer.concat([decipher.update(encryptedBuf), decipher.final()]);
+    const plainBuf = options.compressed ? Buffer.from(pako.inflate(decryptedBuf)) : decryptedBuf;
+    const json = plainBuf.toString('utf8');
+    return JSON.parse(json);
+  } catch (error) {
+    console.error('Decryption failed:', error);
+    throw new Error('Unable to decrypt data');
+  }
 };
 
 export const backupIndexedDBs = (dbNames: string[]): Promise<Backup> => {
@@ -129,7 +161,7 @@ export const getIndexedDBDatabases = async (className: string): Promise<string[]
 };
 
 export const fetchBackup = async (didStr: string, pk: SDK.Domain.PrivateKey) => {
-  const res = await axios.get(`https://socious-wallet-us.s3.amazonaws.com/${didStr}.bin`, {
+  const res = await axios.get(`https://storage.googleapis.com/socious-wallet-gsc/${didStr}.bin`, {
     responseType: 'arraybuffer',
   });
   const uint8Array = new Uint8Array(res.data);
@@ -165,8 +197,8 @@ export const Backup: React.FC = () => {
   useEffect(() => {
     if (did && pluto) {
       backup(pluto, did)
-        .then(r => console.log(r))
-        .catch(err => console.log(err));
+        .then(r => console.warn(r))
+        .catch(err => console.error(err));
     }
   }, [credentials, pluto, did]);
 

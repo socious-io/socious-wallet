@@ -1,0 +1,18 @@
+{
+  "settings-card-header": "设置",
+  "settings-items": {
+    "edit-name": "编辑姓名",
+    "backup": "备份钱包",
+    "remove": "删除钱包",
+    "language": "语言",
+    "automatic": "自动",
+    "version": "应用版本",
+    "platform": "平台"
+  },
+  "settings-confirm": {
+    "header": "删除钱包",
+    "remove-button": "删除",
+    "cancel-button": "取消",
+    "title": "删除钱包后无法恢复。如果您没有备份，将丢失该钱包中的所有凭证。"
+  }
+}

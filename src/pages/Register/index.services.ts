@@ -38,7 +38,7 @@ const useRegister = () => {
       dispatch({ type: 'SET_DID', payload: currentDID });
       navigate('/created');
     } catch (e) {
-      console.log(e, 'error in saving seed phrase');
+      console.error(e, 'error in saving seed phrase');
     }
   };
 

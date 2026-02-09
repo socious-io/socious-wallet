@@ -1,0 +1,12 @@
+{
+  "edit-name-back-link": "Atrás",
+  "edit-name-title": "Editar tu nombre",
+  "edit-name-subtitle": "Actualiza tu nombre y apellido",
+  "edit-name-form": {
+    "firstname-placeholder": "Nombre",
+    "lastname-placeholder": "Apellido",
+    "firstname-required": "El nombre es obligatorio",
+    "lastname-required": "El apellido es obligatorio",
+    "button": "Guardar"
+  }
+}

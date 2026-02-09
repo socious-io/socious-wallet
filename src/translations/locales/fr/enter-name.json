@@ -1,0 +1,8 @@
+{
+  "enter-name-title": "Entrez votre nom complet",
+  "enter-name-subtitle": "Veuillez entrer votre nom en caractères romains.",
+  "enter-name-form.firstname-placeholder": "Prénom",
+  "enter-name-form.lastname-placeholder": "Nom de famille",
+  "enter-name-form.button": "Entrer le nom",
+  "enter-name-form.button-back": "Retour"
+}

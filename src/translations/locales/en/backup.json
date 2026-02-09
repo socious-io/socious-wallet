@@ -8,7 +8,7 @@
     "new-pass-hint": "Your password must be at least 8 characters with lowercase, uppercase, and a special character.",
     "new-pass-error1": "Password is required",
     "new-pass-error2": "Minimum 8 characters",
-    "new-pass-error3": "Password complexity is week",
+    "new-pass-error3": "Password complexity is weak",
     "confirm-pass-label": "Confirm your password",
     "confirm-pass-placeholder": "Confirm Password",
     "confirm-pass-error1": "Confirm password is required",

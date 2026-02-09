@@ -11,7 +11,7 @@ const AppUrlListener: React.FC = () => {
         const url = new URL(event.url);
         navigate(`${url.pathname}${url.search}`);
       } catch (error) {
-        console.log('No url present');
+        console.error('No url present');
       }
     });
   }, []);

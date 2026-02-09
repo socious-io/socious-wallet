@@ -1,0 +1,7 @@
+{
+  "create-pass-title": "创建您的密码",
+  "create-pass-subtitle": "创建一个密码以保护您的钱包访问权限。",
+  "create-pass-retype-title": "重新输入您的密码",
+  "create-pass-retype-subtitle": "确认您的密码。",
+  "create-pass-error": "密码不匹配"
+}
