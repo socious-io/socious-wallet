@@ -38,6 +38,7 @@ const handleMessages =
   ) =>
   async (newMessages: SDK.Domain.Message[]) => {
     const state = stateRef.current;
+    console.log('Received messages:', newMessages.map(m => ({ piuri: m.piuri, from: m.from?.toString(), to: m.to?.toString(), id: m.id })));
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
     dispatch({ type: 'SET_LISTENER_STATE', payload: true });
     const credentialOffers = newMessages.filter(
@@ -111,44 +112,69 @@ const handleMessages =
     }
     if (credentialOffers && credentialOffers.length) {
       for (const credentialOfferMessage of credentialOffers) {
-        const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
-        const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
-        addAction('messages', {
-          message: newMessages,
-          type: 'offered-credential',
-          credential: requestCredential,
-        });
         try {
-          await agent.sendMessage(requestCredential.makeMessage());
+          console.log('Processing credential offer message:', JSON.stringify({
+            piuri: credentialOfferMessage.piuri,
+            from: credentialOfferMessage.from?.toString(),
+            body: credentialOfferMessage.body,
+            attachmentsCount: credentialOfferMessage.attachments?.length,
+          }));
+          const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
+          const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
+          addAction('messages', {
+            message: newMessages,
+            type: 'offered-credential',
+            credential: requestCredential,
+          });
+          try {
+            await agent.sendMessage(requestCredential.makeMessage());
+          } catch (err) {
+            dispatch({ type: 'SET_WARN', payload: { err, section: 'Send accept offer' } });
+          }
         } catch (err) {
-          dispatch({ type: 'SET_WARN', payload: { err, section: 'Send accept offer' } });
+          console.error('Error processing credential offer:', err);
+          console.error('Offer message body:', JSON.stringify(credentialOfferMessage.body, null, 2));
+          console.error('Offer message attachments:', JSON.stringify(credentialOfferMessage.attachments, null, 2));
         }
       }
     }
     if (issuedCredentials.length) {
       for (const issuedCredential of issuedCredentials) {
-        const issueCredential = IssueCredential.fromMessage(issuedCredential);
-        const credentials = await pluto.getAllCredentials();
-        const verfiedVC = credentials.filter(c => c.claims[0]?.type === 'verification')[0];
-        const decoded = decodeJwtPayload((issueCredential.attachments[0].data as SDK.Domain.AttachmentBase64).base64);
+        try {
+          console.log('Processing issued credential message:', JSON.stringify({
+            piuri: issuedCredential.piuri,
+            from: issuedCredential.from?.toString(),
+            to: issuedCredential.to?.toString(),
+            body: issuedCredential.body,
+            attachmentsCount: issuedCredential.attachments?.length,
+            attachmentFormats: issuedCredential.attachments?.map((a: any) => a.format),
+          }));
+          const issueCredential = IssueCredential.fromMessage(issuedCredential);
+          const credentials = await pluto.getAllCredentials();
+          const verfiedVC = credentials.filter(c => c.claims[0]?.type === 'verification')[0];
+          const decoded = decodeJwtPayload((issueCredential.attachments[0].data as SDK.Domain.AttachmentBase64).base64);
 
-        if (!verfiedVC) {
-          if (decoded.vc.credentialSubject.type !== 'verification') break;
-        } else {
-          if (decoded.vc.credentialSubject.type === 'verification') break;
-        }
-        const credential = await agent.processIssuedCredentialMessage(issueCredential);
+          if (!verfiedVC) {
+            if (decoded.vc.credentialSubject.type !== 'verification') break;
+          } else {
+            if (decoded.vc.credentialSubject.type === 'verification') break;
+          }
+          const credential = await agent.processIssuedCredentialMessage(issueCredential);
 
-        addAction('messages', {
-          message: newMessages,
-          type: 'issued-credential',
-          credential,
-        });
-        dispatch({ type: 'SET_LIST_PROCESSING', payload: false });
-        if (!verfiedVC) {
-          dispatch({ type: 'SET_VERIFICATION', payload: credential });
+          addAction('messages', {
+            message: newMessages,
+            type: 'issued-credential',
+            credential,
+          });
+          dispatch({ type: 'SET_LIST_PROCESSING', payload: false });
+          if (!verfiedVC) {
+            dispatch({ type: 'SET_VERIFICATION', payload: credential });
+          }
+          dispatch({ type: 'SET_CREDENTIALS', payload: [credential] });
+        } catch (err) {
+          console.error('Error processing issued credential:', err);
+          console.error('Message details:', JSON.stringify(issuedCredential, null, 2));
         }
-        dispatch({ type: 'SET_CREDENTIALS', payload: [credential] });
       }
     }
   };
