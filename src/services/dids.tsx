@@ -1,8 +1,8 @@
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 import { config } from 'src/config';
 import { apollo, castor } from './pluto';
 
-export async function createDID(services: SDK.Domain.Service[]) {
+export async function createDID(services: SDK.Domain.DIDDocument.Service[]) {
   const mnemonics = apollo.createRandomMnemonics();
 
   const seed = apollo.createSeed(mnemonics, config.SECRET_KEY);
@@ -18,7 +18,7 @@ export async function createDID(services: SDK.Domain.Service[]) {
   return { did, mnemonics, privateKey };
 }
 
-export async function recoverDID(mnemonics: string[], services: SDK.Domain.Service[]) {
+export async function recoverDID(mnemonics: string[], services: SDK.Domain.DIDDocument.Service[]) {
   const seed = apollo.createSeed(mnemonics as SDK.Domain.MnemonicWordList, config.SECRET_KEY);
 
   const privateKey = apollo.createPrivateKey({

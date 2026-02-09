@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { config } from 'src/config';
-import SDK from '@hyperledger/identus-edge-agent-sdk';
-import Storage from '@pluto-encrypted/indexdb';
+import SDK from '@hyperledger/identus-sdk';
+import { createStore } from '@trust0/identus-store';
+import { StorageType } from '@trust0/ridb';
 
 export const apollo = new SDK.Apollo();
 export const castor = new SDK.Castor(apollo);
@@ -17,9 +18,9 @@ const preStart = async () => {
 
 export const connect = async () => {
   await preStart();
-  const store = new SDK.Store({
-    name: config.PLUTO_DB_NAME,
-    storage: Storage,
+  const store = createStore({
+    dbName: config.PLUTO_DB_NAME,
+    storageType: StorageType.IndexDB,
     password: Buffer.from(config.PLUTO_PASSWD).toString('hex'),
   });
   const p = new SDK.Pluto(store, apollo);

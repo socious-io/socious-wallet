@@ -5,7 +5,7 @@ import crypto from 'crypto-browserify';
 import { config } from 'src/config';
 import React, { useEffect } from 'react';
 import { useAppContext } from 'src/store/context';
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 import { logger } from 'src/utilities';
 
 export type Backup = { [dbName: string]: { [storeName: string]: any[] } };

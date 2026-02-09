@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppContext } from 'src/store/context';
 import { arraysEqual } from 'src/utilities';
 import { recoverDID } from 'src/services/dids';
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 
 const useConfirm = () => {
   const navigate = useNavigate();
@@ -12,11 +12,15 @@ const useConfirm = () => {
   const [mns, setMns] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const disabledConfirm = mns.length < 24;
-  const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
-    uri: 'https://example.com/endpoint',
-    accept: ['didcomm/v2'],
-    routingKeys: ['did:example:somemediator#somekey'],
-  });
+  const exampleService = new SDK.Domain.DIDDocument.Service(
+    'didcomm',
+    ['DIDCommMessaging'],
+    new SDK.Domain.DIDDocument.ServiceEndpoint(
+      'https://example.com/endpoint',
+      ['didcomm/v2'],
+      ['did:example:somemediator#somekey'],
+    ),
+  );
 
   const handleMnemonicValue = (value: string) => {
     const updatedMnemonics = value.split(' ');

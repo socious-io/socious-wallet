@@ -1,4 +1,4 @@
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 import { DeviceInfo } from '@capacitor/device';
 export interface Err {
   err: Error;

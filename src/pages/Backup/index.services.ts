@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import SDK from '@hyperledger/identus-edge-agent-sdk';
+import SDK from '@hyperledger/identus-sdk';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -26,11 +26,15 @@ export const useBackup = () => {
   const [schema, setSchema] = useState(null);
   const [disabled, setDisabled] = useState(false);
   const [mnemonics, setMnemonics] = useState(localStorage.getItem('mnemonics')?.split(',') || []);
-  const exampleService = new SDK.Domain.Service('didcomm', ['DIDCommMessaging'], {
-    uri: 'https://example.com/endpoint',
-    accept: ['didcomm/v2'],
-    routingKeys: ['did:example:somemediator#somekey'],
-  });
+  const exampleService = new SDK.Domain.DIDDocument.Service(
+    'didcomm',
+    ['DIDCommMessaging'],
+    new SDK.Domain.DIDDocument.ServiceEndpoint(
+      'https://example.com/endpoint',
+      ['didcomm/v2'],
+      ['did:example:somemediator#somekey'],
+    ),
+  );
 
   useEffect(() => {
     if (!mnemonics.length) createNewDID();

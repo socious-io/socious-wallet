@@ -5,7 +5,7 @@ module.exports = {
     configure: webpackConfig => {
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,
-        crypto: require.resolve('crypto-browserify'),
+        crypto: false,
         stream: require.resolve('stream-browserify'),
         path: require.resolve('path-browserify'),
         fs: false,
