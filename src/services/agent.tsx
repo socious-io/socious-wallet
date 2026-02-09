@@ -38,7 +38,11 @@ const handleMessages =
   ) =>
   async (newMessages: SDK.Domain.Message[]) => {
     const state = stateRef.current;
-    console.log('Received messages:', newMessages.map(m => ({ piuri: m.piuri, from: m.from?.toString(), to: m.to?.toString(), id: m.id })));
+    // eslint-disable-next-line no-console
+    console.log(
+      'Received messages:',
+      newMessages.map(m => ({ piuri: m.piuri, from: m.from?.toString(), to: m.to?.toString(), id: m.id })),
+    );
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
     dispatch({ type: 'SET_LISTENER_STATE', payload: true });
     const credentialOffers = newMessages.filter(
@@ -113,12 +117,16 @@ const handleMessages =
     if (credentialOffers && credentialOffers.length) {
       for (const credentialOfferMessage of credentialOffers) {
         try {
-          console.log('Processing credential offer message:', JSON.stringify({
-            piuri: credentialOfferMessage.piuri,
-            from: credentialOfferMessage.from?.toString(),
-            body: credentialOfferMessage.body,
-            attachmentsCount: credentialOfferMessage.attachments?.length,
-          }));
+          // eslint-disable-next-line no-console
+          console.log(
+            'Processing credential offer message:',
+            JSON.stringify({
+              piuri: credentialOfferMessage.piuri,
+              from: credentialOfferMessage.from?.toString(),
+              body: credentialOfferMessage.body,
+              attachmentsCount: credentialOfferMessage.attachments?.length,
+            }),
+          );
           const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
           const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
           addAction('messages', {
@@ -141,14 +149,18 @@ const handleMessages =
     if (issuedCredentials.length) {
       for (const issuedCredential of issuedCredentials) {
         try {
-          console.log('Processing issued credential message:', JSON.stringify({
-            piuri: issuedCredential.piuri,
-            from: issuedCredential.from?.toString(),
-            to: issuedCredential.to?.toString(),
-            body: issuedCredential.body,
-            attachmentsCount: issuedCredential.attachments?.length,
-            attachmentFormats: issuedCredential.attachments?.map((a: any) => a.format),
-          }));
+          // eslint-disable-next-line no-console
+          console.log(
+            'Processing issued credential message:',
+            JSON.stringify({
+              piuri: issuedCredential.piuri,
+              from: issuedCredential.from?.toString(),
+              to: issuedCredential.to?.toString(),
+              body: issuedCredential.body,
+              attachmentsCount: issuedCredential.attachments?.length,
+              attachmentFormats: issuedCredential.attachments?.map((a: any) => a.format),
+            }),
+          );
           const issueCredential = IssueCredential.fromMessage(issuedCredential);
           const credentials = await pluto.getAllCredentials();
           const verfiedVC = credentials.filter(c => c.claims[0]?.type === 'verification')[0];
