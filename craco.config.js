@@ -24,6 +24,12 @@ module.exports = {
         }),
       );
 
+      // Fix ESM extensionless imports in @aparajita packages
+      webpackConfig.module.rules.push({
+        test: /\.m?js$/,
+        resolve: { fullySpecified: false },
+      });
+
       return webpackConfig;
     },
   },
