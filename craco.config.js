@@ -8,6 +8,7 @@ module.exports = {
         crypto: false,
         stream: require.resolve('stream-browserify'),
         path: require.resolve('path-browserify'),
+        buffer: require.resolve('buffer/'),
         fs: false,
         process: require.resolve('process/browser'), // Polyfill process
       };
@@ -20,7 +21,8 @@ module.exports = {
 
       webpackConfig.plugins.push(
         new webpack.ProvidePlugin({
-          process: 'process/browser', // Ensure process is available globally
+          process: 'process/browser',
+          Buffer: ['buffer', 'Buffer'],
         }),
       );
 
