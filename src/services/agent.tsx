@@ -127,6 +127,15 @@ const handleMessages =
               attachmentsCount: credentialOfferMessage.attachments?.length,
             }),
           );
+          // Cloud Agent v2.1.0 sends credential_preview.attributes directly,
+          // but SDK v7 expects credential_preview.body.attributes
+          const preview = credentialOfferMessage.body?.credential_preview;
+          if (preview && preview.attributes && !preview.body) {
+            credentialOfferMessage.body.credential_preview = {
+              ...preview,
+              body: { attributes: preview.attributes },
+            };
+          }
           const credentialOffer = OfferCredential.fromMessage(credentialOfferMessage);
           const requestCredential = await agent.prepareRequestCredentialWithIssuer(credentialOffer);
           addAction('messages', {
