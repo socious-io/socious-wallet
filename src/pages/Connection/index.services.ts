@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'src/services/http';
 import { useAppContext } from 'src/store/context';
@@ -22,6 +22,7 @@ const useConnection = () => {
   const [timeExceed, setTimeExceed] = useState(false);
   const [connId, setConnId] = useState('');
   const [didPeer, setDidPeer] = useState(false);
+  const establishingRef = useRef(false);
 
   useEffect(() => {
     if (timeExceed) {
@@ -83,18 +84,28 @@ const useConnection = () => {
   }, [connId]);
 
   useEffect(() => {
-    if (confirmed && agent?.state === 'running') {
+    if (confirmed && agent?.state === 'running' && !establishingRef.current) {
+      establishingRef.current = true;
       const establish = async () => {
-        const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
-        setConnId(parsed.id);
-        await agent.acceptInvitation(parsed);
-        setEstablished(true);
-        setTimeout(() => setTimeExceed(true), 2400000);
-        addAction('connections', {
-          oob,
-          callback,
-          message: 'established',
-        });
+        try {
+          const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
+          setConnId(parsed.id);
+          await agent.acceptInvitation(parsed);
+          setEstablished(true);
+          setTimeout(() => setTimeExceed(true), 2400000);
+          addAction('connections', {
+            oob,
+            callback,
+            message: 'established',
+          });
+        } catch (err) {
+          console.error('Connection establishment failed:', err);
+          establishingRef.current = false;
+          dispatch({
+            type: 'SET_WARN',
+            payload: { err: err instanceof Error ? err : new Error(String(err)), section: 'Establish Connection' },
+          });
+        }
       };
       establish();
     }
