@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
@@ -17,7 +17,7 @@ const startKYC = async (did: string, session?: string) => {
   try {
     const response = await axios.post(`${config.BACKUP_AGENT}/verify/start`, { did, session }, { headers });
     localStorage.setItem('session', response.data.session);
-    localStorage.setItem(FLAG_KEY, 'APPROVED');
+    localStorage.setItem(FLAG_KEY, 'INPROGRESS');
     return response.data;
   } catch (err) {
     console.error(err);
@@ -45,16 +45,16 @@ const useVerify = () => {
     }
   }, [credentials, verification]);
 
-  const getVerificationStatus = async () => {
+  const getVerificationStatus = useCallback(async () => {
     const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
-    const response = await axios.get(`${config.BACKUP_AGENT}/verify/${did.methodId}/status?t=${new Date().getTime()}`, {
+    const response = await axios.get(`${config.BACKUP_AGENT}/verify/${did?.methodId}/status?t=${new Date().getTime()}`, {
       headers,
     });
     return response.data;
-  };
+  }, [did?.methodId]);
 
   useEffect(() => {
-    if ((did && verification === null) || state.submitted === 'INREVIEW' || state.submitted === 'INPROGRESS') {
+    if ((did && verification === null) || state.submitted === 'INREVIEW' || state.submitted === 'INPROGRESS' || state.submitted === 'APPROVED') {
       const checkStatus = async () => {
         try {
           const response = await getVerificationStatus();
