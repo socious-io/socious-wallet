@@ -30,12 +30,18 @@ export const connect = async () => {
 
 export function usePluto() {
   const [pluto, setPluto] = useState<SDK.Domain.Pluto>();
+  const [plutoError, setPlutoError] = useState<string>();
 
   useEffect(() => {
     if (!pluto) {
-      connect().then(db => setPluto(db));
+      connect()
+        .then(db => setPluto(db))
+        .catch(err => {
+          console.error('Pluto connect failed:', err);
+          setPlutoError(String(err));
+        });
     }
   }, [pluto]);
 
-  return { pluto };
+  return { pluto, plutoError };
 }

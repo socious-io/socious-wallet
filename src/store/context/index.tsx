@@ -95,7 +95,7 @@ function appReducer(state: StateType, action: ActionType): StateType {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const { pluto } = usePluto();
+  const { pluto, plutoError } = usePluto();
   const stateRef = useRef<StateType>(state);
   const agentStartedRef = useRef(false);
 
@@ -117,7 +117,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!pluto) return;
+    if (plutoError || !pluto) return;
     dispatch({ type: 'LOADING_START' });
     dispatch({ type: 'SET_PLUTO', payload: pluto });
 
@@ -143,7 +143,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         console.error('Failed to load data from Pluto', error);
         dispatch({ type: 'LOADING_END' });
       });
-  }, [pluto]);
+  }, [pluto, plutoError]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
