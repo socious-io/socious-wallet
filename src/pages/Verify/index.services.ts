@@ -47,14 +47,22 @@ const useVerify = () => {
 
   const getVerificationStatus = useCallback(async () => {
     const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
-    const response = await axios.get(`${config.BACKUP_AGENT}/verify/${did?.methodId}/status?t=${new Date().getTime()}`, {
-      headers,
-    });
+    const response = await axios.get(
+      `${config.BACKUP_AGENT}/verify/${did?.methodId}/status?t=${new Date().getTime()}`,
+      {
+        headers,
+      },
+    );
     return response.data;
   }, [did?.methodId]);
 
   useEffect(() => {
-    if ((did && verification === null) || state.submitted === 'INREVIEW' || state.submitted === 'INPROGRESS' || state.submitted === 'APPROVED') {
+    if (
+      (did && verification === null) ||
+      state.submitted === 'INREVIEW' ||
+      state.submitted === 'INPROGRESS' ||
+      state.submitted === 'APPROVED'
+    ) {
       const checkStatus = async () => {
         try {
           const response = await getVerificationStatus();
