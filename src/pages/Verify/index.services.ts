@@ -63,7 +63,9 @@ const useVerify = () => {
   const handleStatusResponse = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (response: any) => {
-      switch (response.verification?.status.toLowerCase()) {
+      const status = response.verification?.status?.toLowerCase();
+      if (!status) return;
+      switch (status) {
         case 'not started':
           localStorage.setItem(FLAG_KEY, 'NOT_STARTED');
           dispatch({ type: 'SET_SUBMIT', payload: 'NOT_STARTED' });
@@ -72,7 +74,7 @@ const useVerify = () => {
           localStorage.setItem(FLAG_KEY, 'DECLINED');
           localStorage.removeItem('session');
           dispatch({ type: 'SET_SUBMIT', payload: 'DECLINED' });
-          Browser?.close();
+          Browser?.close().catch((e: unknown) => console.warn('Browser.close:', e));
           break;
         case 'in progress':
           dispatch({ type: 'SET_SUBMIT', payload: 'INPROGRESS' });
@@ -87,24 +89,28 @@ const useVerify = () => {
           break;
         case 'in review':
           dispatch({ type: 'SET_SUBMIT', payload: 'INREVIEW' });
-          Browser.close();
+          Browser.close().catch((e: unknown) => console.warn('Browser.close:', e));
           break;
         case 'approved': {
           if (approvedRef.current) break;
-          approvedRef.current = true;
+          if (!response.connection?.url) break;
           // Need to clear messages before redirect
           dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
           // For Web navigate to the new url
           const url = new URL(response.connection.url);
           navigate(`${url.pathname}${url.search}`);
+          // Only mark approved after successful navigation
+          approvedRef.current = true;
 
           //For Mobile if state changes to approved and init status is not approved close the browser
-          if (state.device.platform !== 'web') Browser?.close();
+          if (state.device.platform !== 'web') {
+            Browser?.close().catch((e: unknown) => console.warn('Browser.close:', e));
+          }
 
           break;
         }
         default:
-          console.error('Unknown status:');
+          console.error('Unknown status:', status);
       }
     },
     [dispatch, navigate, state.device.platform],
