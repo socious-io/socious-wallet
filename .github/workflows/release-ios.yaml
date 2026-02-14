@@ -36,13 +36,13 @@ jobs:
     name: Building iOS
     outputs:
       LATEST_APPSTORE_BUILD_NUMBER: ${{ steps.build-number.outputs.LATEST_APPSTORE_BUILD_NUMBER }}
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
@@ -189,7 +189,7 @@ jobs:
 
   deploy-appstore:
     name: Deploy to Apple Appstore
-    runs-on: macos-latest
+    runs-on: macos-26
     if: github.event.release.prerelease != true
     needs: [build-ios]
     env:
