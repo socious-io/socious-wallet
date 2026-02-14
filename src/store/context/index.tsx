@@ -143,7 +143,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         console.error('Failed to load data from Pluto', error);
         dispatch({ type: 'LOADING_END' });
       });
-  }, [pluto, state.submitted, state.selectedCredential]);
+  }, [pluto]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
