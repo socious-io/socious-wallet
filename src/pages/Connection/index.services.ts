@@ -23,6 +23,11 @@ const useConnection = () => {
   const [connId, setConnId] = useState('');
   const [didPeer, setDidPeer] = useState(false);
   const establishingRef = useRef(false);
+  const didPeerRef = useRef(false);
+
+  useEffect(() => {
+    didPeerRef.current = didPeer;
+  }, [didPeer]);
 
   useEffect(() => {
     if (timeExceed) {
@@ -89,8 +94,27 @@ const useConnection = () => {
       const establish = async () => {
         try {
           const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
-          setConnId(parsed.id);
-          await agent.acceptInvitation(parsed);
+          // Use connectionId from callback URL (Cloud Agent's ID) for polling,
+          // fall back to invitation ID if callback doesn't contain it
+          const callbackId = callback?.split('/').pop();
+          setConnId(callbackId || parsed.id);
+
+          // Retry acceptInvitation up to 3 times if the Cloud Agent doesn't acknowledge
+          for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+              await agent.acceptInvitation(parsed);
+            } catch (acceptErr) {
+              console.warn(`acceptInvitation attempt ${attempt + 1} error:`, acceptErr);
+            }
+            // Wait up to 10 seconds for the Cloud Agent to acknowledge
+            for (let i = 0; i < 10; i++) {
+              if (didPeerRef.current) break;
+              await new Promise(r => setTimeout(r, 1000));
+            }
+            if (didPeerRef.current) break;
+            if (attempt < 2) console.warn(`Connection attempt ${attempt + 1} timed out, retrying...`);
+          }
+
           setEstablished(true);
           setTimeout(() => setTimeExceed(true), 2400000);
           addAction('connections', {

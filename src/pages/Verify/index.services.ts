@@ -30,6 +30,7 @@ const useVerify = () => {
   const { state, dispatch } = useAppContext();
   const { did, credentials, verification } = state || {};
   const checkingRef = useRef(false);
+  const approvedRef = useRef(false);
 
   const onStartVerification = async () => {
     // if in review or approved return
@@ -88,6 +89,8 @@ const useVerify = () => {
           Browser.close();
           break;
         case 'approved': {
+          if (approvedRef.current) break;
+          approvedRef.current = true;
           // Need to clear messages before redirect
           dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
           // For Web navigate to the new url
