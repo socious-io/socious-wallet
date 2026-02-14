@@ -97,6 +97,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { pluto } = usePluto();
   const stateRef = useRef<StateType>(state);
+  const agentStartedRef = useRef(false);
 
   useEffect(() => {
     stateRef.current = state;
@@ -133,7 +134,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           payload: dids?.length > 0 ? master || dids[0].did : null,
         });
         dispatch({ type: 'LOADING_END' });
-        if (dids.length > 0) startAgent(pluto, dispatch, stateRef);
+        if (dids.length > 0 && !agentStartedRef.current) {
+          agentStartedRef.current = true;
+          startAgent(pluto, dispatch, stateRef);
+        }
       })
       .catch(error => {
         console.error('Failed to load data from Pluto', error);

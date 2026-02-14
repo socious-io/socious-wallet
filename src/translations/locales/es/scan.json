@@ -2,5 +2,6 @@
   "scan-error-access": "Error al acceder a la cámara",
   "scan-error-support": "no es compatible con tu navegador",
   "scan-error-qr": "¡El código QR no es válido! Por favor, inténtalo de nuevo.",
-  "scan-back-button": "Atrás"
+  "scan-back-button": "Atrás",
+  "scan-instruction": "Apunta tu cámara al código QR"
 }

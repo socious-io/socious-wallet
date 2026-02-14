@@ -198,6 +198,7 @@
 				"${BUILT_PRODUCTS_DIR}/AparajitaCapacitorSecureStorage/AparajitaCapacitorSecureStorage.framework",
 				"${BUILT_PRODUCTS_DIR}/Capacitor/Capacitor.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorApp/CapacitorApp.framework",
+				"${BUILT_PRODUCTS_DIR}/CapacitorBarcodeScanner/CapacitorBarcodeScanner.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorBrowser/CapacitorBrowser.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorCordova/Cordova.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorDevice/CapacitorDevice.framework",
@@ -206,6 +207,7 @@
 				"${BUILT_PRODUCTS_DIR}/CapawesomeCapacitorFilePicker/CapawesomeCapacitorFilePicker.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/IONFilesystemLib/IONFilesystemLib.framework/IONFilesystemLib",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OSBarcodeLib/OSBarcodeLib.framework/OSBarcodeLib",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -213,6 +215,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AparajitaCapacitorSecureStorage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Capacitor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapacitorApp.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapacitorBarcodeScanner.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapacitorBrowser.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cordova.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapacitorDevice.framework",
@@ -221,6 +224,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CapawesomeCapacitorFilePicker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IONFilesystemLib.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OSBarcodeLib.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -381,7 +385,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Socious Wallet";
 				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.6.58;
+				MARKETING_VERSION = 1.7.3;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "socious.mobile-wallet.app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -408,7 +412,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Socious Wallet";
 				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.6.58;
+				MARKETING_VERSION = 1.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "socious.mobile-wallet.app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

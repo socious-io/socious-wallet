@@ -2,5 +2,6 @@
   "scan-error-access": "خطأ في الوصول إلى الكاميرا",
   "scan-error-support": "غير مدعوم من قبل متصفحك",
   "scan-error-qr": "رمز QR غير صالح! يرجى المحاولة مرة أخرى.",
-  "scan-back-button": "رجوع"
+  "scan-back-button": "رجوع",
+  "scan-instruction": "وجّه الكاميرا نحو رمز QR"
 }
