@@ -157,7 +157,7 @@ const useVerify = () => {
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      listener.then((l) => l.remove());
+      listener.then(l => l.remove());
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [checkStatus]);
