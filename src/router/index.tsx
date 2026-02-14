@@ -1,4 +1,5 @@
 import { RouteObject, createBrowserRouter, Navigate, useRouteError } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import { useAppContext } from 'src/store/context';
 import Layout from 'src/containers/Layout';
 import Intro from 'src/pages/Intro';
@@ -8,8 +9,9 @@ import Credentials from 'src/pages/Credentials';
 import Connection from 'src/pages/Connection';
 import Verify from 'src/pages/Verify';
 import Loading from 'src/components/Loading';
-import Scan from 'src/pages/Scan';
 import Download from 'src/pages/Download';
+
+const Scan = lazy(() => import('src/pages/Scan'));
 import AppUrlListener from 'src/containers/AppUrlListener';
 import Settings from 'src/pages/Settings';
 import SetupPass from 'src/pages/SetupPass';
@@ -48,7 +50,14 @@ export const blueprint: RouteObject[] = [
       { path: '/import', element: <Recover /> },
       { path: '/connect', element: <Connection /> },
       { path: '/settings', element: <Settings /> },
-      { path: '/scan', element: <Scan /> },
+      {
+        path: '/scan',
+        element: (
+          <Suspense fallback={<Loading show={true} animation="grow" />}>
+            <Scan />
+          </Suspense>
+        ),
+      },
       { path: '/entry', element: <WalletEntry /> },
       { path: '/unlock', element: <UnlockPage /> },
       { path: '/enter-name', element: <EnterName /> },
