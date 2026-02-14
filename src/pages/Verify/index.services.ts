@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
@@ -29,12 +29,14 @@ const useVerify = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useAppContext();
   const { did, credentials, verification } = state || {};
+  const checkingRef = useRef(false);
 
   const onStartVerification = async () => {
     // if in review or approved return
     if (state.submitted === 'INREVIEW' || state.submitted === 'APPROVED') return;
 
     const { url } = await startKYC(did.methodId, localStorage.getItem('session'));
+    dispatch({ type: 'SET_SUBMIT', payload: 'INPROGRESS' });
     if (state.device.platform === 'web') window.location.replace(url);
     else Browser.open({ url });
   };
@@ -56,6 +58,73 @@ const useVerify = () => {
     return response.data;
   }, [did?.methodId]);
 
+  const handleStatusResponse = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (response: any) => {
+      switch (response.verification?.status.toLowerCase()) {
+        case 'not started':
+          localStorage.setItem(FLAG_KEY, 'NOT_STARTED');
+          dispatch({ type: 'SET_SUBMIT', payload: 'NOT_STARTED' });
+          break;
+        case 'declined':
+          localStorage.setItem(FLAG_KEY, 'DECLINED');
+          localStorage.removeItem('session');
+          dispatch({ type: 'SET_SUBMIT', payload: 'DECLINED' });
+          Browser?.close();
+          break;
+        case 'in progress':
+          dispatch({ type: 'SET_SUBMIT', payload: 'INPROGRESS' });
+          break;
+        case 'expired':
+          localStorage.setItem(FLAG_KEY, 'EXPIRED');
+          dispatch({ type: 'SET_SUBMIT', payload: 'EXPIRED' });
+          break;
+        case 'abandoned':
+          localStorage.setItem(FLAG_KEY, 'ABANDONED');
+          dispatch({ type: 'SET_SUBMIT', payload: 'ABANDONED' });
+          break;
+        case 'in review':
+          dispatch({ type: 'SET_SUBMIT', payload: 'INREVIEW' });
+          Browser.close();
+          break;
+        case 'approved': {
+          // Need to clear messages before redirect
+          dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
+          // For Web navigate to the new url
+          const url = new URL(response.connection.url);
+          navigate(`${url.pathname}${url.search}`);
+
+          //For Mobile if state changes to approved and init status is not approved close the browser
+          if (state.device.platform !== 'web') Browser?.close();
+
+          break;
+        }
+        default:
+          console.error('Unknown status:');
+      }
+    },
+    [dispatch, navigate, state.device.platform],
+  );
+
+  const checkStatus = useCallback(async () => {
+    if (checkingRef.current) return;
+    checkingRef.current = true;
+    try {
+      const response = await getVerificationStatus();
+      handleStatusResponse(response);
+    } catch (err) {
+      const sessionID = localStorage.getItem('session');
+      console.error(err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((err as any)?.response?.status === 400 && sessionID) {
+        startKYC(did.methodId, sessionID);
+      }
+    } finally {
+      checkingRef.current = false;
+    }
+  }, [getVerificationStatus, handleStatusResponse, did?.methodId]);
+
+  // Polling interval for status checks
   useEffect(() => {
     if (
       (did && verification === null) ||
@@ -63,63 +132,35 @@ const useVerify = () => {
       state.submitted === 'INPROGRESS' ||
       state.submitted === 'APPROVED'
     ) {
-      const checkStatus = async () => {
-        try {
-          const response = await getVerificationStatus();
-          switch (response.verification?.status.toLowerCase()) {
-            case 'not started':
-              localStorage.setItem(FLAG_KEY, 'NOT_STARTED');
-              dispatch({ type: 'SET_SUBMIT', payload: 'NOT_STARTED' });
-              break;
-            case 'declined':
-              localStorage.setItem(FLAG_KEY, 'DECLINED');
-              localStorage.removeItem('session');
-              dispatch({ type: 'SET_SUBMIT', payload: 'DECLINED' });
-              Browser?.close();
-              break;
-            case 'in progress':
-              dispatch({ type: 'SET_SUBMIT', payload: 'INPROGRESS' });
-              break;
-            case 'expired':
-              localStorage.setItem(FLAG_KEY, 'EXPIRED');
-              dispatch({ type: 'SET_SUBMIT', payload: 'EXPIRED' });
-              break;
-            case 'abandoned':
-              localStorage.setItem(FLAG_KEY, 'ABANDONED');
-              dispatch({ type: 'SET_SUBMIT', payload: 'ABANDONED' });
-              break;
-            case 'in review':
-              dispatch({ type: 'SET_SUBMIT', payload: 'INREVIEW' });
-              Browser.close();
-              break;
-            case 'approved': {
-              // Need to clear messages before redirect
-              dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
-              // For Web navigate to the new url
-              const url = new URL(response.connection.url);
-              navigate(`${url.pathname}${url.search}`);
-
-              //For Mobile if state changes to approved and init status is not approved close the browser
-              if (state.device.platform !== 'web') Browser?.close();
-
-              break;
-            }
-            default:
-              console.error('Unknown status:');
-          }
-        } catch (err) {
-          const sessionID = localStorage.getItem('session');
-          console.error(err);
-          if (err?.response?.status === 400 && sessionID) {
-            startKYC(did.methodId, sessionID);
-          }
-        }
-      };
-
       const intervalId = setInterval(checkStatus, 5000);
       return () => clearInterval(intervalId);
     }
-  }, [did, verification, dispatch, navigate, getVerificationStatus]);
+  }, [did, verification, state.submitted, checkStatus]);
+
+  // Listen for browser close (iOS: SFSafariViewController dismissed)
+  // and immediately check status since timers are suspended while browser is open
+  useEffect(() => {
+    const listener = Browser.addListener('browserFinished', () => {
+      // eslint-disable-next-line no-console
+      console.log('Browser closed, checking verification status');
+      checkStatus();
+    });
+
+    // Also check on visibility change (app returning to foreground)
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // eslint-disable-next-line no-console
+        console.log('App visible, checking verification status');
+        checkStatus();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      listener.then((l) => l.remove());
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [checkStatus]);
 
   return { translate, verification, onStartVerification, submitStatus: state.submitted };
 };
