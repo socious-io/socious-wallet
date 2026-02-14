@@ -24,6 +24,7 @@ const useConnection = () => {
   const [didPeer, setDidPeer] = useState(false);
   const establishingRef = useRef(false);
   const didPeerRef = useRef(false);
+  const [debugInfo, setDebugInfo] = useState('waiting');
 
   useEffect(() => {
     didPeerRef.current = didPeer;
@@ -80,59 +81,86 @@ const useConnection = () => {
   useEffect(() => {
     if (connId) {
       const checkStatus = async () => {
-        const { data } = await axios.get(`${config.BACKUP_AGENT}/connections/${connId}?t=${new Date().getTime()}`);
-        setDidPeer(data.state === CONN_PEER_SUCCESS_STATUS);
+        try {
+          const { data } = await axios.get(`${config.BACKUP_AGENT}/connections/${connId}?t=${new Date().getTime()}`);
+          setDebugInfo(prev => {
+            const base = prev.split(' | poll:')[0];
+            return `${base} | poll:${data.state}`;
+          });
+          setDidPeer(data.state === CONN_PEER_SUCCESS_STATUS);
+        } catch (err: any) {
+          setDebugInfo(prev => {
+            const base = prev.split(' | poll:')[0];
+            return `${base} | poll-err:${err?.response?.status || err?.message}`;
+          });
+        }
       };
       const intervalId = setInterval(checkStatus, 3000);
+      checkStatus(); // immediate first check
       return () => clearInterval(intervalId);
     }
   }, [connId]);
 
   useEffect(() => {
-    if (confirmed && agent?.state === 'running' && !establishingRef.current) {
-      establishingRef.current = true;
-      const establish = async () => {
-        try {
-          const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
-          // Use connectionId from callback URL (Cloud Agent's ID) for polling,
-          // fall back to invitation ID if callback doesn't contain it
-          const callbackId = callback?.split('/').pop();
-          setConnId(callbackId || parsed.id);
-
-          // Retry acceptInvitation up to 3 times if the Cloud Agent doesn't acknowledge
-          for (let attempt = 0; attempt < 3; attempt++) {
-            try {
-              await agent.acceptInvitation(parsed);
-            } catch (acceptErr) {
-              console.warn(`acceptInvitation attempt ${attempt + 1} error:`, acceptErr);
-            }
-            // Wait up to 10 seconds for the Cloud Agent to acknowledge
-            for (let i = 0; i < 10; i++) {
-              if (didPeerRef.current) break;
-              await new Promise(r => setTimeout(r, 1000));
-            }
-            if (didPeerRef.current) break;
-            if (attempt < 2) console.warn(`Connection attempt ${attempt + 1} timed out, retrying...`);
-          }
-
-          setEstablished(true);
-          setTimeout(() => setTimeExceed(true), 2400000);
-          addAction('connections', {
-            oob,
-            callback,
-            message: 'established',
-          });
-        } catch (err) {
-          console.error('Connection establishment failed:', err);
-          establishingRef.current = false;
-          dispatch({
-            type: 'SET_WARN',
-            payload: { err: err instanceof Error ? err : new Error(String(err)), section: 'Establish Connection' },
-          });
-        }
-      };
-      establish();
+    if (!confirmed) {
+      setDebugInfo(`agent:${agent?.state || 'null'} confirmed:false`);
+      return;
     }
+    if (!agent || agent.state !== 'running') {
+      setDebugInfo(`agent:${agent?.state || 'null'} confirmed:true waiting-for-agent`);
+      return;
+    }
+    if (establishingRef.current) return;
+    establishingRef.current = true;
+
+    const establish = async () => {
+      try {
+        setDebugInfo('parsing-oob...');
+        const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
+        const callbackId = callback?.split('/').pop();
+        const pollingId = callbackId || parsed.id;
+        const ids = `inv:${parsed.id?.slice(0, 8)} cb:${callbackId?.slice(0, 8)}`;
+        setDebugInfo(`parsed ok ${ids} poll:${pollingId?.slice(0, 8)}`);
+        setConnId(pollingId);
+
+        for (let attempt = 0; attempt < 3; attempt++) {
+          const dbgBase = () => debugInfo.split(' | poll:')[0];
+          setDebugInfo(`${dbgBase()} | accept #${attempt + 1}...`);
+          try {
+            await agent.acceptInvitation(parsed);
+            setDebugInfo(`${dbgBase()} | accept #${attempt + 1} ok`);
+          } catch (acceptErr: any) {
+            const msg = acceptErr?.message?.slice(0, 30);
+            setDebugInfo(`${dbgBase()} | accept #${attempt + 1} err:${msg}`);
+          }
+          for (let i = 0; i < 10; i++) {
+            if (didPeerRef.current) break;
+            await new Promise(r => setTimeout(r, 1000));
+          }
+          if (didPeerRef.current) break;
+        }
+
+        setEstablished(true);
+        if (!didPeerRef.current) {
+          setDebugInfo(prev => `${prev} | retries exhausted, still polling...`);
+        }
+        setTimeout(() => setTimeExceed(true), 2400000);
+        addAction('connections', {
+          oob,
+          callback,
+          message: 'established',
+        });
+      } catch (err: any) {
+        console.error('Connection establishment failed:', err);
+        setDebugInfo(`ERROR: ${err?.message}`);
+        establishingRef.current = false;
+        dispatch({
+          type: 'SET_WARN',
+          payload: { err: err instanceof Error ? err : new Error(String(err)), section: 'Establish Connection' },
+        });
+      }
+    };
+    establish();
   }, [confirmed, agent, listenerActive]);
 
   const handleConfirm = async () => {
@@ -167,6 +195,7 @@ const useConnection = () => {
     handleCancel,
     verification,
     verifyConnection,
+    debugInfo,
   };
 };
 
