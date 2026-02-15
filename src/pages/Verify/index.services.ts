@@ -32,6 +32,7 @@ const useVerify = () => {
   const { did, credentials, verification } = state || {};
   const checkingRef = useRef(false);
   const approvedRef = useRef(false);
+  const burstPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const onStartVerification = async () => {
     // if in review or approved return
@@ -148,6 +149,21 @@ const useVerify = () => {
     }
   }, [did, verification, state.submitted, checkStatus]);
 
+  // Start burst polling: check every 2s for 30s to quickly detect status changes
+  const startBurstPolling = useCallback(() => {
+    if (burstPollRef.current) clearInterval(burstPollRef.current);
+    let count = 0;
+    burstPollRef.current = setInterval(() => {
+      count++;
+      checkStatus();
+      if (count >= 15) {
+        // 15 * 2s = 30s, stop burst and fall back to normal 5s polling
+        if (burstPollRef.current) clearInterval(burstPollRef.current);
+        burstPollRef.current = null;
+      }
+    }, 2000);
+  }, [checkStatus]);
+
   // Listen for custom URL scheme (sociouswallet://) from DIDIT callback redirect.
   // This fires when DIDIT completes and redirects through wallet-api to our URL scheme.
   useEffect(() => {
@@ -155,12 +171,14 @@ const useVerify = () => {
       if (data.url?.startsWith('sociouswallet://')) {
         Browser.close().catch((e: unknown) => console.warn('Browser.close:', e));
         checkStatus();
+        startBurstPolling();
       }
     });
     return () => {
       urlListener.then(l => l.remove());
+      if (burstPollRef.current) clearInterval(burstPollRef.current);
     };
-  }, [checkStatus]);
+  }, [checkStatus, startBurstPolling]);
 
   // Listen for browser close (iOS: SFSafariViewController dismissed)
   // and immediately check status since timers are suspended while browser is open
@@ -169,6 +187,7 @@ const useVerify = () => {
       // eslint-disable-next-line no-console
       console.log('Browser closed, checking verification status');
       checkStatus();
+      startBurstPolling();
     });
 
     // Also check on visibility change (app returning to foreground)
@@ -177,6 +196,7 @@ const useVerify = () => {
         // eslint-disable-next-line no-console
         console.log('App visible, checking verification status');
         checkStatus();
+        startBurstPolling();
       }
     };
     document.addEventListener('visibilitychange', onVisibilityChange);
@@ -185,7 +205,7 @@ const useVerify = () => {
       listener.then(l => l.remove());
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, [checkStatus]);
+  }, [checkStatus, startBurstPolling]);
 
   return { translate, verification, onStartVerification, submitStatus: state.submitted };
 };

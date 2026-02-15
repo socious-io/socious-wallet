@@ -23,12 +23,17 @@ function Verify() {
             <span className="text-secondary text-center">{translate('verify-subtitle')}</span>
             <img src={verifyImage} width={354} height={186} alt="Verify Id Card" />
           </div>
-          {submitStatus !== 'INREVIEW' && submitStatus !== 'APPROVED' && (
+          {submitStatus !== 'INREVIEW' && submitStatus !== 'APPROVED' && submitStatus !== 'INPROGRESS' && (
             <Button variant="primary" type="submit" className="fw-semibold w-100 py-2" onClick={onStartVerification}>
               {translate('verify-veriff-button')}
             </Button>
           )}
 
+          {submitStatus === 'INPROGRESS' && (
+            <Alert variant="info" className="w-100">
+              {translate('verify-inprogress')}
+            </Alert>
+          )}
           {submitStatus === 'INREVIEW' && (
             <Alert variant="primary" className="w-100">
               {translate('verify-submitted')}

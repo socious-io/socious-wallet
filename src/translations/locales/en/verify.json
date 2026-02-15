@@ -4,5 +4,6 @@
   "verify-subtitle": "Socious Wallet partners with Didit for secure identity verification that complies with KYC, AML, and GDPR. No personal data is stored, and a single verification works for multiple services. You decide what information to share, and it is all done in just 1 minute.",
   "verify-submitted": "Your verification request has been submitted.",
   "verify-verified": "Your identity has been verified. Please remain on this page while your credentials are being generated. If nothing happens after 30 seconds, completely exit and restart the app.",
-  "verify-veriff-button": "Get verified"
+  "verify-veriff-button": "Get verified",
+  "verify-inprogress": "Verification in progress. Please wait while we confirm your identity..."
 }
