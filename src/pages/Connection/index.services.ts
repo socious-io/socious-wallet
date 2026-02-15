@@ -120,11 +120,24 @@ const useConnection = () => {
     const establish = async () => {
       // Wait for agent to become available (up to 30 seconds)
       let currentAgent = agent;
-      diag('establish-start', { hasAgent: !!currentAgent, agentState: currentAgent?.state });
+      diag('establish-start', {
+        hasAgent: !!currentAgent,
+        agentState: currentAgent?.state,
+        stateKeys: Object.keys(stateRef.current || {}),
+        hasStateAgent: !!stateRef.current?.agent,
+      });
       if (!currentAgent || currentAgent.state !== 'running') {
         for (let i = 0; i < 120; i++) {
           await new Promise(r => setTimeout(r, 1000));
           currentAgent = stateRef.current?.agent;
+          if (i % 10 === 9) {
+            diag('agent-wait-tick', {
+              i,
+              hasAgent: !!currentAgent,
+              agentState: currentAgent?.state,
+              stateAgentState: stateRef.current?.agent?.state,
+            });
+          }
           if (currentAgent && currentAgent.state === 'running') break;
         }
         diag('agent-wait-done', { hasAgent: !!currentAgent, agentState: currentAgent?.state });
@@ -154,10 +167,13 @@ const useConnection = () => {
             await currentAgent.acceptInvitation(parsed);
             diag('accept-ok', { attempt });
           } catch (acceptErr: any) {
+            const respData = acceptErr?.response?.data;
+            const respStatus = acceptErr?.response?.status;
             diag('accept-error', {
               attempt,
               error: acceptErr?.message || String(acceptErr),
-              stack: acceptErr?.stack?.substring(0, 300),
+              respStatus,
+              respData: JSON.stringify(respData || '').substring(0, 500),
             });
           }
           for (let i = 0; i < 10; i++) {

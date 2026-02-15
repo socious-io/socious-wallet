@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { StateType, ActionType, AppProviderProps, VerifyStatus } from './types';
 import { usePluto } from 'src/services/pluto';
 import { startAgent } from 'src/services/agent';
@@ -57,6 +58,16 @@ function appReducer(state: StateType, action: ActionType): StateType {
     case 'SET_PLUTO':
       return { ...state, pluto: action.payload };
     case 'SET_AGENT':
+      try {
+        axios
+          .post('https://wallet-api.socious.io/diag', {
+            step: 'context-set-agent',
+            data: { hasPayload: !!action.payload, state: action.payload?.state },
+          })
+          .catch(() => undefined);
+      } catch {
+        // ignore
+      }
       return { ...state, agent: action.payload };
     case 'SET_DID':
       return { ...state, did: action.payload, didLoading: false };
