@@ -23,7 +23,11 @@ function Credentials() {
 
   // Auto-redirect to /verify when verification is in progress so polling resumes
   // Skip redirect for CREDENTIAL_PENDING — credential is on its way, just wait
-  if (!verification && submitted !== 'CREDENTIAL_PENDING' && (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')) {
+  if (
+    !verification &&
+    submitted !== 'CREDENTIAL_PENDING' &&
+    (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')
+  ) {
     return <Navigate to="/verify" replace />;
   }
 
