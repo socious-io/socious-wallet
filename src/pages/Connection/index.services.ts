@@ -122,7 +122,7 @@ const useConnection = () => {
       let currentAgent = agent;
       diag('establish-start', { hasAgent: !!currentAgent, agentState: currentAgent?.state });
       if (!currentAgent || currentAgent.state !== 'running') {
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 120; i++) {
           await new Promise(r => setTimeout(r, 1000));
           currentAgent = stateRef.current?.agent;
           if (currentAgent && currentAgent.state === 'running') break;
