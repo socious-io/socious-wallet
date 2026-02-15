@@ -139,7 +139,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         dispatch({ type: 'LOADING_END' });
         if (dids.length > 0 && !agentStartedRef.current) {
           agentStartedRef.current = true;
-          startAgent(pluto, dispatch, stateRef);
+          startAgent(pluto, dispatch, stateRef).catch(err => {
+            console.error('startAgent failed:', err);
+            agentStartedRef.current = false;
+          });
         }
       })
       .catch(error => {
