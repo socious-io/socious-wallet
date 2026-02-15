@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
 import { Browser } from '@capacitor/browser';
+import { App } from '@capacitor/app';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore this package types has issue so we ignore error
@@ -146,6 +147,20 @@ const useVerify = () => {
       return () => clearInterval(intervalId);
     }
   }, [did, verification, state.submitted, checkStatus]);
+
+  // Listen for custom URL scheme (sociouswallet://) from DIDIT callback redirect.
+  // This fires when DIDIT completes and redirects through wallet-api to our URL scheme.
+  useEffect(() => {
+    const urlListener = App.addListener('appUrlOpen', data => {
+      if (data.url?.startsWith('sociouswallet://')) {
+        Browser.close().catch((e: unknown) => console.warn('Browser.close:', e));
+        checkStatus();
+      }
+    });
+    return () => {
+      urlListener.then(l => l.remove());
+    };
+  }, [checkStatus]);
 
   // Listen for browser close (iOS: SFSafariViewController dismissed)
   // and immediately check status since timers are suspended while browser is open

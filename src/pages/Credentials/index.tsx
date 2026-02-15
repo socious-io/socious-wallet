@@ -201,6 +201,23 @@ function Credentials() {
             {filteredCredential.claims.map(claim =>
               Object.keys(claim)
                 .filter(field => field !== 'id')
+                .sort((a, b) => {
+                  const order = [
+                    'last_name',
+                    'first_name',
+                    'gender',
+                    'date_of_birth',
+                    'country',
+                    'id_number',
+                    'document_type',
+                    'document_number',
+                    'issued_date',
+                    'type',
+                  ];
+                  const ai = order.indexOf(a);
+                  const bi = order.indexOf(b);
+                  return (ai === -1 ? order.length : ai) - (bi === -1 ? order.length : bi);
+                })
                 .map(
                   (field, i) =>
                     claim[field] && (
