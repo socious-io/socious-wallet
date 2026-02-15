@@ -184,8 +184,6 @@ const useVerify = () => {
   // and immediately check status since timers are suspended while browser is open
   useEffect(() => {
     const listener = Browser.addListener('browserFinished', () => {
-      // eslint-disable-next-line no-console
-      console.log('Browser closed, checking verification status');
       checkStatus();
       startBurstPolling();
     });
@@ -193,8 +191,6 @@ const useVerify = () => {
     // Also check on visibility change (app returning to foreground)
     const onVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        // eslint-disable-next-line no-console
-        console.log('App visible, checking verification status');
         checkStatus();
         startBurstPolling();
       }

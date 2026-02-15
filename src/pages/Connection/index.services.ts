@@ -24,7 +24,6 @@ const useConnection = () => {
   const [didPeer, setDidPeer] = useState(false);
   const establishingRef = useRef(false);
   const didPeerRef = useRef(false);
-  const [debugInfo, setDebugInfo] = useState('waiting');
 
   useEffect(() => {
     didPeerRef.current = didPeer;
@@ -83,16 +82,9 @@ const useConnection = () => {
       const checkStatus = async () => {
         try {
           const { data } = await axios.get(`${config.BACKUP_AGENT}/connections/${connId}?t=${new Date().getTime()}`);
-          setDebugInfo(prev => {
-            const base = prev.split(' | poll:')[0];
-            return `${base} | poll:${data.state}`;
-          });
           setDidPeer(data.state === CONN_PEER_SUCCESS_STATUS);
-        } catch (err: any) {
-          setDebugInfo(prev => {
-            const base = prev.split(' | poll:')[0];
-            return `${base} | poll-err:${err?.response?.status || err?.message}`;
-          });
+        } catch {
+          // Connection status check failed, will retry on next interval
         }
       };
       const intervalId = setInterval(checkStatus, 3000);
@@ -102,36 +94,23 @@ const useConnection = () => {
   }, [connId]);
 
   useEffect(() => {
-    if (!confirmed) {
-      setDebugInfo(`agent:${agent?.state || 'null'} confirmed:false`);
-      return;
-    }
-    if (!agent || agent.state !== 'running') {
-      setDebugInfo(`agent:${agent?.state || 'null'} confirmed:true waiting-for-agent`);
-      return;
-    }
+    if (!confirmed) return;
+    if (!agent || agent.state !== 'running') return;
     if (establishingRef.current) return;
     establishingRef.current = true;
 
     const establish = async () => {
       try {
-        setDebugInfo('parsing-oob...');
         const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
         const callbackId = callback?.split('/').pop();
         const pollingId = callbackId || parsed.id;
-        const ids = `inv:${parsed.id?.slice(0, 8)} cb:${callbackId?.slice(0, 8)}`;
-        setDebugInfo(`parsed ok ${ids} poll:${pollingId?.slice(0, 8)}`);
         setConnId(pollingId);
 
         for (let attempt = 0; attempt < 3; attempt++) {
-          const dbgBase = () => debugInfo.split(' | poll:')[0];
-          setDebugInfo(`${dbgBase()} | accept #${attempt + 1}...`);
           try {
             await agent.acceptInvitation(parsed);
-            setDebugInfo(`${dbgBase()} | accept #${attempt + 1} ok`);
-          } catch (acceptErr: any) {
-            const msg = acceptErr?.message?.slice(0, 30);
-            setDebugInfo(`${dbgBase()} | accept #${attempt + 1} err:${msg}`);
+          } catch {
+            // Accept attempt failed, will retry
           }
           for (let i = 0; i < 10; i++) {
             if (didPeerRef.current) break;
@@ -141,9 +120,6 @@ const useConnection = () => {
         }
 
         setEstablished(true);
-        if (!didPeerRef.current) {
-          setDebugInfo(prev => `${prev} | retries exhausted, still polling...`);
-        }
         setTimeout(() => setTimeExceed(true), 2400000);
         addAction('connections', {
           oob,
@@ -152,7 +128,6 @@ const useConnection = () => {
         });
       } catch (err: any) {
         console.error('Connection establishment failed:', err);
-        setDebugInfo(`ERROR: ${err?.message}`);
         establishingRef.current = false;
         dispatch({
           type: 'SET_WARN',
@@ -195,7 +170,6 @@ const useConnection = () => {
     handleCancel,
     verification,
     verifyConnection,
-    debugInfo,
   };
 };
 

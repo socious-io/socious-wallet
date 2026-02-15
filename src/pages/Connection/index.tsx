@@ -10,7 +10,7 @@ import NavigationBar from 'src/containers/NavigationBar';
 
 function Connection() {
   const { t: translate } = useTranslation();
-  const { oob, openModal, handleConfirm, handleCancel, verification, verifyConnection, debugInfo } = useConnection();
+  const { oob, openModal, handleConfirm, handleCancel, verification, verifyConnection } = useConnection();
 
   if (!oob) return <Navigate to="/" />;
   if (!verification && !verifyConnection) return <Navigate to="/" />;
@@ -35,7 +35,6 @@ function Connection() {
               ]}
             />
           </div>
-          <div style={{ fontSize: 10, color: '#999', padding: 8, wordBreak: 'break-all' }}>[DBG] {debugInfo}</div>
           <NavigationBar />
         </Card>
       </div>

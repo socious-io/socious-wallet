@@ -38,11 +38,6 @@ const handleMessages =
   ) =>
   async (newMessages: SDK.Domain.Message[]) => {
     const state = stateRef.current;
-    // eslint-disable-next-line no-console
-    console.log(
-      'Received messages:',
-      newMessages.map(m => ({ piuri: m.piuri, from: m.from?.toString(), to: m.to?.toString(), id: m.id })),
-    );
     dispatch({ type: 'SET_NEW_MESSAGE', payload: newMessages });
     dispatch({ type: 'SET_LISTENER_STATE', payload: true });
     const credentialOffers = newMessages.filter(
@@ -117,16 +112,6 @@ const handleMessages =
     if (credentialOffers && credentialOffers.length) {
       for (const credentialOfferMessage of credentialOffers) {
         try {
-          // eslint-disable-next-line no-console
-          console.log(
-            'Processing credential offer message:',
-            JSON.stringify({
-              piuri: credentialOfferMessage.piuri,
-              from: credentialOfferMessage.from?.toString(),
-              body: credentialOfferMessage.body,
-              attachmentsCount: credentialOfferMessage.attachments?.length,
-            }),
-          );
           // Cloud Agent v2.1.0 sends credential_preview.attributes directly,
           // but SDK v7 expects credential_preview.body.attributes
           const preview = credentialOfferMessage.body?.credential_preview;
@@ -150,26 +135,12 @@ const handleMessages =
           }
         } catch (err) {
           console.error('Error processing credential offer:', err);
-          console.error('Offer message body:', JSON.stringify(credentialOfferMessage.body, null, 2));
-          console.error('Offer message attachments:', JSON.stringify(credentialOfferMessage.attachments, null, 2));
         }
       }
     }
     if (issuedCredentials.length) {
       for (const issuedCredential of issuedCredentials) {
         try {
-          // eslint-disable-next-line no-console
-          console.log(
-            'Processing issued credential message:',
-            JSON.stringify({
-              piuri: issuedCredential.piuri,
-              from: issuedCredential.from?.toString(),
-              to: issuedCredential.to?.toString(),
-              body: issuedCredential.body,
-              attachmentsCount: issuedCredential.attachments?.length,
-              attachmentFormats: issuedCredential.attachments?.map((a: any) => a.format),
-            }),
-          );
           const issueCredential = IssueCredential.fromMessage(issuedCredential);
           const credentials = await pluto.getAllCredentials();
           const verfiedVC = credentials.filter(c => c.claims[0]?.type === 'verification')[0];
@@ -194,7 +165,6 @@ const handleMessages =
           dispatch({ type: 'SET_CREDENTIALS', payload: [credential] });
         } catch (err) {
           console.error('Error processing issued credential:', err);
-          console.error('Message details:', JSON.stringify(issuedCredential, null, 2));
         }
       }
     }
