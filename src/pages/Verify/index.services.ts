@@ -19,6 +19,7 @@ const startKYC = async (did: string, session?: string) => {
     const response = await axios.post(`${config.BACKUP_AGENT}/verify/start`, { did, session }, { headers });
     localStorage.setItem('session', response.data.session);
     localStorage.setItem(FLAG_KEY, 'INPROGRESS');
+    localStorage.removeItem('connection_handled');
     return response.data;
   } catch (err) {
     console.error(err);
@@ -96,13 +97,16 @@ const useVerify = () => {
         case 'approved': {
           if (approvedRef.current) break;
           if (!response.connection?.url) break;
+          // Prevent re-navigating to /connect/ after component remount
+          if (localStorage.getItem('connection_handled') === response.connection.id) break;
           // Need to clear messages before redirect
           dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
           // For Web navigate to the new url
           const url = new URL(response.connection.url);
           navigate(`${url.pathname}${url.search}`);
-          // Only mark approved after successful navigation
+          // Mark approved to prevent re-navigation (both in ref and localStorage)
           approvedRef.current = true;
+          localStorage.setItem('connection_handled', response.connection.id);
 
           //For Mobile if state changes to approved and init status is not approved close the browser
           if (state.device.platform !== 'web') {
