@@ -8,6 +8,8 @@ const AppUrlListener: React.FC = () => {
   useEffect(() => {
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       try {
+        // Ignore sociouswallet:// URLs — these are handled by the Verify page listener
+        if (event.url?.startsWith('sociouswallet://')) return;
         const url = new URL(event.url);
         navigate(`${url.pathname}${url.search}`);
       } catch (error) {
