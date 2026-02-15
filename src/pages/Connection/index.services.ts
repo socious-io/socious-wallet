@@ -24,6 +24,11 @@ const useConnection = () => {
   const [didPeer, setDidPeer] = useState(false);
   const establishingRef = useRef(false);
   const didPeerRef = useRef(false);
+  const stateRef = useRef(state);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   useEffect(() => {
     didPeerRef.current = didPeer;
@@ -93,22 +98,47 @@ const useConnection = () => {
     }
   }, [connId]);
 
+  // Start connection polling as soon as we have a callback ID, even before agent is ready
   useEffect(() => {
     if (!confirmed) return;
-    if (!agent || agent.state !== 'running') return;
+    const callbackId = callback?.split('/').pop();
+    if (callbackId && !connId) {
+      setConnId(callbackId);
+    }
+  }, [confirmed, callback, connId]);
+
+  useEffect(() => {
+    if (!confirmed) return;
     if (establishingRef.current) return;
-    establishingRef.current = true;
 
     const establish = async () => {
+      // Wait for agent to become available (up to 30 seconds)
+      let currentAgent = agent;
+      if (!currentAgent || currentAgent.state !== 'running') {
+        for (let i = 0; i < 30; i++) {
+          await new Promise(r => setTimeout(r, 1000));
+          currentAgent = stateRef.current?.agent;
+          if (currentAgent && currentAgent.state === 'running') break;
+        }
+      }
+
+      if (!currentAgent || currentAgent.state !== 'running') {
+        dispatch({
+          type: 'SET_WARN',
+          payload: {
+            err: new Error('Agent not ready. Please restart the app and try again.'),
+            section: 'Establish Connection',
+          },
+        });
+        return;
+      }
+
       try {
-        const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
-        const callbackId = callback?.split('/').pop();
-        const pollingId = callbackId || parsed.id;
-        setConnId(pollingId);
+        const parsed = await currentAgent.parseOOBInvitation(new URL(window.location.href));
 
         for (let attempt = 0; attempt < 3; attempt++) {
           try {
-            await agent.acceptInvitation(parsed);
+            await currentAgent.acceptInvitation(parsed);
           } catch {
             // Accept attempt failed, will retry
           }
@@ -135,8 +165,10 @@ const useConnection = () => {
         });
       }
     };
+
+    establishingRef.current = true;
     establish();
-  }, [confirmed, agent, listenerActive]);
+  }, [confirmed]);
 
   const handleConfirm = async () => {
     setConfirmed(true);
