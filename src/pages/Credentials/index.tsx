@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ListGroup, Button } from 'react-bootstrap'; // Added Button import
 import Card from 'src/components/Card';
@@ -23,8 +23,7 @@ function Credentials() {
 
   // Auto-redirect to /verify when verification is in progress so polling resumes
   if (!verification && (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')) {
-    navigate('/verify', { replace: true });
-    return null;
+    return <Navigate to="/verify" replace />;
   }
 
   const isKyc = type => type === 'verification';
