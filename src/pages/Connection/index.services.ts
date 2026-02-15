@@ -59,6 +59,8 @@ const useConnection = () => {
           .get(callback, { params: { accept: true } })
           .then(r => console.warn(`callback successfully with status ${r.status}`))
           .catch(err => console.error(err));
+      // Stop Verify page from polling and creating new connections
+      dispatch({ type: 'SET_SUBMIT', payload: 'CREDENTIAL_PENDING' });
       navigate('/');
       dispatch({ type: 'SET_LIST_PROCESSING', payload: true });
       addAction('connections', {

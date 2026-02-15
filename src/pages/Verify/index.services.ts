@@ -140,8 +140,9 @@ const useVerify = () => {
     }
   }, [getVerificationStatus, handleStatusResponse, did?.methodId]);
 
-  // Polling interval for status checks
+  // Polling interval for status checks (skip if credential already being issued)
   useEffect(() => {
+    if (state.submitted === 'CREDENTIAL_PENDING') return;
     if (
       (did && verification === null) ||
       state.submitted === 'INREVIEW' ||

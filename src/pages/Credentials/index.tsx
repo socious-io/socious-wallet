@@ -22,7 +22,8 @@ function Credentials() {
   const { id } = useParams();
 
   // Auto-redirect to /verify when verification is in progress so polling resumes
-  if (!verification && (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')) {
+  // Skip redirect for CREDENTIAL_PENDING — credential is on its way, just wait
+  if (!verification && submitted !== 'CREDENTIAL_PENDING' && (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')) {
     return <Navigate to="/verify" replace />;
   }
 
