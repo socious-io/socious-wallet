@@ -21,6 +21,12 @@ function Credentials() {
   const { credentials, verification, submitted, listProcessing } = state || {};
   const { id } = useParams();
 
+  // Auto-redirect to /verify when verification is in progress so polling resumes
+  if (!verification && (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')) {
+    navigate('/verify', { replace: true });
+    return null;
+  }
+
   const isKyc = type => type === 'verification';
 
   const generateNonKycTypeText = claim => {
@@ -98,10 +104,24 @@ function Credentials() {
           ],
         };
         break;
+      case 'INPROGRESS':
+      case 'INREVIEW':
+        props = {
+          variant: 'warning',
+          iconName: 'alert-submit',
+          title: translate('credential-alert.approved-title'),
+          subtitle: translate('credential-alert.approved-subtitle'),
+          links: [
+            {
+              to: '/verify',
+              label: translate('credential-alert.approved-link'),
+            },
+          ],
+        };
+        break;
       case 'ABANDONED':
       case 'EXPIRED':
       case 'DECLINED':
-      case 'INPROGRESS':
         props = {
           variant: 'danger',
           iconName: 'alert-danger',
