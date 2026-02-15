@@ -13,6 +13,7 @@ export type VerifyStatus =
   | 'ABANDONED'
   | 'INREVIEW'
   | 'INPROGRESS'
+  | 'CREDENTIAL_PENDING'
   | '';
 
 export interface StateType {
