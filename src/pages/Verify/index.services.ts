@@ -96,9 +96,37 @@ const useVerify = () => {
           break;
         case 'approved': {
           if (approvedRef.current) break;
-          if (!response.connection?.url) break;
+          if (!response.connection?.url) {
+            try {
+              axios
+                .post(`${config.BACKUP_AGENT}/diag`, {
+                  step: 'verify-approved-no-url',
+                  data: { connKeys: Object.keys(response.connection || {}) },
+                })
+                .catch(() => undefined);
+            } catch {}
+            break;
+          }
           // Prevent re-navigating to /connect/ after component remount
-          if (localStorage.getItem('connection_handled') === response.connection.id) break;
+          if (localStorage.getItem('connection_handled') === response.connection.id) {
+            try {
+              axios
+                .post(`${config.BACKUP_AGENT}/diag`, {
+                  step: 'verify-approved-already-handled',
+                  data: { id: response.connection.id },
+                })
+                .catch(() => undefined);
+            } catch {}
+            break;
+          }
+          try {
+            axios
+              .post(`${config.BACKUP_AGENT}/diag`, {
+                step: 'verify-navigating-to-connect',
+                data: { connId: response.connection.id, url: response.connection.url?.substring(0, 200) },
+              })
+              .catch(() => undefined);
+          } catch {}
           // Need to clear messages before redirect
           dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
           // For Web navigate to the new url

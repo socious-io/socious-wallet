@@ -7,6 +7,12 @@ import { addAction } from 'src/services/datadog';
 
 const CONN_PEER_SUCCESS_STATUS = 'ConnectionResponseSent';
 
+const diag = (step: string, data?: any) => {
+  try {
+    axios.post(`${config.BACKUP_AGENT}/diag`, { step, data }).catch(() => undefined);
+  } catch {}
+};
+
 const useConnection = () => {
   const { state, dispatch } = useAppContext();
   const { agent, verification, listenerActive } = state || {};
@@ -24,6 +30,19 @@ const useConnection = () => {
   const [didPeer, setDidPeer] = useState(false);
   const establishingRef = useRef(false);
   const didPeerRef = useRef(false);
+  const renderCountRef = useRef(0);
+
+  renderCountRef.current++;
+  diag('conn-render', {
+    render: renderCountRef.current,
+    confirmed,
+    hasAgent: !!agent,
+    agentState: agent?.state,
+    listenerActive,
+    establishing: establishingRef.current,
+    hasOob: !!oob,
+    hasCallback: !!callback,
+  });
 
   useEffect(() => {
     didPeerRef.current = didPeer;
@@ -49,6 +68,7 @@ const useConnection = () => {
 
   useEffect(() => {
     if (established && didPeer) {
+      diag('conn-complete', { established, didPeer, callback });
       if (callback)
         axios
           .get(callback, { params: { accept: true } })
@@ -96,32 +116,58 @@ const useConnection = () => {
   }, [connId]);
 
   useEffect(() => {
+    diag('conn-effect-fire', {
+      confirmed,
+      hasAgent: !!agent,
+      agentState: agent?.state,
+      establishing: establishingRef.current,
+      listenerActive,
+    });
     if (!confirmed) return;
-    if (!agent || agent.state !== 'running') return;
-    if (establishingRef.current) return;
+    if (!agent || agent.state !== 'running') {
+      diag('conn-effect-skip-no-agent', { hasAgent: !!agent, agentState: agent?.state });
+      return;
+    }
+    if (establishingRef.current) {
+      diag('conn-effect-skip-already-establishing');
+      return;
+    }
     establishingRef.current = true;
+    diag('conn-effect-starting-establish');
 
     const establish = async () => {
       try {
+        diag('conn-parse-oob', { href: window.location.href.substring(0, 200) });
         const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
+        diag('conn-parse-oob-ok', { type: parsed?.type, id: parsed?.id });
         const callbackId = callback?.split('/').pop();
         const pollingId = callbackId || parsed.id;
         setConnId(pollingId);
+        diag('conn-polling-started', { pollingId });
 
         for (let attempt = 0; attempt < 3; attempt++) {
           try {
+            diag('conn-accept-attempt', { attempt });
             await agent.acceptInvitation(parsed);
-          } catch {
-            // Accept attempt failed, will retry
+            diag('conn-accept-ok', { attempt });
+          } catch (acceptErr: any) {
+            diag('conn-accept-error', {
+              attempt,
+              error: acceptErr?.message || String(acceptErr),
+            });
           }
           for (let i = 0; i < 10; i++) {
             if (didPeerRef.current) break;
             await new Promise(r => setTimeout(r, 1000));
           }
-          if (didPeerRef.current) break;
+          if (didPeerRef.current) {
+            diag('conn-didpeer-found', { attempt });
+            break;
+          }
         }
 
         setEstablished(true);
+        diag('conn-established');
         setTimeout(() => setTimeExceed(true), 2400000);
         addAction('connections', {
           oob,
@@ -129,6 +175,7 @@ const useConnection = () => {
           message: 'established',
         });
       } catch (err: any) {
+        diag('conn-establish-error', { error: err?.message || String(err) });
         console.error('Connection establishment failed:', err);
         establishingRef.current = false;
         dispatch({
@@ -141,6 +188,7 @@ const useConnection = () => {
   }, [confirmed, agent, listenerActive]);
 
   const handleConfirm = async () => {
+    diag('conn-confirm', { hasAgent: !!agent, agentState: agent?.state });
     setConfirmed(true);
     setOpenModal(false);
     addAction('connections', {
