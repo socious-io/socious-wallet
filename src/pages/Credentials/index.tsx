@@ -23,9 +23,12 @@ function Credentials() {
 
   // Auto-redirect to /verify when verification is in progress so polling resumes
   // Skip redirect for CREDENTIAL_PENDING — credential is on its way, just wait
+  // Check localStorage as well because the React state update may not have propagated yet
+  const isPending =
+    submitted === 'CREDENTIAL_PENDING' || localStorage.getItem('submitted_kyc') === 'CREDENTIAL_PENDING';
   if (
     !verification &&
-    submitted !== 'CREDENTIAL_PENDING' &&
+    !isPending &&
     (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')
   ) {
     return <Navigate to="/verify" replace />;
