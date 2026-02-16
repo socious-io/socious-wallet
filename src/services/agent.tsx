@@ -14,6 +14,12 @@ type Challenge = {
   [key: string]: any;
 };
 
+// Module-level reference to the running agent, accessible even when React state is cleared
+let _runningAgent: SDK.Agent | null = null;
+export function getRunningAgent(): SDK.Agent | null {
+  return _runningAgent?.state === 'running' ? _runningAgent : null;
+}
+
 const waitFor = async (condition: () => boolean, interval = 100, timeout = 100000): Promise<void> => {
   const start = Date.now();
   return new Promise((resolve, reject) => {
@@ -202,6 +208,7 @@ export async function startAgent(
 
   try {
     const agent = await handleStart();
+    _runningAgent = agent;
     diag('agent-dispatch', { state: agent.state });
     dispatch({ type: 'SET_AGENT', payload: agent });
     return { agent };

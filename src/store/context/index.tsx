@@ -129,9 +129,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (plutoError || !pluto) return;
-    // Reset agent guard when pluto changes (new wallet created)
-    agentStartedRef.current = false;
-    dispatch({ type: 'SET_AGENT', payload: null });
     dispatch({ type: 'LOADING_START' });
     dispatch({ type: 'SET_PLUTO', payload: pluto });
 
