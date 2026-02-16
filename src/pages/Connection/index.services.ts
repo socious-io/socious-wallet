@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'src/services/http';
 import { useAppContext } from 'src/store/context';
 import { config } from 'src/config';
 import { addAction } from 'src/services/datadog';
+import { getRunningAgent } from 'src/services/agent';
 
 const CONN_PEER_SUCCESS_STATUS = 'ConnectionResponseSent';
 
@@ -115,30 +116,14 @@ const useConnection = () => {
     }
   }, [connId]);
 
-  useEffect(() => {
-    diag('conn-effect-fire', {
-      confirmed,
-      hasAgent: !!agent,
-      agentState: agent?.state,
-      establishing: establishingRef.current,
-      listenerActive,
-    });
-    if (!confirmed) return;
-    if (!agent || agent.state !== 'running') {
-      diag('conn-effect-skip-no-agent', { hasAgent: !!agent, agentState: agent?.state });
-      return;
-    }
-    if (establishingRef.current) {
-      diag('conn-effect-skip-already-establishing');
-      return;
-    }
-    establishingRef.current = true;
-    diag('conn-effect-starting-establish');
-
-    const establish = async () => {
+  // Extract establish logic so it can be called with any agent reference
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const doEstablish = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (agentToUse: any) => {
       try {
         diag('conn-parse-oob', { href: window.location.href.substring(0, 200) });
-        const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
+        const parsed = await agentToUse.parseOOBInvitation(new URL(window.location.href));
         diag('conn-parse-oob-ok', { type: parsed?.type, id: parsed?.id });
         const callbackId = callback?.split('/').pop();
         const pollingId = callbackId || parsed.id;
@@ -148,7 +133,7 @@ const useConnection = () => {
         for (let attempt = 0; attempt < 3; attempt++) {
           try {
             diag('conn-accept-attempt', { attempt });
-            await agent.acceptInvitation(parsed);
+            await agentToUse.acceptInvitation(parsed);
             diag('conn-accept-ok', { attempt });
           } catch (acceptErr: any) {
             diag('conn-accept-error', {
@@ -183,9 +168,67 @@ const useConnection = () => {
           payload: { err: err instanceof Error ? err : new Error(String(err)), section: 'Establish Connection' },
         });
       }
+    },
+    [callback, oob, dispatch],
+  );
+
+  useEffect(() => {
+    diag('conn-effect-fire', {
+      confirmed,
+      hasAgent: !!agent,
+      agentState: agent?.state,
+      establishing: establishingRef.current,
+      listenerActive,
+    });
+    if (!confirmed) return;
+    if (establishingRef.current) {
+      diag('conn-effect-skip-already-establishing');
+      return;
+    }
+
+    // Try context agent first, then fall back to module-level reference
+    const availableAgent = agent && agent.state === 'running' ? agent : getRunningAgent();
+
+    if (availableAgent) {
+      establishingRef.current = true;
+      diag('conn-effect-starting-establish', { source: agent === availableAgent ? 'context' : 'module' });
+      doEstablish(availableAgent);
+      return;
+    }
+
+    // Agent not ready yet — poll getRunningAgent() every 2s (up to 120s)
+    // This bypasses React context propagation issues on iOS
+    diag('conn-waiting-for-agent');
+    let stopped = false;
+    const pollId = setInterval(() => {
+      if (stopped || establishingRef.current) {
+        clearInterval(pollId);
+        return;
+      }
+      const polled = getRunningAgent();
+      diag('conn-agent-poll', { found: !!polled, state: polled?.state });
+      if (polled) {
+        clearInterval(pollId);
+        establishingRef.current = true;
+        diag('conn-agent-found-via-poll', { state: polled.state });
+        doEstablish(polled);
+      }
+    }, 2000);
+
+    const timeoutId = setTimeout(() => {
+      stopped = true;
+      clearInterval(pollId);
+      if (!establishingRef.current) {
+        diag('conn-agent-poll-timeout');
+      }
+    }, 120000);
+
+    return () => {
+      stopped = true;
+      clearInterval(pollId);
+      clearTimeout(timeoutId);
     };
-    establish();
-  }, [confirmed, agent, listenerActive]);
+  }, [confirmed, agent, listenerActive, doEstablish]);
 
   const handleConfirm = async () => {
     diag('conn-confirm', { hasAgent: !!agent, agentState: agent?.state });
