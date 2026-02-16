@@ -24,11 +24,6 @@ const useConnection = () => {
   const [didPeer, setDidPeer] = useState(false);
   const establishingRef = useRef(false);
   const didPeerRef = useRef(false);
-  const stateRef = useRef(state);
-
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
 
   useEffect(() => {
     didPeerRef.current = didPeer;
@@ -100,92 +95,30 @@ const useConnection = () => {
     }
   }, [connId]);
 
-  // Start connection polling as soon as we have a callback ID, even before agent is ready
   useEffect(() => {
     if (!confirmed) return;
-    const callbackId = callback?.split('/').pop();
-    if (callbackId && !connId) {
-      setConnId(callbackId);
-    }
-  }, [confirmed, callback, connId]);
-
-  useEffect(() => {
-    if (!confirmed) return;
+    if (!agent || agent.state !== 'running') return;
     if (establishingRef.current) return;
-
-    const diag = (step: string, data?: any) => {
-      try {
-        axios.post(`${config.BACKUP_AGENT}/diag`, { step, data }).catch(() => undefined);
-      } catch {}
-    };
+    establishingRef.current = true;
 
     const establish = async () => {
-      // Wait for agent to become available (up to 30 seconds)
-      let currentAgent = agent;
-      diag('establish-start', {
-        hasAgent: !!currentAgent,
-        agentState: currentAgent?.state,
-        stateKeys: Object.keys(stateRef.current || {}),
-        hasStateAgent: !!stateRef.current?.agent,
-      });
-      if (!currentAgent || currentAgent.state !== 'running') {
-        for (let i = 0; i < 120; i++) {
-          await new Promise(r => setTimeout(r, 1000));
-          currentAgent = stateRef.current?.agent;
-          if (i % 10 === 9) {
-            diag('agent-wait-tick', {
-              i,
-              hasAgent: !!currentAgent,
-              agentState: currentAgent?.state,
-              stateAgentState: stateRef.current?.agent?.state,
-            });
-          }
-          if (currentAgent && currentAgent.state === 'running') break;
-        }
-        diag('agent-wait-done', { hasAgent: !!currentAgent, agentState: currentAgent?.state });
-      }
-
-      if (!currentAgent || currentAgent.state !== 'running') {
-        diag('agent-not-ready');
-        dispatch({
-          type: 'SET_WARN',
-          payload: {
-            err: new Error('Agent not ready. Please restart the app and try again.'),
-            section: 'Establish Connection',
-          },
-        });
-        return;
-      }
-
       try {
-        const url = new URL(window.location.href);
-        diag('parse-oob', { href: url.href.substring(0, 200), hasOob: !!url.searchParams.get('_oob') });
-        const parsed = await currentAgent.parseOOBInvitation(url);
-        diag('parse-oob-ok', { type: parsed?.type, id: parsed?.id });
+        const parsed = await agent.parseOOBInvitation(new URL(window.location.href));
+        const callbackId = callback?.split('/').pop();
+        const pollingId = callbackId || parsed.id;
+        setConnId(pollingId);
 
         for (let attempt = 0; attempt < 3; attempt++) {
           try {
-            diag('accept-attempt', { attempt });
-            await currentAgent.acceptInvitation(parsed);
-            diag('accept-ok', { attempt });
-          } catch (acceptErr: any) {
-            const respData = acceptErr?.response?.data;
-            const respStatus = acceptErr?.response?.status;
-            diag('accept-error', {
-              attempt,
-              error: acceptErr?.message || String(acceptErr),
-              respStatus,
-              respData: JSON.stringify(respData || '').substring(0, 500),
-            });
+            await agent.acceptInvitation(parsed);
+          } catch {
+            // Accept attempt failed, will retry
           }
           for (let i = 0; i < 10; i++) {
             if (didPeerRef.current) break;
             await new Promise(r => setTimeout(r, 1000));
           }
-          if (didPeerRef.current) {
-            diag('didpeer-found', { attempt });
-            break;
-          }
+          if (didPeerRef.current) break;
         }
 
         setEstablished(true);
@@ -196,7 +129,6 @@ const useConnection = () => {
           message: 'established',
         });
       } catch (err: any) {
-        diag('establish-error', { error: err?.message || String(err) });
         console.error('Connection establishment failed:', err);
         establishingRef.current = false;
         dispatch({
@@ -205,10 +137,8 @@ const useConnection = () => {
         });
       }
     };
-
-    establishingRef.current = true;
     establish();
-  }, [confirmed]);
+  }, [confirmed, agent, listenerActive]);
 
   const handleConfirm = async () => {
     setConfirmed(true);
