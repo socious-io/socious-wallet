@@ -5,10 +5,10 @@ android {
     compileSdk 35
     defaultConfig {
         applicationId "socious.wallet.app"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 26
         targetSdkVersion 35
-        versionCode 12
-        versionName "1.1"
+        versionCode 3
+        versionName "1.6.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,12 +16,26 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+     
+    signingConfigs {
+      release {
+        // You need to specify either an absolute path or include the
+        // keystore file in the same directory as the build.gradle file.
+        storeFile file("./android/build-release.keystore")
+        storePassword "Password"
+        keyAlias "key_number_one"
+        keyPassword "Password"
+      }
     }
+
+    buildTypes {
+      release {
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        signingConfig signingConfigs.release
+      }
+    }
+
 }
 
 repositories {
