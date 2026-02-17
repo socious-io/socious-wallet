@@ -1,4 +1,4 @@
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ListGroup, Button } from 'react-bootstrap'; // Added Button import
 import Card from 'src/components/Card';
@@ -20,19 +20,6 @@ function Credentials() {
   const { state } = useAppContext();
   const { credentials, verification, submitted, listProcessing } = state || {};
   const { id } = useParams();
-
-  // Auto-redirect to /verify when verification is in progress so polling resumes
-  // Skip redirect for CREDENTIAL_PENDING — credential is on its way, just wait
-  // Check localStorage as well because the React state update may not have propagated yet
-  const isPending =
-    submitted === 'CREDENTIAL_PENDING' || localStorage.getItem('submitted_kyc') === 'CREDENTIAL_PENDING';
-  if (
-    !verification &&
-    !isPending &&
-    (submitted === 'INPROGRESS' || submitted === 'INREVIEW' || submitted === 'APPROVED')
-  ) {
-    return <Navigate to="/verify" replace />;
-  }
 
   const isKyc = type => type === 'verification';
 
@@ -111,24 +98,10 @@ function Credentials() {
           ],
         };
         break;
-      case 'INPROGRESS':
-      case 'INREVIEW':
-        props = {
-          variant: 'warning',
-          iconName: 'alert-submit',
-          title: translate('credential-alert.approved-title'),
-          subtitle: translate('credential-alert.approved-subtitle'),
-          links: [
-            {
-              to: '/verify',
-              label: translate('credential-alert.approved-link'),
-            },
-          ],
-        };
-        break;
       case 'ABANDONED':
       case 'EXPIRED':
       case 'DECLINED':
+      case 'INPROGRESS':
         props = {
           variant: 'danger',
           iconName: 'alert-danger',

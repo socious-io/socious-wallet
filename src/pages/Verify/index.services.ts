@@ -19,7 +19,6 @@ const startKYC = async (did: string, session?: string) => {
     const response = await axios.post(`${config.BACKUP_AGENT}/verify/start`, { did, session }, { headers });
     localStorage.setItem('session', response.data.session);
     localStorage.setItem(FLAG_KEY, 'INPROGRESS');
-    localStorage.removeItem('connection_handled');
     return response.data;
   } catch (err) {
     console.error(err);
@@ -96,45 +95,14 @@ const useVerify = () => {
           break;
         case 'approved': {
           if (approvedRef.current) break;
-          if (!response.connection?.url) {
-            try {
-              axios
-                .post(`${config.BACKUP_AGENT}/diag`, {
-                  step: 'verify-approved-no-url',
-                  data: { connKeys: Object.keys(response.connection || {}) },
-                })
-                .catch(() => undefined);
-            } catch {}
-            break;
-          }
-          // Prevent re-navigating to /connect/ after component remount
-          if (localStorage.getItem('connection_handled') === response.connection.id) {
-            try {
-              axios
-                .post(`${config.BACKUP_AGENT}/diag`, {
-                  step: 'verify-approved-already-handled',
-                  data: { id: response.connection.id },
-                })
-                .catch(() => undefined);
-            } catch {}
-            break;
-          }
-          try {
-            axios
-              .post(`${config.BACKUP_AGENT}/diag`, {
-                step: 'verify-navigating-to-connect',
-                data: { connId: response.connection.id, url: response.connection.url?.substring(0, 200) },
-              })
-              .catch(() => undefined);
-          } catch {}
+          if (!response.connection?.url) break;
           // Need to clear messages before redirect
           dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
           // For Web navigate to the new url
           const url = new URL(response.connection.url);
           navigate(`${url.pathname}${url.search}`);
-          // Mark approved to prevent re-navigation (both in ref and localStorage)
+          // Only mark approved after successful navigation
           approvedRef.current = true;
-          localStorage.setItem('connection_handled', response.connection.id);
 
           //For Mobile if state changes to approved and init status is not approved close the browser
           if (state.device.platform !== 'web') {
@@ -168,9 +136,8 @@ const useVerify = () => {
     }
   }, [getVerificationStatus, handleStatusResponse, did?.methodId]);
 
-  // Polling interval for status checks (skip if credential already being issued)
+  // Polling interval for status checks
   useEffect(() => {
-    if (state.submitted === 'CREDENTIAL_PENDING') return;
     if (
       (did && verification === null) ||
       state.submitted === 'INREVIEW' ||

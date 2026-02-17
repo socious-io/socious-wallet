@@ -1,5 +1,4 @@
 import SDK from '@hyperledger/identus-sdk';
-import axios from 'axios';
 import { config } from 'src/config';
 import { decodeJwtPayload } from 'src/utilities';
 import { ActionType, StateType } from 'src/store/context/types';
@@ -13,12 +12,6 @@ type Challenge = {
   type: string;
   [key: string]: any;
 };
-
-// Module-level reference to the running agent, accessible even when React state is cleared
-let _runningAgent: SDK.Agent | null = null;
-export function getRunningAgent(): SDK.Agent | null {
-  return _runningAgent?.state === 'running' ? _runningAgent : null;
-}
 
 const waitFor = async (condition: () => boolean, interval = 100, timeout = 100000): Promise<void> => {
   const start = Date.now();
@@ -182,38 +175,18 @@ export async function startAgent(
   dispatch: React.Dispatch<ActionType>,
   stateRef: React.MutableRefObject<StateType>,
 ) {
-  const diag = (step: string, data?: any) => {
-    try {
-      axios.post(`${config.BACKUP_AGENT}/diag`, { step, data }).catch(() => undefined);
-    } catch {
-      // ignore
-    }
-  };
-
-  diag('agent-init', { mediatorDID: config.MEDIATOR_DID?.substring(0, 30) });
-
   const handleStart = async () => {
     const a = SDK.Agent.initialize({ mediatorDID: SDK.Domain.DID.fromString(config.MEDIATOR_DID), pluto });
     a.addListener(SDK.ListenerKey.MESSAGE, handleMessages(pluto, a, dispatch, stateRef));
-    diag('agent-starting');
     await a.start();
-    diag('agent-started', { state: a.state });
     const mediator = a.currentMediatorDID;
     if (!mediator) {
       throw new Error('Mediator not available');
     }
-    diag('agent-mediator-ok', { mediator: mediator.toString().substring(0, 30) });
     return a;
   };
 
-  try {
-    const agent = await handleStart();
-    _runningAgent = agent;
-    diag('agent-dispatch', { state: agent.state });
-    dispatch({ type: 'SET_AGENT', payload: agent });
-    return { agent };
-  } catch (err: any) {
-    diag('agent-error', { error: err?.message || String(err), stack: err?.stack?.substring(0, 300) });
-    throw err;
-  }
+  const agent = await handleStart();
+  dispatch({ type: 'SET_AGENT', payload: agent });
+  return { agent };
 }
