@@ -113,13 +113,10 @@ const useVerify = () => {
           const pollForAgent = () => {
             const agent = getRunningAgent();
             if (agent) {
-              console.log('[Verify] Agent ready, navigating to', connectPath);
               navigate(connectPath);
             } else if (Date.now() - startTime > 120000) {
-              console.warn('[Verify] Agent not ready after 120s, navigating anyway');
               navigate(connectPath);
             } else {
-              console.log('[Verify] Waiting for agent...', Math.round((Date.now() - startTime) / 1000), 's');
               agentPollRef.current = setTimeout(pollForAgent, 2000);
             }
           };
