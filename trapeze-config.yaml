@@ -60,6 +60,7 @@ platforms:
     packageName: $ANDROID_PACKAGE_NAME
     versionName: $VERSION
     versionCode: $ANDROID_VERSION_CODE
+    minSdkVersion: 26
 
     gradle:
       - file: app/build.gradle # Removing buildTypes
