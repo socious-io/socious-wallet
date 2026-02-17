@@ -4,6 +4,12 @@ import { decodeJwtPayload } from 'src/utilities';
 import { ActionType, StateType } from 'src/store/context/types';
 import { addAction } from './datadog';
 
+let _runningAgent: SDK.Agent | null = null;
+
+export function getRunningAgent(): SDK.Agent | null {
+  return _runningAgent;
+}
+
 const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
 const RequestPresentation = SDK.RequestPresentation;
@@ -187,6 +193,7 @@ export async function startAgent(
   };
 
   const agent = await handleStart();
+  _runningAgent = agent;
   dispatch({ type: 'SET_AGENT', payload: agent });
   return { agent };
 }

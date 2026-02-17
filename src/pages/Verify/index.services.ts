@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
 import { Browser } from '@capacitor/browser';
 import { App } from '@capacitor/app';
+import { getRunningAgent } from 'src/services/agent';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore this package types has issue so we ignore error
@@ -33,6 +34,7 @@ const useVerify = () => {
   const checkingRef = useRef(false);
   const approvedRef = useRef(false);
   const burstPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const agentPollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const onStartVerification = async () => {
     // if in review or approved return
@@ -96,19 +98,32 @@ const useVerify = () => {
         case 'approved': {
           if (approvedRef.current) break;
           if (!response.connection?.url) break;
-          // Need to clear messages before redirect
-          dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
-          // For Web navigate to the new url
-          const url = new URL(response.connection.url);
-          navigate(`${url.pathname}${url.search}`);
-          // Only mark approved after successful navigation
           approvedRef.current = true;
+          dispatch({ type: 'SET_NEW_MESSAGE', payload: [] });
 
-          //For Mobile if state changes to approved and init status is not approved close the browser
           if (state.device.platform !== 'web') {
             Browser?.close().catch((e: unknown) => console.warn('Browser.close:', e));
           }
 
+          const url = new URL(response.connection.url);
+          const connectPath = `${url.pathname}${url.search}`;
+
+          // Wait for agent to be running before navigating to /connect
+          const startTime = Date.now();
+          const pollForAgent = () => {
+            const agent = getRunningAgent();
+            if (agent) {
+              console.log('[Verify] Agent ready, navigating to', connectPath);
+              navigate(connectPath);
+            } else if (Date.now() - startTime > 120000) {
+              console.warn('[Verify] Agent not ready after 120s, navigating anyway');
+              navigate(connectPath);
+            } else {
+              console.log('[Verify] Waiting for agent...', Math.round((Date.now() - startTime) / 1000), 's');
+              agentPollRef.current = setTimeout(pollForAgent, 2000);
+            }
+          };
+          pollForAgent();
           break;
         }
         default:
@@ -177,6 +192,7 @@ const useVerify = () => {
     return () => {
       urlListener.then(l => l.remove());
       if (burstPollRef.current) clearInterval(burstPollRef.current);
+      if (agentPollRef.current) clearTimeout(agentPollRef.current);
     };
   }, [checkStatus, startBurstPolling]);
 
