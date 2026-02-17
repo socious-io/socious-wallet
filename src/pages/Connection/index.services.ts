@@ -32,6 +32,10 @@ const useConnection = () => {
   const establishingRef = useRef(false);
   const didPeerRef = useRef(false);
   const renderCountRef = useRef(0);
+  // Keep a ref to the latest agent from context so the poll can access it
+  // without agent being in the effect's dependency array
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const agentRef = useRef<any>(agent);
 
   renderCountRef.current++;
   diag('conn-render', {
@@ -48,6 +52,10 @@ const useConnection = () => {
   useEffect(() => {
     didPeerRef.current = didPeer;
   }, [didPeer]);
+
+  useEffect(() => {
+    agentRef.current = agent;
+  }, [agent]);
 
   useEffect(() => {
     if (timeExceed) {
@@ -172,13 +180,17 @@ const useConnection = () => {
     [callback, oob, dispatch],
   );
 
+  // IMPORTANT: Do NOT include agent or listenerActive in deps.
+  // On iOS, SET_AGENT context dispatch kills the poll via effect cleanup
+  // but never re-fires the effect (context propagation fails in WKWebView).
+  // Instead, we use agentRef + getRunningAgent() to find the agent independently.
   useEffect(() => {
+    const contextAgent = agentRef.current;
     diag('conn-effect-fire', {
       confirmed,
-      hasAgent: !!agent,
-      agentState: agent?.state,
+      hasAgent: !!contextAgent,
+      agentState: contextAgent?.state,
       establishing: establishingRef.current,
-      listenerActive,
     });
     if (!confirmed) return;
     if (establishingRef.current) {
@@ -186,27 +198,29 @@ const useConnection = () => {
       return;
     }
 
-    // Try context agent first, then fall back to module-level reference
-    const availableAgent = agent && agent.state === 'running' ? agent : getRunningAgent();
+    // Try context agent (via ref) first, then module-level reference
+    const availableAgent = contextAgent && contextAgent.state === 'running' ? contextAgent : getRunningAgent();
 
     if (availableAgent) {
       establishingRef.current = true;
-      diag('conn-effect-starting-establish', { source: agent === availableAgent ? 'context' : 'module' });
+      diag('conn-effect-starting-establish', {
+        source: contextAgent === availableAgent ? 'context' : 'module',
+      });
       doEstablish(availableAgent);
       return;
     }
 
-    // Agent not ready yet — poll getRunningAgent() every 2s (up to 120s)
-    // This bypasses React context propagation issues on iOS
+    // Agent not ready yet — poll agentRef + getRunningAgent() every 2s (up to 120s)
+    // This poll is immune to React context changes because agent is NOT in deps
     diag('conn-waiting-for-agent');
-    let stopped = false;
     const pollId = setInterval(() => {
-      if (stopped || establishingRef.current) {
+      if (establishingRef.current) {
         clearInterval(pollId);
         return;
       }
-      const polled = getRunningAgent();
-      diag('conn-agent-poll', { found: !!polled, state: polled?.state });
+      const fromRef = agentRef.current;
+      const polled = fromRef && fromRef.state === 'running' ? fromRef : getRunningAgent();
+      diag('conn-agent-poll', { found: !!polled, fromRef: !!fromRef, fromModule: !!getRunningAgent() });
       if (polled) {
         clearInterval(pollId);
         establishingRef.current = true;
@@ -216,7 +230,6 @@ const useConnection = () => {
     }, 2000);
 
     const timeoutId = setTimeout(() => {
-      stopped = true;
       clearInterval(pollId);
       if (!establishingRef.current) {
         diag('conn-agent-poll-timeout');
@@ -224,11 +237,10 @@ const useConnection = () => {
     }, 120000);
 
     return () => {
-      stopped = true;
       clearInterval(pollId);
       clearTimeout(timeoutId);
     };
-  }, [confirmed, agent, listenerActive, doEstablish]);
+  }, [confirmed, doEstablish]);
 
   const handleConfirm = async () => {
     diag('conn-confirm', { hasAgent: !!agent, agentState: agent?.state });
