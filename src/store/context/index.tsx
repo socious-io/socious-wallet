@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react';
 import { StateType, ActionType, AppProviderProps, VerifyStatus } from './types';
 import { usePluto } from 'src/services/pluto';
-import { startAgent } from 'src/services/agent';
+import { startAgent, sendDiag } from 'src/services/agent';
 import { Device, DeviceInfo } from '@capacitor/device';
 import { config } from 'src/config';
 import SelectCredentialModal from 'src/components/SelectCredentialModal';
@@ -134,9 +134,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           payload: dids?.length > 0 ? master || dids[0].did : null,
         });
         dispatch({ type: 'LOADING_END' });
+        sendDiag('pluto-loaded', { dids: dids.length, creds: credentials.length });
         if (dids.length > 0 && !agentStartedRef.current) {
           agentStartedRef.current = true;
-          startAgent(pluto, dispatch, stateRef);
+          startAgent(pluto, dispatch, stateRef).catch(err => {
+            sendDiag('agent-failed', { error: String(err), message: err?.message });
+            agentStartedRef.current = false;
+          });
         }
       })
       .catch(error => {
