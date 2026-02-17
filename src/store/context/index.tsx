@@ -149,6 +149,18 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       });
   }, [pluto, plutoError]);
 
+  // Start agent when DID becomes available after wallet creation (fresh install).
+  // The pluto effect above only runs once; if no DIDs exist at that time, agent never starts.
+  useEffect(() => {
+    if (!pluto || !state.did || agentStartedRef.current) return;
+    agentStartedRef.current = true;
+    sendDiag('agent-starting-did-available', { did: state.did?.toString()?.substring(0, 20) });
+    startAgent(pluto, dispatch, stateRef).catch(err => {
+      sendDiag('agent-failed-did', { error: String(err), message: err?.message });
+      agentStartedRef.current = false;
+    });
+  }, [state.did, pluto]);
+
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       {children}

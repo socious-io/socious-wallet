@@ -14,14 +14,8 @@ export function sendDiag(step: string, data?: Record<string, unknown>) {
   try {
     const url = `${config.BACKUP_AGENT}/diag`;
     const body = JSON.stringify({ step, data });
-    const blob = new Blob([body], { type: 'application/json' });
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(url, blob);
-    } else {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (config.BACKUP_AGENT_API_KEY) headers['x-api-key'] = config.BACKUP_AGENT_API_KEY;
-      window.fetch(url, { method: 'POST', headers, body, keepalive: true }).catch(() => undefined);
-    }
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    window.fetch(url, { method: 'POST', headers, body, keepalive: true }).catch(() => undefined);
   } catch {
     // best effort
   }
