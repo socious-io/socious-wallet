@@ -10,17 +10,6 @@ export function getRunningAgent(): SDK.Agent | null {
   return _runningAgent;
 }
 
-export function sendDiag(step: string, data?: Record<string, unknown>) {
-  try {
-    const url = `${config.BACKUP_AGENT}/diag`;
-    const body = JSON.stringify({ step, data });
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    window.fetch(url, { method: 'POST', headers, body, keepalive: true }).catch(() => undefined);
-  } catch {
-    // best effort
-  }
-}
-
 const OfferCredential = SDK.OfferCredential;
 const IssueCredential = SDK.IssueCredential;
 const RequestPresentation = SDK.RequestPresentation;
@@ -203,10 +192,8 @@ export async function startAgent(
     return a;
   };
 
-  sendDiag('agent-starting', { mediator: config.MEDIATOR_DID?.substring(0, 30) });
   const agent = await handleStart();
   _runningAgent = agent;
-  sendDiag('agent-started', { state: agent.state });
   dispatch({ type: 'SET_AGENT', payload: agent });
   return { agent };
 }

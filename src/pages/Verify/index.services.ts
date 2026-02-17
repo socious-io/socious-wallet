@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppContext } from 'src/store/context';
 import { Browser } from '@capacitor/browser';
 import { App } from '@capacitor/app';
-import { getRunningAgent, sendDiag } from 'src/services/agent';
+import { getRunningAgent } from 'src/services/agent';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore this package types has issue so we ignore error
@@ -112,13 +112,9 @@ const useVerify = () => {
           const startTime = Date.now();
           const pollForAgent = () => {
             const agent = getRunningAgent();
-            const elapsed = Math.round((Date.now() - startTime) / 1000);
-            sendDiag('agent-poll', { hasAgent: !!agent, elapsed });
             if (agent) {
-              sendDiag('agent-poll-navigate', { elapsed, path: connectPath });
               navigate(connectPath);
             } else if (Date.now() - startTime > 120000) {
-              sendDiag('agent-poll-timeout', { elapsed });
               navigate(connectPath);
             } else {
               agentPollRef.current = setTimeout(pollForAgent, 2000);
