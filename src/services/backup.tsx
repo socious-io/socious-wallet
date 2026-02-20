@@ -161,8 +161,10 @@ export const getIndexedDBDatabases = async (className: string): Promise<string[]
 };
 
 export const fetchBackup = async (didStr: string, pk: SDK.Domain.PrivateKey) => {
-  const res = await axios.get(`https://storage.googleapis.com/socious-wallet-gsc/${didStr}.bin`, {
+  const headers = { 'x-api-key': config.BACKUP_AGENT_API_KEY };
+  const res = await axios.get(`${config.BACKUP_AGENT}/fetch/${didStr}.bin`, {
     responseType: 'arraybuffer',
+    headers,
   });
   const uint8Array = new Uint8Array(res.data);
   let dataString;
